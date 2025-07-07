@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Church Directory – Kingdom Connects</title>
+  <link rel="stylesheet" href="styles/style.css" />
+</head>
+<body>
+
+  <div id="site-header"></div>
+
+  <main class="content">
+    <h1>Church Directory</h1>
+    <div id="churchList" class="church-list">
+      <!-- Churches will appear here -->
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <!-- Load header and footer -->
+  <script>
+    async function loadHTML(id, file) {
+      const res = await fetch(file);
+      const html = await res.text();
+      document.getElementById(id).innerHTML = html;
+    }
+    loadHTML("site-header", "includes/header.html");
+    loadHTML("site-footer", "includes/footer.html");
+  </script>
+
+  <!-- Load churches from Firestore -->
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { collection, getDocs, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-lite.js';
+
+    const churchList = document.getElementById('churchList');
+
+    async function loadChurches() {
+      const q = query(collection(db, "churches"), orderBy("name"));
+      const snapshot = await getDocs(q);
+      churchList.innerHTML = "";
+
+      if (snapshot.empty) {
+        churchList.innerHTML = "<p>No churches found.</p>";
+        return;
+      }
+
+      snapshot.forEach(doc => {
+        const church = doc.data();
+        const div = document.createElement('div');
+        div.className = 'church-card';
+        div.innerHTML = `
+          <h3>${church.name || "Unnamed Church"}</h3>
+          <p>${church.location || "No location provided"}</p>
+          <a href="church.html?id=${doc.id}" class="button">View Details</a>
+        `;
+        churchList.appendChild(div);
+      });
+    }
+
+    loadChurches();
+  </script>
+
+</body>
+</html>

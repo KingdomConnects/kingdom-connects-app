@@ -1,0 +1,166 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Business Directory</title>
+  <link rel="stylesheet" href="styles/style.css">
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";const firebaseConfig = {
+  apiKey: "AIzaSyD3Im6F3lWgMbJiA7plsDt_Rp9kCLTr6KU",
+  authDomain: "kingdom-commerce.firebaseapp.com",
+  projectId: "kingdom-commerce",
+  storageBucket: "kingdom-commerce.appspot.com",
+  messagingSenderId: "926457853462",
+  appId: "1:926457853462:web:eba8e9ecb2bb5ff43da737"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let allBusinesses = [];
+
+async function loadBusinesses() {
+  const businessListDiv = document.getElementById("businessList");
+  businessListDiv.innerHTML = "Loading businesses...";
+
+  try {
+    const q = query(collection(db, "business_listings"), where("listing_status", "==", "active"));
+    const querySnapshot = await getDocs(q);
+    allBusinesses = [];
+
+    querySnapshot.forEach((docSnap) => {
+      const b = docSnap.data();
+      allBusinesses.push({
+        id: docSnap.id,
+        name: b.business_name || "Unnamed Business",
+        city: b.city || "",
+        category: b.category || "",
+        subcategory: b.subcategory || "",
+        church: b.church_name || ""
+      });
+    });
+
+    populateCategoryDropdown();
+    renderBusinesses(allBusinesses);
+
+  } catch (error) {
+    console.error("Error loading businesses:", error);
+    businessListDiv.innerHTML = "<p>Error loading businesses.</p>";
+  }
+}
+
+function populateCategoryDropdown() {
+  const categorySet = new Set();
+  allBusinesses.forEach(b => {
+    if (b.category) categorySet.add(b.category);
+  });
+
+  const categoryDropdown = document.getElementById("categoryFilter");
+  categoryDropdown.innerHTML = "<option value=''>All Categories</option>";
+  categorySet.forEach(cat => {
+    const option = document.createElement("option");
+    option.value = cat;
+    option.textContent = cat;
+    categoryDropdown.appendChild(option);
+  });
+}
+
+function populateSubcategoryDropdown(selectedCategory) {
+  const subcategorySet = new Set();
+  allBusinesses.forEach(b => {
+    if (b.category === selectedCategory && b.subcategory) {
+      subcategorySet.add(b.subcategory);
+    }
+  });
+
+  const subcategoryDiv = document.getElementById("subcategorySection");
+  const subcategoryDropdown = document.getElementById("subcategoryFilter");
+
+  if (subcategorySet.size > 0) {
+    subcategoryDropdown.innerHTML = "<option value=''>All Subcategories</option>";
+    subcategorySet.forEach(sub => {
+      const option = document.createElement("option");
+      option.value = sub;
+      option.textContent = sub;
+      subcategoryDropdown.appendChild(option);
+    });
+    subcategoryDiv.style.display = "block";
+  } else {
+    subcategoryDiv.style.display = "none";
+  }
+}
+
+function applyFilters() {
+  const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+  const selectedCategory = document.getElementById('categoryFilter').value;
+  const selectedSubcategory = document.getElementById('subcategoryFilter').value;
+
+  const filtered = allBusinesses.filter(b => {
+    const matchesName = b.name.toLowerCase().includes(searchTerm);
+    const matchesCategory = !selectedCategory || b.category === selectedCategory;
+    const matchesSubcategory = !selectedSubcategory || b.subcategory === selectedSubcategory;
+    return matchesName && matchesCategory && matchesSubcategory;
+  });
+
+  renderBusinesses(filtered);
+}
+
+function renderBusinesses(businessArray) {
+  const businessListDiv = document.getElementById("businessList");
+  businessListDiv.innerHTML = "";
+
+  if (businessArray.length === 0) {
+    businessListDiv.innerHTML = "<p>No matching businesses found.</p>";
+    return;
+  }
+
+  businessArray.forEach((b) => {
+    const card = document.createElement("div");
+    card.className = "card padded";
+
+    card.innerHTML = `
+      <h2>${b.name}</h2>
+      <p><strong>City:</strong> ${b.city}</p>
+      <p><strong>Church:</strong> ${b.church}</p>
+      <p><strong>Category:</strong> ${b.category}</p>
+      ${b.subcategory ? `<p><strong>Subcategory:</strong> ${b.subcategory}</p>` : ""}
+      <a class="button" href="business.html?id=${b.id}">View Profile</a>
+    `;
+    businessListDiv.appendChild(card);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadBusinesses();
+
+  document.getElementById('searchBox').addEventListener('input', applyFilters);
+  document.getElementById('categoryFilter').addEventListener('change', () => {
+    const selectedCategory = document.getElementById('categoryFilter').value;
+    populateSubcategoryDropdown(selectedCategory);
+    applyFilters();
+  });
+  document.getElementById('subcategoryFilter').addEventListener('change', applyFilters);
+});
+
+  </script>
+</head>
+<body class="container">
+  <img src="library/kingdom-commerce-logo.png" alt="Kingdom Commerce Logo" class="logo">  <div class="text-center">
+    <a class="button" href="home.html">← Back to Home</a>
+    <h1 class="section-title">Business Directory</h1>
+    <a class="button" href="church_directory.html">View Church Directory</a>
+    <a class="button" href="businesses_by_church.html">View Businesses by Church</a>
+  </div>  <div class="card padded">
+    <input type="text" id="searchBox" placeholder="Search by Business Name..."><select id="categoryFilter">
+  <option value="">All Categories</option>
+</select>
+
+<div id="subcategorySection" style="display:none;">
+  <select id="subcategoryFilter">
+    <option value="">All Subcategories</option>
+  </select>
+</div>
+
+  </div>  <div id="businessList" class="padded"></div>
+</body>
+</html>

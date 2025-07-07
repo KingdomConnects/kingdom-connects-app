@@ -1,0 +1,30 @@
+/* style.css – Universal Theme for Kingdom Connects */
+
+/* Base layout */ body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background: linear-gradient(to bottom right, #0a1f44, #1e3c72); color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+
+/* Shared logo positioning for all pages */ .logo, .logo-top-left { position: absolute; top: 1rem; left: 1rem; height: 40px; width: auto; z-index: 10; }
+
+/* Glass-style cards */ .card { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 20px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3); padding: 2rem; max-width: 400px; width: 90%; text-align: center; }
+
+/* Typography */ h1, h2, h3, h4, p { color: #cfe0ff; margin-bottom: 1rem; }
+
+label { display: block; margin-bottom: 0.25rem; text-align: left; color: #b0c8ff; font-size: 0.9rem; }
+
+/* Forms */ input[type="text"], input[type="email"], input[type="password"], input[type="tel"], textarea { width: 100%; padding: 0.5rem; border-radius: 8px; border: none; margin-bottom: 1rem; font-size: 1rem; }
+
+/* Orange CTA button */ button, .button { background-color: #ff8800; color: white; border: none; padding: 0.75rem 1.5rem; font-size: 1rem; border-radius: 12px; cursor: pointer; transition: background-color 0.2s ease; }
+
+button:hover, .button:hover { background-color: #e36e00; }
+
+/* Utility */ .hidden { display: none; }
+
+.centered { display: flex; justify-content: center; align-items: center; }
+
+.text-center { text-align: center; }
+
+/* Responsive padding */ .padded { padding: 1.5rem; }
+
+/* Max container for forms or sections */ .container { max-width: 800px; width: 95%; margin: 0 auto; }
+
+/* Section header spacing */ .section-title { margin-top: 2rem; margin-bottom: 1rem; font-size: 1.4rem; color: #ffffff; text-align: center; }
+
