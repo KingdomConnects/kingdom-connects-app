@@ -1,58 +1,27 @@
-/* Reset and base layout */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 
-html, body {
-  height: 100%;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(to bottom right, #0f1d40, #11255d);
-  color: #fff;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Business Directory</title>
+  <link rel="stylesheet" href="styles/style.css" />
+</head>
+<body>
+  <div class="container">
+    <a href="index.html" class="back-button">← Back to Home</a>
+    <h1>Business Directory</h1>
+    
+    <input type="text" placeholder="Search by Business Name..." class="search-input" />
+    
+    <select class="category-select">
+      <option>All Categories</option>
+    </select>
 
-/* Container (Main card) */
-.container {
-  min-height: 100vh;
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 2rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 20px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-}
+    <button class="action-button">View Church Directory</button>
+    <button class="action-button">View Businesses by Church</button>
 
-/* Headings */
-h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 1.5rem;
-}
-
-/* Back Button */
-.back-button {
-  display: block;
-  background-color: #ff8000;
-  color: white;
-  text-align: center;
-  padding: 1rem;
-  font-weight: bold;
-  font-size: 1.1rem;
-  border-radius: 15px;
-  text-decoration: none;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-/* Input + Select */
-input[type="text"],
-select {
-  width: 100%;
-  padding: 0.9rem 1rem;
-  margin-bottom
+    <p class="error-message">Error loading businesses. Please check database connection.</p>
+  </div>
+</body>
+</html>
