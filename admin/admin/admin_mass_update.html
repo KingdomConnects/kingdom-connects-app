@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin – Mass Update / Bulk Actions</title>
+    <link rel="stylesheet" href="../styles/style.css">
+</head>
+<body>
+
+    <img src="../library/kingdom-connects-logo.png" alt="Kingdom Commerce Logo" class="logo">
+
+    <h1>Admin – Mass Update / Bulk Actions</h1>
+
+    <div class="clear"></div>
+
+    <button onclick="simulateBulk('businesses')">Simulate Approve All Pending Businesses</button>
+    <button onclick="simulateBulk('churches')">Simulate Approve All Pending Churches</button>
+    <button onclick="simulateBulk('reviews')">Simulate Approve All Pending Reviews</button>
+
+    <div id="result"></div>
+
+    <button onclick="window.location.href='admin_dashboard.html'">← Back to Admin Dashboard</button>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { firebaseConfig } from "../js/firebase-config.js";
+        import { getFirestore, collection, query, where, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function simulateBulk(collectionName) {
+            const resultDiv = document.getElementById("result");
+            resultDiv.innerText = `Processing ${collectionName}...`;
+
+            try {
+                const q = query(collection(db, collectionName), where("status", "==", "pending"));
+                const snapshot = await getDocs(q);
+
+                if (snapshot.empty) {
+                    resultDiv.innerText = `No pending ${collectionName} to approve.`;
+                    return;
+                }
+
+                const batch = writeBatch(db);
+                snapshot.forEach((docSnap) => {
+                    batch.update(docSnap.ref, { status: "approved" });
+                });
+
+                await batch.commit();
+                resultDiv.innerText = `Approved ${snapshot.size} ${collectionName}.`;
+            } catch (err) {
+                console.error(err);
+                resultDiv.innerText = `Error processing ${collectionName}.`;
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin – Manage Single User</title>
+    <link rel="stylesheet" href="../styles/style.css">
+</head>
+<body>
+
+    <img src="../library/kingdom-connects-logo.png" alt="Kingdom Commerce Logo" class="logo">
+
+    <h1>Admin – Manage Single User</h1>
+
+    <div class="clear"></div>
+
+    <div id="userDetails">
+        <p>Loading user details...</p>
+    </div>
+
+    <button onclick="window.location.href='admin_manage_users.html'">← Back to User List</button>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { firebaseConfig } from "../js/firebase-config.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get("id");
+
+        async function loadUserDetails() {
+            const div = document.getElementById("userDetails");
+
+            if (!userId) {
+                div.innerHTML = "<p>Error: No user ID provided in the URL.</p>";
+                return;
+            }
+
+            try {
+                const ref = doc(db, "users", userId);
+                const snap = await getDoc(ref);
+
+                if (!snap.exists()) {
+                    div.innerHTML = "<p>User not found.</p>";
+                    return;
+                }
+
+                const data = snap.data();
+                div.innerHTML = `
+                    <div class="business-card">
+                        <strong>${data.name || "No Name"}</strong><br>
+                        Email: ${data.email || "N/A"}<br>
+                        Role: ${data.role || "N/A"}<br>
+                        Status: ${data.status || "N/A"}
+                    </div>
+                `;
+            } catch (err) {
+                div.innerHTML = "<p>Error loading user details.</p>";
+                console.error(err);
+            }
+        }
+
+        window.addEventListener("DOMContentLoaded", loadUserDetails);
+    </script>
+
+</body>
+</html>

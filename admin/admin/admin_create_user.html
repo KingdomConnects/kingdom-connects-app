@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin – Create New User</title>
+    <link rel="stylesheet" href="../styles/style.css">
+</head>
+<body>
+
+    <img src="../library/kingdom-connects-logo.png" alt="Kingdom Commerce Logo" class="logo">
+
+    <h1>Admin – Create New User</h1>
+
+    <div class="clear"></div>
+
+    <form id="userForm" onsubmit="event.preventDefault(); createUser();">
+        <label>Name:<br>
+            <input type="text" id="userName" placeholder="Full Name" required>
+        </label><br><br>
+
+        <label>Email:<br>
+            <input type="email" id="userEmail" placeholder="Email Address" required>
+        </label><br><br>
+
+        <label>Role:<br>
+            <input type="text" id="userRole" placeholder="Role (user/admin/moderator)">
+        </label><br><br>
+
+        <button type="submit">Add User</button>
+    </form>
+
+    <div id="result"></div>
+
+    <button onclick="window.location.href='admin_dashboard.html'">← Back to Admin Dashboard</button>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { firebaseConfig } from "../js/firebase-config.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function createUser() {
+            const resultDiv = document.getElementById("result");
+            resultDiv.innerText = "Submitting...";
+
+            const name = document.getElementById("userName").value.trim();
+            const email = document.getElementById("userEmail").value.trim();
+            const role = document.getElementById("userRole").value.trim();
+
+            if (!name || !email) {
+                resultDiv.innerText = "Name and email are required.";
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, "users"), {
+                    name,
+                    email,
+                    role: role || "user",
+                    created_at: serverTimestamp()
+                });
+                resultDiv.innerText = "User successfully added.";
+                document.getElementById("userForm").reset();
+            } catch (err) {
+                resultDiv.innerText = "Error adding user.";
+                console.error(err);
+            }
+        }
+    </script>
+
+</body>
+</html>

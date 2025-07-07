@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin – Pending Churches</title>
+  <link rel="stylesheet" href="../styles/style.css">
+</head>
+<body>
+
+  <img src="../library/kingdom-connects-logo.png" alt="Kingdom Connects Logo" class="logo">
+
+  <h1>Admin – Pending Churches</h1>
+
+  <div class="clear"></div>
+
+  <div id="churchList">
+    <p>Loading pending churches...</p>
+  </div>
+
+  <button onclick="window.location.href='admin_dashboard.html'">← Back to Admin Dashboard</button>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { firebaseConfig } from "../js/firebase-config.js";
+    import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function loadPendingChurches() {
+      const listDiv = document.getElementById("churchList");
+      listDiv.innerHTML = "<p>Loading...</p>";
+
+      try {
+        const q = query(collection(db, "churches"), where("status", "==", "pending"));
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+          listDiv.innerHTML = "<p>No pending churches found.</p>";
+          return;
+        }
+
+        let html = "";
+        snapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          html += `<div class="business-card">
+            <strong>${data.church_name || "Unnamed Church"}</strong><br>
+            ${data.city || ""}, ${data.state || ""}<br>
+            Denomination: ${data.denomination || "N/A"}<br>
+            Status: ${data.status || "pending"}
+            <hr></div>`;
+        });
+
+        listDiv.innerHTML = html;
+      } catch (err) {
+        listDiv.innerHTML = "<p>Error loading pending churches.</p>";
+        console.error(err);
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", loadPendingChurches);
+  </script>
+
+</body>
+</html>

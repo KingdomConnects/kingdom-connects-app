@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin – Site Settings</title>
+    <link rel="stylesheet" href="../styles/style.css">
+</head>
+<body>
+
+    <img src="../library/kingdom-connects-logo.png" alt="Kingdom Commerce Logo" class="logo">
+
+    <h1>Admin – Site Settings</h1>
+
+    <div class="clear"></div>
+
+    <form id="settingsForm">
+        <label>Site Title:<br>
+            <input type="text" id="siteTitle" placeholder="Site Title">
+        </label><br><br>
+
+        <label>Support Email:<br>
+            <input type="email" id="supportEmail" placeholder="Support Email">
+        </label><br><br>
+
+        <label>Contact Phone:<br>
+            <input type="text" id="contactPhone" placeholder="Contact Phone">
+        </label><br><br>
+
+        <label>Default Church Name:<br>
+            <input type="text" id="defaultChurch" placeholder="Default Church Name">
+        </label><br><br>
+
+        <button type="button" onclick="saveSettings()">Save Settings</button>
+    </form>
+
+    <div id="result"></div>
+
+    <button onclick="window.location.href='admin_dashboard.html'">← Back to Admin Dashboard</button>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { firebaseConfig } from "../js/firebase-config.js";
+        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const settingsRef = doc(db, "site_settings", "main");
+
+        async function loadSettings() {
+            try {
+                const snapshot = await getDoc(settingsRef);
+                const data = snapshot.data();
+                document.getElementById("siteTitle").value = data?.site_title || "";
+                document.getElementById("supportEmail").value = data?.support_email || "";
+                document.getElementById("contactPhone").value = data?.contact_phone || "";
+                document.getElementById("defaultChurch").value = data?.default_church || "";
+            } catch (err) {
+                document.getElementById("result").innerText = "Error loading settings.";
+                console.error(err);
+            }
+        }
+
+        async function saveSettings() {
+            const result = document.getElementById("result");
+
+            try {
+                await updateDoc(settingsRef, {
+                    site_title: document.getElementById("siteTitle").value,
+                    support_email: document.getElementById("supportEmail").value,
+                    contact_phone: document.getElementById("contactPhone").value,
+                    default_church: document.getElementById("defaultChurch").value
+                });
+                result.innerText = "Settings saved successfully.";
+            } catch (err) {
+                result.innerText = "Error saving settings.";
+                console.error(err);
+            }
+        }
+
+        window.addEventListener("DOMContentLoaded", loadSettings);
+    </script>
+
+</body>
+</html>

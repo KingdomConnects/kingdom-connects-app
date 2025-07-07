@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin – Manage Churches</title>
+    <link rel="stylesheet" href="../styles/style.css">
+</head>
+<body>
+
+    <img src="../library/kingdom-connects-logo.png" alt="Kingdom Commerce Logo" class="logo">
+
+    <h1>Admin – Manage Churches</h1>
+
+    <div class="clear"></div>
+
+    <label for="statusFilter">Filter by Status:</label>
+    <select id="statusFilter" onchange="loadChurches()">
+        <option value="all">All</option>
+        <option value="pending">Pending</option>
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+    </select>
+
+    <div id="churchList">
+        <p>Loading churches...</p>
+    </div>
+
+    <button onclick="window.location.href='admin_dashboard.html'">← Back to Admin Dashboard</button>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { firebaseConfig } from "../js/firebase-config.js";
+        import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadChurches() {
+            const filter = document.getElementById("statusFilter").value;
+            const churchList = document.getElementById("churchList");
+            churchList.innerHTML = "<p>Loading churches...</p>";
+
+            let q = collection(db, "churches");
+            if (filter !== "all") {
+                q = query(q, where("status", "==", filter));
+            }
+
+            try {
+                const querySnapshot = await getDocs(q);
+                let html = "";
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    html += `<div class="business-card">
+                        <strong>${data.name}</strong><br>
+                        ${data.city || ""}, ${data.state || ""}<br>
+                        Status: ${data.status || "N/A"}
+                        <hr></div>`;
+                });
+                churchList.innerHTML = html || "<p>No churches found.</p>";
+            } catch (err) {
+                churchList.innerHTML = "Error loading churches.";
+                console.error(err);
+            }
+        }
+
+        window.addEventListener("DOMContentLoaded", loadChurches);
+    </script>
+
+</body>
+</html>

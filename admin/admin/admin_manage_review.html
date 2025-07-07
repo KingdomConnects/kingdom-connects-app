@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin – Manage All Reviews</title>
+    <link rel="stylesheet" href="../styles/style.css">
+</head>
+<body>
+
+    <img src="../library/kingdom-connects-logo.png" alt="Kingdom Commerce Logo" class="logo">
+
+    <h1>Admin – Manage All Reviews</h1>
+
+    <div class="clear"></div>
+
+    <label for="statusFilter">Filter by Status:</label>
+    <select id="statusFilter" onchange="loadReviews()">
+        <option value="all">All</option>
+        <option value="pending">Pending</option>
+        <option value="approved">Approved</option>
+        <option value="rejected">Rejected</option>
+    </select>
+
+    <div id="reviewList">
+        <p>Loading reviews...</p>
+    </div>
+
+    <button onclick="window.location.href='admin_dashboard.html'">← Back to Admin Dashboard</button>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { firebaseConfig } from "../js/firebase-config.js";
+        import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadReviews() {
+            const filter = document.getElementById("statusFilter").value;
+            const list = document.getElementById("reviewList");
+            list.innerHTML = "<p>Loading reviews...</p>";
+
+            let q = collection(db, "reviews");
+            if (filter !== "all") {
+                q = query(q, where("status", "==", filter));
+            }
+
+            try {
+                const snapshot = await getDocs(q);
+                let html = "";
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    html += `<div class="business-card">
+                        <strong>${data.business_name || "Unknown Business"}</strong><br>
+                        Rating: ${data.rating || "N/A"}<br>
+                        Comment: ${data.comment || ""}<br>
+                        Status: ${data.status || "N/A"}
+                        <hr></div>`;
+                });
+                list.innerHTML = html || "<p>No reviews found.</p>";
+            } catch (err) {
+                list.innerHTML = "Error loading reviews.";
+                console.error(err);
+            }
+        }
+
+        window.addEventListener("DOMContentLoaded", loadReviews);
+    </script>
+
+</body>
+</html>

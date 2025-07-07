@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin – Manage Church</title>
+    <link rel="stylesheet" href="../styles/style.css">
+</head>
+<body>
+
+    <img src="../library/kingdom-connects-logo.png" alt="Kingdom Commerce Logo" class="logo">
+
+    <h1>Admin – Manage Church</h1>
+
+    <div class="clear"></div>
+
+    <form id="churchForm" onsubmit="event.preventDefault(); saveChurch();">
+        <label>Church Name:</label><br>
+        <input type="text" id="church_name"><br><br>
+
+        <label>City:</label><br>
+        <input type="text" id="city"><br><br>
+
+        <label>State:</label><br>
+        <input type="text" id="state"><br><br>
+
+        <label>Denomination:</label><br>
+        <input type="text" id="denomination"><br><br>
+
+        <label>Website:</label><br>
+        <input type="text" id="website"><br><br>
+
+        <label>Contact Email:</label><br>
+        <input type="email" id="contact_email"><br><br>
+
+        <label>Contact Phone:</label><br>
+        <input type="text" id="contact_phone"><br><br>
+
+        <button type="submit">Save Church</button>
+    </form>
+
+    <div id="statusMessage"></div>
+
+    <button onclick="window.location.href='admin_manage_churches.html'">← Back to Church List</button>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { firebaseConfig } from "../js/firebase-config.js";
+        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const params = new URLSearchParams(window.location.search);
+        const churchId = params.get("id");
+        const messageDiv = document.getElementById("statusMessage");
+
+        async function loadChurch() {
+            if (!churchId) {
+                messageDiv.innerText = "No church ID provided.";
+                return;
+            }
+
+            try {
+                const ref = doc(db, "churches", churchId);
+                const snap = await getDoc(ref);
+                if (snap.exists()) {
+                    const data = snap.data();
+                    document.getElementById("church_name").value = data.church_name || "";
+                    document.getElementById("city").value = data.city || "";
+                    document.getElementById("state").value = data.state || "";
+                    document.getElementById("denomination").value = data.denomination || "";
+                    document.getElementById("website").value = data.website || "";
+                    document.getElementById("contact_email").value = data.contact_email || "";
+                    document.getElementById("contact_phone").value = data.contact_phone || "";
+                } else {
+                    messageDiv.innerText = "Church not found.";
+                }
+            } catch (err) {
+                messageDiv.innerText = "Error loading church.";
+                console.error(err);
+            }
+        }
+
+        async function saveChurch() {
+            if (!churchId) {
+                messageDiv.innerText = "No church ID found.";
+                return;
+            }
+
+            const ref = doc(db, "churches", churchId);
+            try {
+                await updateDoc(ref, {
+                    church_name: document.getElementById("church_name").value,
+                    city: document.getElementById("city").value,
+                    state: document.getElementById("state").value,
+                    denomination: document.getElementById("denomination").value,
+                    website: document.getElementById("website").value,
+                    contact_email: document.getElementById("contact_email").value,
+                    contact_phone: document.getElementById("contact_phone").value,
+                });
+                messageDiv.innerText = "Church info saved.";
+            } catch (err) {
+                messageDiv.innerText = "Failed to save changes.";
+                console.error(err);
+            }
+        }
+
+        window.addEventListener("DOMContentLoaded", loadChurch);
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin – Pending Reviews</title>
+    <link rel="stylesheet" href="../styles/style.css">
+</head>
+<body>
+
+    <img src="../library/kingdom-connects-logo.png" alt="Kingdom Commerce Logo" class="logo">
+
+    <h1>Admin – Pending Reviews</h1>
+
+    <div class="clear"></div>
+
+    <div id="reviewList">
+        <p>Loading pending reviews...</p>
+    </div>
+
+    <button onclick="window.location.href='admin_dashboard.html'">← Back to Admin Dashboard</button>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { firebaseConfig } from "../js/firebase-config.js";
+        import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadPendingReviews() {
+            const reviewList = document.getElementById("reviewList");
+            reviewList.innerHTML = "<p>Loading pending reviews...</p>";
+
+            try {
+                const q = query(collection(db, "reviews"), where("status", "==", "pending"));
+                const querySnapshot = await getDocs(q);
+                let html = "";
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    html += `<div class="business-card">
+                        <strong>${data.business_name || "Unknown Business"}</strong><br>
+                        Rating: ${data.rating || "N/A"}<br>
+                        Comment: ${data.comment || ""}<br>
+                        Submitted: ${new Date(data.timestamp?.seconds * 1000).toLocaleString()}<br>
+                        <hr></div>`;
+                });
+                reviewList.innerHTML = html || "<p>No pending reviews found.</p>";
+            } catch (err) {
+                reviewList.innerHTML = "Error loading pending reviews.";
+                console.error(err);
+            }

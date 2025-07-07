@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin – All Churches</title>
+    <link rel="stylesheet" href="../styles/style.css">
+</head>
+<body>
+
+    <img src="../library/kingdom-connects-logo.png" alt="Kingdom Commerce Logo" class="site-logo">
+
+    <h1>Admin – All Churches</h1>
+
+    <div class="clear"></div>
+
+    <a class="nav-btn" href="admin_dashboard.html">← Back to Admin Dashboard</a>
+
+    <div id="churchList">
+        <p>Loading churches...</p>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { firebaseConfig } from "../js/firebase-config.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadChurches() {
+            const list = document.getElementById("churchList");
+            list.innerHTML = "<p>Loading churches...</p>";
+
+            try {
+                const snapshot = await getDocs(collection(db, "churches"));
+                let html = "";
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    html += `<div class="business-card">
+                        <strong>${data.church_name || "Unnamed Church"}</strong><br>
+                        ${data.city || ""}, ${data.state || ""}<br>
+                        Denomination: ${data.denomination || "N/A"}
+                        <hr></div>`;
+                });
+                list.innerHTML = html || "<p>No churches found.</p>";
+            } catch (err) {
+                list.innerHTML = "Error loading churches.";
+                console.error(err);
+            }
+        }
+
+        window.addEventListener("DOMContentLoaded", loadChurches);
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin – Quick Notes</title>
+    <link rel="stylesheet" href="../styles/style.css">
+</head>
+<body>
+
+    <img src="../library/kingdom-connects-logo.png" alt="Kingdom Commerce Logo" class="logo">
+
+    <h1>Admin – Quick Notes</h1>
+
+    <div class="clear"></div>
+
+    <div id="notesList">
+        <p>Loading admin notes...</p>
+    </div>
+
+    <button onclick="window.location.href='admin_dashboard.html'">← Back to Admin Dashboard</button>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { firebaseConfig } from "../js/firebase-config.js";
+        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadNotes() {
+            const notesList = document.getElementById("notesList");
+            notesList.innerHTML = "<p>Loading notes...</p>";
+
+            try {
+                const q = query(collection(db, "admin_notes"), orderBy("timestamp", "desc"));
+                const snapshot = await getDocs(q);
+
+                if (snapshot.empty) {
+                    notesList.innerHTML = "<p>No notes found.</p>";
+                    return;
+                }
+
+                let html = "";
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    html += `<div class="business-card">
+                        <strong>${data.title || "Untitled Note"}</strong><br>
+                        ${data.content || ""}<br>
+                        <small>${new Date(data.timestamp?.seconds * 1000).toLocaleString()}</small>
+                        <hr></div>`;
+                });
+
+                notesList.innerHTML = html;
+            } catch (err) {
+                notesList.innerHTML = "<p>Error loading notes.</p>";
+                console.error(err);
+            }
+        }
+
+        window.addEventListener("DOMContentLoaded", loadNotes);
+    </script>
+
+</body>
+</html>

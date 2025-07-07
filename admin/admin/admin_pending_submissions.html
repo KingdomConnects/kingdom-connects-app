@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin – Pending Submissions</title>
+    <link rel="stylesheet" href="../styles/style.css">
+</head>
+<body>
+
+    <img src="../library/kingdom-connects-logo.png" alt="Kingdom Commerce Logo" class="logo">
+
+    <h1>Admin – Pending Submissions Overview</h1>
+
+    <div class="clear"></div>
+
+    <div id="pendingCounts">
+        <p>Loading pending submission counts...</p>
+    </div>
+
+    <button onclick="window.location.href='admin_dashboard.html'">← Back to Admin Dashboard</button>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { firebaseConfig } from "../js/firebase-config.js";
+        import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadPendingCounts() {
+            const pendingCountsDiv = document.getElementById("pendingCounts");
+
+            try {
+                const pendingChurches = await getDocs(query(collection(db, "churches"), where("status", "==", "pending")));
+                const pendingBusinesses = await getDocs(query(collection(db

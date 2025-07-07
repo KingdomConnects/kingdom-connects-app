@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin – Moderate Reviews</title>
+    <link rel="stylesheet" href="../styles/style.css">
+</head>
+<body>
+
+    <img src="../library/kingdom-connects-logo.png" alt="Kingdom Commerce Logo" class="logo">
+
+    <h1>Admin – Moderate Reviews</h1>
+
+    <div class="clear"></div>
+
+    <div id="reviewList">
+        <p>Loading pending reviews...</p>
+    </div>
+
+    <button onclick="window.location.href='admin_dashboard.html'">← Back to Admin Dashboard</button>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { firebaseConfig } from "../js/firebase-config.js";
+        import { getFirestore, collection, getDocs, query, where, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadPendingReviews() {
+            const list = document.getElementById("reviewList");
+            list.innerHTML = "<p>Loading...</p>";
+
+            try {
+                const q = query(collection(db, "reviews"), where("status", "==", "pending"));
+                const snapshot = await getDocs(q);
+                let html = "";
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const id = docSnap.id;
+                    html += `<div class="business-card">
+                        <strong>${data.business_name || "Unknown Business"}</strong><br>
+                        Rating: ${data.rating || "N/A"}<br>
+                        Comment: ${data.comment || ""}<br>
+                        <button onclick="moderate('${id}', 'approved')">Approve</button>
+                        <button onclick="moderate('${id}', 'rejected')">Reject</button>
+                        <hr></div>`;
+                });
+                list.innerHTML = html || "<p>No pending reviews.</p>";
+            } catch (err) {
+                list.innerHTML = "Error loading reviews.";
+                console.error(err);
+            }
+        }
+
+        async function moderate(id, newStatus) {
+            const ref = doc(db, "reviews", id);
+            await updateDoc(ref, { status: newStatus });
+            alert(`Review ${newStatus}`);
+            loadPendingReviews();
+        }
+
+        window.addEventListener("DOMContentLoaded", loadPendingReviews);
+        window.moderate = moderate;
+    </script>
+
+</body>
+</html>

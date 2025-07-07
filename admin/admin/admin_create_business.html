@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin – Create New Business</title>
+    <link rel="stylesheet" href="../styles/style.css">
+</head>
+<body>
+
+    <img src="../library/kingdom-connects-logo.png" alt="Kingdom Commerce Logo" class="logo">
+
+    <h1>Admin – Create New Business</h1>
+
+    <div class="clear"></div>
+
+    <form id="businessForm" onsubmit="event.preventDefault(); createBusiness();">
+        <label>Business Name:<br>
+            <input type="text" id="businessName" placeholder="Business Name" required>
+        </label><br><br>
+
+        <label>Contact Email:<br>
+            <input type="email" id="contactEmail" placeholder="Contact Email">
+        </label><br><br>
+
+        <label>Category:<br>
+            <input type="text" id="category" placeholder="Category">
+        </label><br><br>
+
+        <label>Subcategory:<br>
+            <input type="text" id="subcategory" placeholder="Subcategory (optional)">
+        </label><br><br>
+
+        <button type="submit">Add Business</button>
+    </form>
+
+    <div id="resultMessage"></div>
+
+    <button onclick="window.location.href='admin_dashboard.html'">← Back to Admin Dashboard</button>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { firebaseConfig } from "../js/firebase-config.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function createBusiness() {
+            const resultDiv = document.getElementById("resultMessage");
+            resultDiv.innerText = "Submitting...";
+
+            const name = document.getElementById("businessName").value.trim();
+            const email = document.getElementById("contactEmail").value.trim();
+            const category = document.getElementById("category").value.trim();
+            const subcategory = document.getElementById("subcategory").value.trim();
+
+            if (!name) {
+                resultDiv.innerText = "Business name is required.";
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, "businesses"), {
+                    business_name: name,
+                    contact_email: email || "",
+                    category: category || "",
+                    subcategory: subcategory || "",
+                    created_at: serverTimestamp(),
+                    status: "pending"
+                });
+                resultDiv.innerText = "Business successfully added.";
+                document.getElementById("businessForm").reset();
+            } catch (err) {
+                resultDiv.innerText = "Error adding business.";
+                console.error(err);
+            }
+        }
+    </script>
+
+</body>
+</html>

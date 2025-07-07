@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin – Export Data</title>
+  <link rel="stylesheet" href="../styles/style.css">
+</head>
+<body>
+
+  <img src="../library/kingdom-connects-logo.png" alt="Kingdom Connects Logo" class="logo">
+  <h1>Admin – Export Data</h1>
+  <div class="clear"></div>
+
+  <button onclick="exportCollection('users')">Export Users</button>
+  <button onclick="exportCollection('businesses')">Export Businesses</button>
+  <button onclick="exportCollection('churches')">Export Churches</button>
+  <button onclick="exportCollection('reviews')">Export Reviews</button>
+
+  <p id="status"></p>
+  <pre id="output" style="max-height:400px; overflow:auto; background:#f0f0f0; padding:1em;"></pre>
+
+  <button onclick="window.location.href='admin_dashboard.html'">← Back to Admin Dashboard</button>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { firebaseConfig } from "../js/firebase-config.js";
+    import {
+      getFirestore, collection, getDocs
+    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const output = document.getElementById("output");
+    const status = document.getElementById("status");
+
+    async function exportCollection(name) {
+      status.innerText = "Exporting " + name + "...";
+      output.innerText = "";
+
+      try {
+        const snap = await getDocs(collection(db, name));
+        if (snap.empty) {
+          status.innerText = "No records found in " + name + ".";
+          return;
+        }
+
+        const records = [];
+        snap.forEach(doc => {
+          const data = doc.data();
+          data.id = doc.id;
+          records.push(data);
+        });
+
+        output.innerText = JSON.stringify(records, null, 2);
+        status.innerText = "Exported " + records.length + " record(s) from " + name + ".";
+      } catch (err) {
+        console.error(err);
+        status.innerText = "Error exporting data.";
+      }
+    }
+  </script>
+
+</body>
+</html>

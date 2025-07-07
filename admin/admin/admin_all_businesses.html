@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin – All Businesses</title>
+    <link rel="stylesheet" href="../styles/style.css">
+</head>
+<body>
+
+    <img src="../library/kingdom-connects-logo.png" alt="Kingdom Commerce Logo" class="logo">
+
+    <h1>Admin – All Businesses</h1>
+
+    <div class="clear"></div>
+
+    <div id="businessList">
+        <p>Loading businesses...</p>
+    </div>
+
+    <button onclick="window.location.href='admin_dashboard.html'">← Back to Admin Dashboard</button>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { firebaseConfig } from "../js/firebase-config.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadBusinesses() {
+            const list = document.getElementById("businessList");
+            list.innerHTML = "<p>Loading businesses...</p>";
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "businesses"));
+                let html = "";
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    html += `<div class="business-card">
+                        <strong>${data.business_name}</strong><br>
+                        ${data.city || ""}, ${data.state || ""}<br>
+                        Status: ${data.status || "N/A"}
+                        <hr></div>`;
+                });
+                list.innerHTML = html || "<p>No businesses found.</p>";
+            } catch (err) {
+                list.innerHTML = "Error loading businesses.";
+                console.error(err);
+            }
+        }
+
+        window.addEventListener("DOMContentLoaded", loadBusinesses);
+    </script>
+
+</body>
+</html>
