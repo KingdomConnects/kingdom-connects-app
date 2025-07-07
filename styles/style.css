@@ -1,93 +1,98 @@
+/* Reset and Base Styles */
 body {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(to bottom right, #0a1c40, #132d63);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(145deg, #0f1f40, #13254d);
   color: white;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-  padding: 2rem 1rem;
+  padding: 1rem;
 }
 
+/* Container Glass Card */
 .container {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-  border-radius: 20px;
-  padding: 2rem;
   max-width: 600px;
-  width: 100%;
-  box-shadow: 0 0 25px rgba(0,0,0,0.4);
+  margin: 0 auto;
+  padding: 1.5rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
+/* Headings */
 h1 {
+  font-size: 2rem;
   text-align: center;
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
-}
-
-.nav-buttons {
-  display: flex;
-  justify-content: flex-start;
-  margin-bottom: 1rem;
-}
-
-.filter-bar {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
   margin-bottom: 1.5rem;
 }
 
-input[type="text"], select {
+/* Input and Select Fields */
+input[type="text"],
+select {
+  width: 100%;
   padding: 0.75rem;
-  font-size: 1rem;
-  border-radius: 10px;
+  margin: 0.5rem 0;
   border: none;
-  outline: none;
-  background: rgba(255,255,255,0.15);
+  border-radius: 10px;
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.1);
   color: white;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 
-::placeholder {
+input::placeholder {
   color: #ccc;
 }
 
-.quick-links {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.button {
-  background: #ff8800;
+/* Button Styles */
+.button,
+.full-width-button {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+  background-color: #ff7900;
   color: white;
-  padding: 0.6rem 1rem;
   border: none;
   border-radius: 12px;
+  font-size: 1.1rem;
   font-weight: bold;
-  text-decoration: none;
-  transition: background 0.3s ease;
-  display: inline-block;
-}
-
-.button:hover {
-  background: #ffaa33;
-}
-
-.button.small {
-  font-size: 0.85rem;
-  padding: 0.4rem 0.8rem;
-}
-
-.business-list {
-  padding-top: 1rem;
-}
-
-.error {
-  color: #ffaaaa;
   text-align: center;
-  font-style: italic;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.2s ease;
 }
+
+.button:hover,
+.full-width-button:hover {
+  background-color: #e66b00;
+}
+
+/* Back to Home Button */
+.back-button {
+  background-color: #ff7900;
+  padding: 0.75rem 1rem;
+  font-weight: bold;
+  display: inline-block;
+  border-radius: 12px;
+  text-decoration: none;
+  color: white;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.back-button:hover {
+  background-color: #e66b00;
+}
+
+/* Error Message Styling */
+.error-message {
+  margin-top: 1rem;
+  color: #ffb3b3;
+  font-size: 1rem;
+  font-style: italic;
+  text-align: center;
+}
+
+/* Directory List */
