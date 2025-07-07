@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Submit Business</title>
+  <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+
+  <div id="site-header"></div>
+
+  <img src="library/kingdom-connects-logo.png" alt="Kingdom Commerce Logo" class="logo">
+  <h1>Submit Your Business</h1>
+
+  <form id="submitBusinessForm" class="business-card">
+    <input type="text" id="businessName" placeholder="Business Name" required><br><br>
+    <input type="text" id="submittedBy" placeholder="Your Name" required><br><br>
+    <input type="email" id="contactEmail" placeholder="Contact Email" required><br><br>
+    <textarea id="description" placeholder="Brief Description" required></textarea><br><br>
+    <input type="text" id="phone" placeholder="Phone Number"><br><br>
+    <input type="text" id="website" placeholder="Website URL"><br><br>
+    <input type="text" id="city" placeholder="City"><br><br>
+    <input type="text" id="state" placeholder="State"><br><br>
+    <input type="text" id="zip" placeholder="ZIP Code"><br><br>
+
+    <select id="churchName" required>
+      <option value="">Select Your Church</option>
+    </select><br><br>
+
+    <button type="submit" class="back-button">Submit</button>
+  </form>
+
+  <p id="statusMessage"></p>
+
+  <div id="site-footer"></div>
+
+  <script type="module">
+    import {{ initializeApp }} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {{ firebaseConfig }} from "./js/firebase-config.js";
+    import {{
+      getFirestore, collection, getDocs, addDoc
+    }} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const churchDropdown = document.getElementById('churchName');
+
+    async function loadChurches() {{
+      const snapshot = await getDocs(collection(db, "churches"));
+      snapshot.forEach(docSnap => {{
+        const data = docSnap.data();
+        const option = document.createElement('option');
+        option.value = data.church_name;
+        option.textContent = data.church_name;
+        churchDropdown.appendChild(option);
+      }});
+    }}
+
+    loadChurches();
+
+    document.getElementById('submitBusinessForm').addEventListener('submit', async (e) => {{
+      e.preventDefault();
+
+      const data = {{
+        business_name: document.getElementById('businessName').value.trim(),
+        submitted_by: document.getElementById('submittedBy').value.trim(),
+        contact_email: document.getElementById('contactEmail').value.trim(),
+        description: document.getElementById('description').value.trim(),
+        phone_number: document.getElementById('phone').value.trim(),
+        website: document.getElementById('website').value.trim(),
+        city: document.getElementById('city').value.trim(),
+        state: document.getElementById('state').value.trim(),
+        zip_code: document.getElementById('zip').value.trim(),
+        church_name: document.getElementById('churchName').value.trim(),
+        timestamp: Date.now()
+      }};
+
+      try {{
+        await addDoc(collection(db, "pending_businesses"), data);
+        document.getElementById('statusMessage').textContent = "Thank you! Your business was submitted.";
+        document.getElementById('submitBusinessForm').reset();
+      }} catch (err) {{
+        console.error(err);
+        document.getElementById('statusMessage').textContent = "Error submitting form.";
+      }}
+    }});
+  </script>
+
+  <script>
+    async function loadHTML(id, file) {{
+      const res = await fetch(file);
+      const html = await res.text();
+      document.getElementById(id).innerHTML = html;
+    }}
+    loadHTML("site-header", "includes/header.html");
+    loadHTML("site-footer", "includes/footer.html");
+  </script>
+
+</body>
+</html>
