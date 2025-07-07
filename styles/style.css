@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,17 +10,3 @@
   <div class="container">
     <a href="index.html" class="back-button">← Back to Home</a>
     <h1>Business Directory</h1>
-    
-    <input type="text" placeholder="Search by Business Name..." class="search-input" />
-    
-    <select class="category-select">
-      <option>All Categories</option>
-    </select>
-
-    <button class="action-button">View Church Directory</button>
-    <button class="action-button">View Businesses by Church</button>
-
-    <p class="error-message">Error loading businesses. Please check database connection.</p>
-  </div>
-</body>
-</html>
