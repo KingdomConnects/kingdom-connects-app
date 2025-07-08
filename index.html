@@ -1,21 +1,69 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kingdom Connect</title>
   <link rel="stylesheet" href="styles/style.css" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to bottom right, #0d1b2a, #1b263b);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }.container {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+h1 {
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+}
+
+.action-button {
+  background-color: #ff7f00;
+  color: white;
+  font-size: 1rem;
+  padding: 1rem;
+  margin: 0.5rem 0;
+  border: none;
+  width: 100%;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.action-button:hover {
+  background-color: #e36d00;
+}
+
+.footer-note {
+  font-size: 0.9rem;
+  margin-top: 2rem;
+  color: #ccc;
+}
+
+  </style>
 </head>
 <body>
   <div class="container">
-    <h1>Welcome to Kingdom Connect</h1>
+    <h1>Welcome to Kingdom Connect</h1><button class="action-button" onclick="window.location.href='church_directory.html'">Find a Church</button>
+<button class="action-button" onclick="window.location.href='business.html'">View Member Businesses</button>
+<button class="action-button" onclick="window.location.href='submit_business.html'">List Your Business</button>
 
-    <!-- ✅ Buttons now fully functional -->
-    <button class="action-button" onclick="window.location.href='churches.html'">Find a Church</button>
-    <button class="action-button" onclick="window.location.href='business.html'">View Member Businesses</button>
-    <button class="action-button" onclick="window.location.href='submit.html'">List Your Business</button>
+<p class="footer-note">Bringing churches and Christian-owned businesses together.</p>
 
-    <p class="footer-note">Bringing churches and Christian-owned businesses together.</p>
   </div>
 </body>
 </html>
