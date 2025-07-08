@@ -26,6 +26,82 @@ html, body {
   box-sizing: border-box;
 }
 
+/* Form container for submit_business.html */
+.form-container {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.form-container h1 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #ff7f00;
+}
+
+.form-container label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+.form-container input,
+.form-container textarea,
+.form-container select,
+.form-container button {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.form-container input,
+.form-container textarea,
+.form-container select {
+  background-color: #f2f2f2;
+  color: #000;
+}
+
+.form-container button {
+  background-color: #ff7f00;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+}
+
+.form-container button:hover {
+  background-color: #e36d00;
+  box-shadow: 0 0 10px #ffa94d;
+}
+
+.message {
+  padding: 1rem;
+  text-align: center;
+  border-radius: 10px;
+  margin-top: 1rem;
+  font-weight: bold;
+  display: none;
+}
+
+.success {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+.error {
+  background-color: #f44336;
+  color: #fff;
+}
+
 /* Action buttons */
 .action-button {
   width: 100%;
@@ -40,11 +116,12 @@ html, body {
   font-weight: bold;
   text-align: center;
   text-decoration: none;
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 .action-button:hover {
   background-color: #e66d00;
+  box-shadow: 0 0 10px #ffa94d;
 }
 
 /* Footer */
