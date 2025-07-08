@@ -3,66 +3,73 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Submit Your Business</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom right, #0d1b2a, #1b263b);
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 1rem;
+  <link rel="stylesheet" href="styles/style.css" />
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+    import { getFirestore, collection, addDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';const firebaseConfig = {
+  apiKey: "AIzaSyD3Im6F3lWgMbJiA7plsDt_Rp9kCLTr6KU",
+  authDomain: "kingdom-commerce.firebaseapp.com",
+  projectId: "kingdom-commerce",
+  storageBucket: "kingdom-commerce.appspot.com",
+  messagingSenderId: "926457853462",
+  appId: "1:926457853462:web:eba8e9ecb2bb5ff43da737"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('businessForm');
+  const message = document.getElementById('formMessage');
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const requiredFields = ['business', 'name', 'email'];
+    const valid = requiredFields.every(id => document.getElementById(id).value.trim() !== '');
+
+    if (!valid) {
+      message.textContent = 'Please fill out all required fields.';
+      message.className = 'message error';
+      message.style.display = 'block';
+      return;
     }
-    .form-container {
-      background-color: rgba(255, 255, 255, 0.05);
-      padding: 2rem;
-      border-radius: 20px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.3);
-      width: 100%;
-      max-width: 420px;
-      margin: 0 auto;
+
+    const formData = {
+      business: form.business.value.trim(),
+      name: form.name.value.trim(),
+      email: form.email.value.trim(),
+      description: form.description.value.trim(),
+      phone: form.phone.value.trim(),
+      website: form.website.value.trim(),
+      city: form.city.value.trim(),
+      state: form.state.value.trim(),
+      zip: form.zip.value.trim(),
+      church: form.church.value.trim(),
+      timestamp: new Date().toISOString()
+    };
+
+    try {
+      await addDoc(collection(db, 'businesses'), formData);
+      message.textContent = 'Business submitted and saved successfully!';
+      message.className = 'message success';
+      message.style.display = 'block';
+      form.reset();
+    } catch (err) {
+      console.error('Error writing to Firestore:', err);
+      message.textContent = 'Something went wrong. Please try again later.';
+      message.className = 'message error';
+      message.style.display = 'block';
     }
-    h1 {
-      text-align: center;
-      margin-bottom: 1.5rem;
-      color: #ff7f00;
-    }
-    input, textarea, select, button {
-      width: 100%;
-      padding: 0.75rem;
-      margin-bottom: 1rem;
-      border: none;
-      border-radius: 10px;
-      font-size: 1rem;
-      box-sizing: border-box;
-    }
-    input, textarea, select {
-      background-color: #f2f2f2;
-      color: #000;
-    }
-    button {
-      background-color: #ff7f00;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #e36d00;
-    }
-    label {
-      display: block;
-      margin-bottom: 0.25rem;
-      font-weight: bold;
-      font-size: 0.95rem;
-    }
-  </style>
+  });
+});
+
+  </script>
 </head>
 <body>
   <div class="form-container">
     <h1>Submit Your Business</h1>
-    <form>
+    <form id="businessForm">
       <label for="business">Business Name</label>
       <input type="text" id="business" name="business" required /><label for="name">Your Name</label>
   <input type="text" id="name" name="name" required />
@@ -97,6 +104,7 @@
 
   <button type="submit">Submit</button>
 </form>
+<div id="formMessage" class="message"></div>
 
   </div>
 </body>
