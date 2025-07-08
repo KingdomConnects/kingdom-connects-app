@@ -1,101 +1,100 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Submit Business</title>
-  <link rel="stylesheet" href="styles/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Submit Your Business</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom right, #0d1b2a, #1b263b);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .form-container {
+      background-color: rgba(255, 255, 255, 0.05);
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      width: 90%;
+      max-width: 400px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #ff7f00;
+    }
+    input, textarea, select, button {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+    }
+    input, textarea, select {
+      background-color: #f2f2f2;
+      color: #000;
+    }
+    button {
+      background-color: #ff7f00;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #e36d00;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-weight: bold;
+      font-size: 0.95rem;
+    }
+  </style>
 </head>
 <body>
+  <div class="form-container">
+    <h1>Submit Your Business</h1>
+    <form>
+      <label for="business">Business Name</label>
+      <input type="text" id="business" name="business" required /><label for="name">Your Name</label>
+  <input type="text" id="name" name="name" required />
 
-  <div id="site-header"></div>
+  <label for="email">Contact Email</label>
+  <input type="email" id="email" name="email" required />
 
-  <img src="library/kingdom-connects-logo.png" alt="Kingdom Commerce Logo" class="logo">
-  <h1>Submit Your Business</h1>
+  <label for="description">Brief Description</label>
+  <textarea id="description" name="description" rows="3"></textarea>
 
-  <form id="submitBusinessForm" class="business-card">
-    <input type="text" id="businessName" placeholder="Business Name" required><br><br>
-    <input type="text" id="submittedBy" placeholder="Your Name" required><br><br>
-    <input type="email" id="contactEmail" placeholder="Contact Email" required><br><br>
-    <textarea id="description" placeholder="Brief Description" required></textarea><br><br>
-    <input type="text" id="phone" placeholder="Phone Number"><br><br>
-    <input type="text" id="website" placeholder="Website URL"><br><br>
-    <input type="text" id="city" placeholder="City"><br><br>
-    <input type="text" id="state" placeholder="State"><br><br>
-    <input type="text" id="zip" placeholder="ZIP Code"><br><br>
+  <label for="phone">Phone Number</label>
+  <input type="tel" id="phone" name="phone" />
 
-    <select id="churchName" required>
-      <option value="">Select Your Church</option>
-    </select><br><br>
+  <label for="website">Website URL</label>
+  <input type="url" id="website" name="website" />
 
-    <button type="submit" class="back-button">Submit</button>
-  </form>
+  <label for="city">City</label>
+  <input type="text" id="city" name="city" />
 
-  <p id="statusMessage"></p>
+  <label for="state">State</label>
+  <input type="text" id="state" name="state" />
 
-  <div id="site-footer"></div>
+  <label for="zip">ZIP Code</label>
+  <input type="text" id="zip" name="zip" />
 
-  <script type="module">
-    import {{ initializeApp }} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import {{ firebaseConfig }} from "./js/firebase-config.js";
-    import {{
-      getFirestore, collection, getDocs, addDoc
-    }} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  <label for="church">Select Your Church</label>
+  <select id="church" name="church">
+    <option value="">-- Select --</option>
+    <option value="church1">Church 1</option>
+    <option value="church2">Church 2</option>
+  </select>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+  <button type="submit">Submit</button>
+</form>
 
-    const churchDropdown = document.getElementById('churchName');
-
-    async function loadChurches() {{
-      const snapshot = await getDocs(collection(db, "churches"));
-      snapshot.forEach(docSnap => {{
-        const data = docSnap.data();
-        const option = document.createElement('option');
-        option.value = data.church_name;
-        option.textContent = data.church_name;
-        churchDropdown.appendChild(option);
-      }});
-    }}
-
-    loadChurches();
-
-    document.getElementById('submitBusinessForm').addEventListener('submit', async (e) => {{
-      e.preventDefault();
-
-      const data = {{
-        business_name: document.getElementById('businessName').value.trim(),
-        submitted_by: document.getElementById('submittedBy').value.trim(),
-        contact_email: document.getElementById('contactEmail').value.trim(),
-        description: document.getElementById('description').value.trim(),
-        phone_number: document.getElementById('phone').value.trim(),
-        website: document.getElementById('website').value.trim(),
-        city: document.getElementById('city').value.trim(),
-        state: document.getElementById('state').value.trim(),
-        zip_code: document.getElementById('zip').value.trim(),
-        church_name: document.getElementById('churchName').value.trim(),
-        timestamp: Date.now()
-      }};
-
-      try {{
-        await addDoc(collection(db, "pending_businesses"), data);
-        document.getElementById('statusMessage').textContent = "Thank you! Your business was submitted.";
-        document.getElementById('submitBusinessForm').reset();
-      }} catch (err) {{
-        console.error(err);
-        document.getElementById('statusMessage').textContent = "Error submitting form.";
-      }}
-    }});
-  </script>
-
-  <script>
-    async function loadHTML(id, file) {{
-      const res = await fetch(file);
-      const html = await res.text();
-      document.getElementById(id).innerHTML = html;
-    }}
-    loadHTML("site-header", "includes/header.html");
-    loadHTML("site-footer", "includes/footer.html");
-  </script>
-
+  </div>
 </body>
 </html>
