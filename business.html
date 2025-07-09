@@ -1,83 +1,87 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Business Profile</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Member Businesses – Kingdom Connect</title>
+  <link rel="stylesheet" href="styles/style.css" />
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      query,
+      orderBy
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";const firebaseConfig = {
+  apiKey: "AIzaSyD3Im6F3lWgMbJiA7plsDt_Rp9kCLTr6KU",
+  authDomain: "kingdom-commerce.firebaseapp.com",
+  projectId: "kingdom-commerce"
+};
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyD3Im6F3lWgMbJiA7plsDt_Rp9kCLTr6KU",
-      authDomain: "kingdom-commerce.firebaseapp.com",
-      projectId: "kingdom-commerce",
-      storageBucket: "kingdom-commerce.appspot.com",
-      messagingSenderId: "926457853462",
-      appId: "1:926457853462:web:eba8e9ecb2bb5ff43da737"
-    };
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+let allBusinesses = [];
 
-    function getBusinessId() {
-      const params = new URLSearchParams(window.location.search);
-      return params.get('id') || "HDq5RCjVsUizUz0M0SmQ";  // Fallback Test ID
-    }
+async function fetchBusinesses() {
+  const q = query(collection(db, "businesses"), orderBy("businessName"));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+}
 
-    async function loadBusiness() {
-      const businessId = getBusinessId();
-      const businessDiv = document.getElementById("businessDetails");
-      const reviewLink = document.getElementById("reviewLink");
+function renderResults(term = "") {
+  const results = document.getElementById("results");
+  results.innerHTML = "";
+  const filtered = allBusinesses.filter(biz =>
+    (biz.businessName || biz.name || "").toLowerCase().includes(term) ||
+    (biz.description || "").toLowerCase().includes(term) ||
+    (biz.category || "").toLowerCase().includes(term)
+  );
 
-      if (!businessId) {
-        businessDiv.innerHTML = "<p>No business ID found in URL.</p>";
-        return;
-      }
+  if (filtered.length === 0) {
+    results.innerHTML = "<p>No results found.</p>";
+    return;
+  }
 
-      try {
-        const docRef = doc(db, "business_listings", businessId);
-        const docSnap = await getDoc(docRef);
+  filtered.forEach(biz => {
+    const div = document.createElement("div");
+    div.className = "business-card";
+    div.innerHTML = `
+      <h3>${biz.businessName || biz.name || "Unnamed Business"}</h3>
+      <p>${biz.description || "No description provided."}</p>
+      <p><strong>Phone:</strong> ${biz.phone || "N/A"}</p>
+      <p><strong>City:</strong> ${biz.city || "N/A"}</p>
+    `;
+    results.appendChild(div);
+  });
+}
 
-        if (docSnap.exists()) {
-          const b = docSnap.data();
+async function runSearch() {
+  try {
+    document.getElementById("results").innerHTML = "<p>Loading...</p>";
+    allBusinesses = await fetchBusinesses();
+    console.log("Loaded businesses:", allBusinesses);
+    renderResults();
+  } catch (error) {
+    console.error("Error loading businesses:", error);
+    document.getElementById("results").innerHTML = "<p>Error loading businesses.</p>";
+  }
+}
 
-          businessDiv.innerHTML = `
-            <h1>${b.business_name || "Unnamed Business"}</h1>
-            <p><strong>City:</strong> ${b.city || ""}</p>
-            <p><strong>Church:</strong> ${b.church_name || ""}</p>
-            <p><strong>Category:</strong> ${b.category || ""}</p>
-            ${b.subcategory ? `<p><strong>Subcategory:</strong> ${b.subcategory}</p>` : ""}
-            ${b.website_url ? `<p><strong>Website:</strong> <a href="${b.website_url}" target="_blank">${b.website_url}</a></p>` : ""}
-          `;
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("searchInput").addEventListener("input", e => {
+    renderResults(e.target.value.toLowerCase());
+  });
+  runSearch();
+});
 
-          // Set the review link URL with correct business ID
-          reviewLink.href = `submit_review.html?id=${businessId}`;
-
-        } else {
-          businessDiv.innerHTML = "<p>Business not found.</p>";
-        }
-
-      } catch (error) {
-        console.error("Error loading business:", error);
-        businessDiv.innerHTML = "<p>Error loading business details.</p>";
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', loadBusiness);
   </script>
 </head>
 <body>
-
-  <img src="library/kingdom-commerce-logo.png" alt="Kingdom Commerce Logo" class="logo">
-
-  <a class="nav-btn" href="home.html">← Back to Home</a>
-
-  <div id="businessDetails">
-    <p>Loading business details...</p>
+  <div class="container">
+    <h1>Member Businesses</h1>
+    <input type="text" id="searchInput" placeholder="Search by name, description, or category..." />
+    <div id="results"></div>
   </div>
-
-  <a id="reviewLink" class="nav-btn" href="#">Leave a Review</a>
-
 </body>
 </html>
