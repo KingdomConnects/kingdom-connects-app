@@ -2,14 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Submit Your Business</title>
-  <link rel="stylesheet" href="/styles/style.css" />
+  <link rel="stylesheet" href="styles/style.css" />
 
-  <!-- Firebase Firestore Integration -->
   <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-    import { getFirestore, collection, addDoc, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyD3Im6F3lWgMbJiA7plsDt_Rp9kCLTr6KU",
@@ -23,105 +22,104 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    window.addEventListener('DOMContentLoaded', () => {
-      const form = document.getElementById('businessForm');
-      const message = document.getElementById('formMessage');
+    window.submitForm = async function () {
+      const status = document.getElementById("status");
+      status.textContent = "";
+      status.className = "";
 
-      form.addEventListener('submit', async function (e) {
-        e.preventDefault();
+      const churchCode = document.getElementById("church").value.trim();
+      if (!churchCode) {
+        status.textContent = "Please select a church.";
+        status.className = "error";
+        return;
+      }
 
-        const requiredFields = ['business', 'name', 'email', 'church'];
-        const valid = requiredFields.every(id => document.getElementById(id).value.trim() !== '');
+      try {
+        const churchRef = doc(db, "churches", churchCode);
+        const churchDoc = await getDoc(churchRef);
 
-        if (!valid) {
-          message.textContent = 'Please fill out all required fields.';
-          message.className = 'message error';
-          message.style.display = 'block';
-          return;
+        if (!churchDoc.exists()) {
+          throw new Error("Selected church does not exist in database.");
         }
 
-        const churchCode = form.church.value.trim();
+        const data = {
+          business_name: document.getElementById("businessName").value.trim(),
+          contact_name: document.getElementById("yourName").value.trim(),
+          email: document.getElementById("contactEmail").value.trim(),
+          description: document.getElementById("description").value.trim(),
+          phone: document.getElementById("phone").value.trim(),
+          website: document.getElementById("website").value.trim(),
+          address_line1: document.getElementById("address1").value.trim(),
+          address_line2: document.getElementById("address2").value.trim(),
+          city: document.getElementById("city").value.trim(),
+          state: document.getElementById("state").value.trim(),
+          zip: document.getElementById("zip").value.trim(),
+          churchCode: churchCode,
+          created_at: serverTimestamp()
+        };
 
-        try {
-          const churchDoc = await getDoc(doc(db, 'churches', churchCode));
-          if (!churchDoc.exists()) {
-            throw new Error('Invalid church code');
-          }
+        await addDoc(collection(db, "business_listings"), data);
 
-          const formData = {
-            business: form.business.value.trim(),
-            name: form.name.value.trim(),
-            email: form.email.value.trim(),
-            description: form.description.value.trim(),
-            phone: form.phone.value.trim(),
-            website: form.website.value.trim(),
-            city: form.city.value.trim(),
-            state: form.state.value.trim(),
-            zip: form.zip.value.trim(),
-            churchCode: churchCode,
-            timestamp: new Date().toISOString()
-          };
-
-          await addDoc(collection(db, 'businesses'), formData);
-
-          message.textContent = 'Business submitted and saved successfully!';
-          message.className = 'message success';
-          message.style.display = 'block';
-          form.reset();
-        } catch (err) {
-          console.error('Submission failed:', err);
-          message.textContent = 'Something went wrong. Please try again later.';
-          message.className = 'message error';
-          message.style.display = 'block';
-        }
-      });
-    });
+        status.textContent = "Submission successful!";
+        status.className = "success";
+        document.getElementById("businessForm").reset();
+      } catch (err) {
+        console.error("Submission error:", err);
+        status.textContent = "Error: " + err.message;
+        status.className = "error";
+      }
+    };
   </script>
 </head>
-
 <body>
   <div class="form-container">
     <h1>Submit Your Business</h1>
-    <form id="businessForm">
-      <label for="business">Business Name</label>
-      <input type="text" id="business" name="business" required />
+    <form id="businessForm" onsubmit="event.preventDefault(); submitForm();">
+      <label>Business Name</label>
+      <input id="businessName" required />
 
-      <label for="name">Your Name</label>
-      <input type="text" id="name" name="name" required />
+      <label>Your Name</label>
+      <input id="yourName" required />
 
-      <label for="email">Contact Email</label>
-      <input type="email" id="email" name="email" required />
+      <label>Contact Email</label>
+      <input type="email" id="contactEmail" required />
 
-      <label for="description">Brief Description</label>
-      <textarea id="description" name="description" rows="3"></textarea>
+      <label>Brief Description</label>
+      <textarea id="description" rows="4" required></textarea>
 
-      <label for="phone">Phone Number</label>
-      <input type="tel" id="phone" name="phone" />
+      <label>Phone Number</label>
+      <input id="phone" required />
 
-      <label for="website">Website URL</label>
-      <input type="url" id="website" name="website" />
+      <label>Website URL</label>
+      <input id="website" />
 
-      <label for="city">City</label>
-      <input type="text" id="city" name="city" />
+      <label>Address Line 1</label>
+      <input id="address1" required />
 
-      <label for="state">State</label>
-      <input type="text" id="state" name="state" />
+      <label>Address Line 2</label>
+      <input id="address2" />
 
-      <label for="zip">ZIP Code</label>
-      <input type="text" id="zip" name="zip" />
+      <label>City</label>
+      <input id="city" required />
 
-      <label for="church">Select Your Church</label>
-      <select id="church" name="church" required>
+      <label>State</label>
+      <input id="state" required />
+
+      <label>ZIP Code</label>
+      <input id="zip" required />
+
+      <label>Select Your Church</label>
+      <select id="church" required>
         <option value="">-- Select --</option>
-        <option value="venice_baptist">Venice Baptist</option>
-        <option value="englewood_faith">Englewood Faith</option>
-        <option value="northport_chapel">North Port Chapel</option>
-        <!-- Add more churches as document IDs -->
+        <option value="ETNcvTpmNmIKLJfz9fm">Foundation Church</option>
+        <option value="abc123ExampleID">Englewood Faith</option>
+        <option value="northportChapel987">North Port Chapel</option>
+        <!-- Add more using actual church document IDs -->
       </select>
 
       <button type="submit">Submit</button>
     </form>
-    <div id="formMessage" class="message"></div>
+    <div id="status" class="form-status"></div>
   </div>
 </body>
 </html>
