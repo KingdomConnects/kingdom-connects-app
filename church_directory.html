@@ -1,64 +1,64 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Church Directory</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>Church Directory – Kingdom Connect</title>
+  <link rel="stylesheet" href="styles/style.css" />
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script defer>
+    // Initialize Firebase
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const churchListDiv = document.getElementById("churchList");
+      churchListDiv.innerHTML = "<p>Loading churches...</p>";
+
+      try {
+        const snapshot = await db.collection("churches").get();
+
+        if (snapshot.empty) {
+          churchListDiv.innerHTML = "<p>No churches found in the database.</p>";
+          console.warn("No churches found.");
+          return;
+        }
+
+        const list = document.createElement("ul");
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const item = document.createElement("li");
+          item.textContent = data.name || "(Unnamed Church)";
+          list.appendChild(item);
+        });
+
+        churchListDiv.innerHTML = "";
+        churchListDiv.appendChild(list);
+        console.log("Churches loaded successfully.");
+
+      } catch (error) {
+        churchListDiv.innerHTML = "<p>Error loading church list.</p>";
+        console.error("Error fetching churches:", error);
+      }
+    });
+  </script>
 </head>
 <body>
   <div class="container">
     <h1>Church Directory</h1>
-    <div id="statusMessage">Loading churches...</div>
-    <ul id="churchList"></ul>
-  </div>  <!-- Firebase SDK -->  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      getDocs,
-      query,
-      orderBy
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_AUTH_DOMAIN",
-      projectId: "kingdom-commerce",
-      storageBucket: "YOUR_STORAGE_BUCKET",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    const churchList = document.getElementById("churchList");
-    const statusMessage = document.getElementById("statusMessage");
-
-    async function loadChurches() {
-      try {
-        const churchesRef = collection(db, "churches");
-        const q = query(churchesRef, orderBy("name"));
-        const querySnapshot = await getDocs(q);
-
-        if (querySnapshot.empty) {
-          statusMessage.textContent = "No churches found.";
-          return;
-        }
-
-        statusMessage.textContent = "";
-        querySnapshot.forEach((doc) => {
-          const church = doc.data();
-          const li = document.createElement("li");
-          li.textContent = church.name || "Unnamed Church";
-          churchList.appendChild(li);
-        });
-      } catch (error) {
-        statusMessage.textContent = `Error loading churches: ${error.message}`;
-        console.error("Firestore error:", error);
-      }
-    }
-
-    loadChurches();
-  </script></body>
+    <div id="churchList">
+      <!-- Churches will be inserted here -->
+    </div>
+  </div>
+</body>
 </html>
