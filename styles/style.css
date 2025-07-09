@@ -1,26 +1,22 @@
-/* style.css - Updated for proper scroll and form visibility */
+/* Global Styles */ html, body { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; background: linear-gradient(to bottom right, #0d1a3d, #1b263b); color: white; overflow-y: auto; box-sizing: border-box; }
 
-html, body { height: 100%; margin: 0; padding: 0; overflow-y: auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0a1744; color: #fff; box-sizing: border-box; }
+/* Main Form Layout */ .form-container { max-width: 540px; width: 90%; margin: 40px auto; padding: 2rem; background-color: rgba(255, 255, 255, 0.06); border-radius: 14px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.4); backdrop-filter: blur(6px); }
 
-.page-wrapper { height: 100vh; overflow-y: auto; display: flex; justify-content: center; align-items: start; padding: 20px; }
+h1 { text-align: center; font-size: 1.8rem; color: #ffa726; margin-bottom: 1.5rem; }
 
-.form-container { background-color: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 24px; max-width: 600px; width: 100%; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); overflow-y: auto; }
+label { display: block; margin-top: 1rem; font-weight: bold; color: #ffffff; }
 
-h1 { color: #ff6f00; text-align: center; margin-bottom: 20px; }
+input, textarea, select { width: 100%; padding: 0.75rem; margin-top: 0.3rem; border: none; border-radius: 8px; font-size: 1rem; background-color: #f2f2f2; color: #000; box-sizing: border-box; }
 
-form label { display: block; margin-top: 16px; font-weight: bold; color: #ffffff; }
+textarea { resize: vertical; min-height: 100px; }
 
-form input, form textarea, form select { width: 100%; padding: 10px; margin-top: 4px; border: none; border-radius: 10px; background: #eef2fa; color: #000; font-size: 16px; box-sizing: border-box; }
+button[type="submit"] { margin-top: 2rem; background-color: #ff8c00; color: white; border: none; padding: 0.9rem; font-size: 1.1rem; border-radius: 10px; cursor: pointer; width: 100%; box-shadow: 0 0 12px rgba(255, 140, 0, 0.5); transition: all 0.3s ease; }
 
-form textarea { min-height: 100px; }
+button[type="submit"]:hover { background-color: #ffa726; box-shadow: 0 0 16px rgba(255, 140, 0, 0.7); }
 
-button[type="submit"] { margin-top: 24px; background-color: #ff6f00; color: white; border: none; border-radius: 10px; padding: 14px 24px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; box-shadow: 0 0 15px rgba(255, 111, 0, 0.6); transition: all 0.3s ease-in-out; }
+/* Feedback messages */ #status.success { margin-top: 1rem; padding: 0.75rem; background-color: #28a745; color: white; border-radius: 8px; text-align: center; }
 
-button[type="submit"]:hover, button[type="submit"]:active { box-shadow: 0 0 20px rgba(255, 111, 0, 1); transform: scale(1.02); }
+#status.error { margin-top: 1rem; padding: 0.75rem; background-color: #c0392b; color: white; border-radius: 8px; text-align: center; }
 
-#message { margin-top: 16px; padding: 12px; text-align: center; border-radius: 8px; font-weight: bold; display: none; }
-
-#message.success { background-color: #28a745; color: white; }
-
-#message.error { background-color: #dc3545; color: white; }
+/* Responsive Tweaks */ @media (max-width: 480px) { .form-container { padding: 1.2rem; } h1 { font-size: 1.5rem; } }
 
