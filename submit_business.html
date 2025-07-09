@@ -2,73 +2,147 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Submit Your Business</title>
-  <link rel="stylesheet" href="styles/style.css" />
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-</head>
-<body>
-  <div class="form-container">
-    <h1>Submit Your Business</h1>
-    <form id="businessForm">
-      <label>Business Name</label>
-      <input type="text" name="business_name" required />
+  <link rel="stylesheet" href="/styles/style.css" />
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      doc,
+      getDoc,
+      setDoc,
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-      <label>Your Name</label>
-      <input type="text" name="owner_name" required />
-
-      <label>Contact Email</label>
-      <input type="email" name="email" required />
-
-      <label>Brief Description</label>
-      <textarea name="description" required></textarea>
-
-      <label>Phone Number</label>
-      <input type="text" name="phone" required />
-
-      <label>Website URL</label>
-      <input type="url" name="website" />
-
-      <label>Address Line 1</label>
-      <input type="text" name="address_line1" required />
-
-      <label>Address Line 2</label>
-      <input type="text" name="address_line2" />
-
-      <label>City</label>
-      <input type="text" name="city" required />
-
-      <label>State</label>
-      <input type="text" name="state" required />
-
-      <label>ZIP Code</label>
-      <input type="text" name="zip_code" required />
-
-      <label>Select Your Church</label>
-      <select name="church_id" id="churchSelect" required>
-        <option value="">Loading churches...</option>
-      </select>
-
-      <button type="submit">Submit</button>
-    </form>
-    <div id="formMessage"></div>
-  </div>
-
-  <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyD3Im6F3lWgMbJiA7plsDt_Rp9kCLTr6KU",
-      authDomain: "kingdom-commerce.firebaseapp.com",
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
       projectId: "kingdom-commerce",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
     };
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-    const form = document.getElementById("businessForm");
-    const messageBox = document.getElementById("formMessage");
-    const churchSelect = document.getElementById("churchSelect");
+    const churchSelect = document.addEventListener("DOMContentLoaded", async () => {
+      const churchDropdown = document.getElementById("church");
+      const churchSnapshot = await getDocs(collection(db, "churches"));
+      churchSnapshot.forEach(doc => {
+        const option = document.createElement("option");
+        option.value = doc.id;
+        option.textContent = doc.data().name;
+        churchDropdown.appendChild(option);
+      });
+    });
 
-    // Load churches dynamically into dropdown
-    db.collection("churches").get().then(snapshot => {
-      churchSelect.innerHTML =
+    async function handleSubmit(event) {
+      event.preventDefault();
+      const status = document.getElementById("status");
+      status.textContent = "";
+
+      const form = event.target;
+      const churchId = form.church.value;
+      const churchRef = doc(db, "churches", churchId);
+      const churchSnap = await getDoc(churchRef);
+
+      if (!churchSnap.exists()) {
+        status.textContent = "Error: Selected church does not exist.";
+        status.className = "error";
+        return;
+      }
+
+      const data = {
+        business_name: form.business_name.value,
+        name: form.name.value,
+        email: form.email.value,
+        description: form.description.value,
+        phone: form.phone.value,
+        website: form.website.value,
+        address_line1: form.address1.value,
+        address_line2: form.address2.value,
+        city: form.city.value,
+        state: form.state.value,
+        zip_code: form.zip.value,
+        church: churchId,
+        created_at: new Date().toISOString()
+      };
+
+      try {
+        await setDoc(doc(collection(db, "businesses")), data);
+        status.textContent = "Business submitted successfully!";
+        status.className = "success";
+        form.reset();
+      } catch (error) {
+        status.textContent = "Error submitting business. Try again.";
+        status.className = "error";
+        console.error(error);
+      }
+    }
+
+    window.handleSubmit = handleSubmit;
+  </script>
+</head>
+<body>
+  <main class="form-container">
+    <h1>Submit Your Business</h1>
+    <form onsubmit="handleSubmit(event)">
+      <label>Business Name
+        <input type="text" name="business_name" required />
+      </label>
+
+      <label>Your Name
+        <input type="text" name="name" required />
+      </label>
+
+      <label>Contact Email
+        <input type="email" name="email" required />
+      </label>
+
+      <label>Brief Description
+        <textarea name="description" required></textarea>
+      </label>
+
+      <label>Phone Number
+        <input type="tel" name="phone" required />
+      </label>
+
+      <label>Website URL
+        <input type="url" name="website" />
+      </label>
+
+      <label>Address Line 1
+        <input type="text" name="address1" />
+      </label>
+
+      <label>Address Line 2
+        <input type="text" name="address2" />
+      </label>
+
+      <label>City
+        <input type="text" name="city" />
+      </label>
+
+      <label>State
+        <input type="text" name="state" />
+      </label>
+
+      <label>ZIP Code
+        <input type="text" name="zip" />
+      </label>
+
+      <label>Select Your Church
+        <select id="church" name="church" required>
+          <option value="">-- Select --</option>
+        </select>
+      </label>
+
+      <button type="submit">Submit</button>
+      <div id="status" class="status"></div>
+    </form>
+  </main>
+</body>
+</html>
