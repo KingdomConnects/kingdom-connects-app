@@ -1,93 +1,96 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Submit Your Business</title>
   <link rel="stylesheet" href="styles/style.css" />
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      addDoc,
-      getDocs,
-      doc,
-      getDoc
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "kingdom-commerce",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
-};
+  <script defer type="module">
+    // Firebase Config
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
 
-const churchSelect = document.getElementById("church_select");
-const form = document.getElementById("businessForm");
-const statusDiv = document.getElementById("statusMessage");
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-async function loadChurches() {
-  try {
-    const snapshot = await getDocs(collection(db, "churches"));
-    snapshot.forEach((docSnap) => {
-      const data = docSnap.data();
-      const option = document.createElement("option");
-      option.value = docSnap.id;
-      option.textContent = data.name || "Unnamed Church";
-      churchSelect.appendChild(option);
-    });
-    console.log("Church list loaded.");
-  } catch (error) {
-    console.error("Error loading churches:", error);
-    statusDiv.textContent = "⚠️ Failed to load church list.";
-  }
-}
+    const churchSelect = document.getElementById("churchId");
+    const form = document.getElementById("businessForm");
+    const status = document.getElementById("status");
 
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  statusDiv.textContent = "Submitting...";
-
-  const businessData = {
-    business_name: document.getElementById("business_name").value,
-    contact_name: document.getElementById("contact_name").value,
-    contact_email: document.getElementById("contact_email").value,
-    description: document.getElementById("description").value,
-    phone: document.getElementById("phone").value,
-    website: document.getElementById("website").value,
-    address_line1: document.getElementById("address_line1").value,
-    address_line2: document.getElementById("address_line2").value,
-    city: document.getElementById("city").value,
-    state: document.getElementById("state").value,
-    zip_code: document.getElementById("zip_code").value,
-    churchId: churchSelect.value,
-    created_at: new Date()
-  };
-
-  console.log("Submitting business data:", businessData);
-
-  try {
-    const churchRef = doc(db, "churches", businessData.churchId);
-    const churchSnap = await getDoc(churchRef);
-    if (!churchSnap.exists()) {
-      throw new Error("Selected church does not exist in database.");
+    // Load churches from Firestore
+    async function loadChurches() {
+      try {
+        const snapshot = await getDocs(collection(db, "churches"));
+        snapshot.forEach((docSnap) => {
+          const option = document.createElement("option");
+          option.value = docSnap.id;
+          option.textContent = docSnap.data().name;
+          churchSelect.appendChild(option);
+        });
+        console.log("Churches loaded into dropdown.");
+      } catch (error) {
+        console.error("Error loading churches:", error);
+        status.textContent = "Error loading churches.";
+        status.style.color = "red";
+      }
     }
 
-    await addDoc(collection(db, "business_listings"), businessData);
-    statusDiv.textContent = "Business submitted successfully.";
-    statusDiv.className = "success";
-    form.reset();
-  } catch (error) {
-    console.error("Submission error:", error);
-    statusDiv.textContent = "Error: " + error.message;
-    statusDiv.className = "error";
-  }
-});
+    loadChurches();
 
-loadChurches();
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      status.textContent = "";
 
+      const formData = {
+        businessName: form.businessName.value,
+        contactName: form.contactName.value,
+        email: form.email.value,
+        description: form.description.value,
+        phone: form.phone.value,
+        website: form.website.value,
+        address1: form.address1.value,
+        address2: form.address2.value,
+        city: form.city.value,
+        state: form.state.value,
+        zip: form.zip.value,
+        churchId: form.churchId.value,
+        created_at: new Date().toISOString()
+      };
+
+      console.log("Submitting form data:", formData);
+
+      try {
+        // Check if church exists
+        const churchRef = doc(db, "churches", formData.churchId);
+        const churchSnap = await getDoc(churchRef);
+
+        if (!churchSnap.exists()) {
+          status.textContent = "Error: Selected church ID does not exist.";
+          status.style.color = "red";
+          console.error("Church not found:", formData.churchId);
+          return;
+        }
+
+        await addDoc(collection(db, "businesses"), formData);
+        status.textContent = "Business submitted successfully!";
+        status.style.color = "green";
+        console.log("Form submitted.");
+        form.reset();
+      } catch (error) {
+        console.error("Submission error:", error);
+        status.textContent = "Error: " + error.message;
+        status.style.color = "red";
+      }
+    });
   </script>
 </head>
 <body>
@@ -95,45 +98,46 @@ loadChurches();
     <h1>Submit Your Business</h1>
     <form id="businessForm">
       <label>Business Name</label>
-      <input type="text" id="business_name" required /><label>Your Name</label>
-  <input type="text" id="contact_name" required />
+      <input type="text" name="businessName" required />
 
-  <label>Contact Email</label>
-  <input type="email" id="contact_email" required />
+      <label>Your Name</label>
+      <input type="text" name="contactName" required />
 
-  <label>Brief Description</label>
-  <textarea id="description" required></textarea>
+      <label>Contact Email</label>
+      <input type="email" name="email" required />
 
-  <label>Phone Number</label>
-  <input type="tel" id="phone" required />
+      <label>Brief Description</label>
+      <textarea name="description" required></textarea>
 
-  <label>Website URL</label>
-  <input type="url" id="website" />
+      <label>Phone Number</label>
+      <input type="tel" name="phone" required />
 
-  <label>Address Line 1</label>
-  <input type="text" id="address_line1" required />
+      <label>Website URL</label>
+      <input type="url" name="website" />
 
-  <label>Address Line 2</label>
-  <input type="text" id="address_line2" />
+      <label>Address Line 1</label>
+      <input type="text" name="address1" required />
 
-  <label>City</label>
-  <input type="text" id="city" required />
+      <label>Address Line 2</label>
+      <input type="text" name="address2" />
 
-  <label>State</label>
-  <input type="text" id="state" required />
+      <label>City</label>
+      <input type="text" name="city" required />
 
-  <label>ZIP Code</label>
-  <input type="text" id="zip_code" required />
+      <label>State</label>
+      <input type="text" name="state" required />
 
-  <label>Select Your Church</label>
-  <select id="church_select" required>
-    <option value="">-- Select --</option>
-  </select>
+      <label>ZIP Code</label>
+      <input type="text" name="zip" required />
 
-  <button type="submit">Submit</button>
-</form>
-<div id="statusMessage"></div>
+      <label>Select Your Church</label>
+      <select name="churchId" id="churchId" required>
+        <option value="">-- Select a Church --</option>
+      </select>
 
+      <button type="submit">Submit</button>
+      <div id="status"></div>
+    </form>
   </div>
 </body>
 </html>
