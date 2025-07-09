@@ -1,60 +1,95 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Member Businesses – Kingdom Connect</title>
   <link rel="stylesheet" href="styles/style.css" />
-  <script type="module" src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
-  <script type="module" src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
 </head>
 <body>
-  <div class="page-container">
-    <h1 class="page-title">Member Businesses</h1>
+
+  <div id="site-header"></div>
+
+  <main class="content">
+    <h1>Member Businesses</h1>
+
     <input type="text" id="searchInput" placeholder="Search by name, description, or category..." />
-    <div id="businessList"></div>
-  </div>  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyD9YzHekf81gqSy2rxuXco3KP2cM4Z_KjY",
-      authDomain: "kingdom-commerce.firebaseapp.com",
-      projectId: "kingdom-commerce",
-      storageBucket: "kingdom-commerce.appspot.com",
-      messagingSenderId: "507563048014",
-      appId: "1:507563048014:web:be0916a57d520c2d32d830"
-    };
+    <div id="searchResults" class="business-list">
+      <!-- Results will appear here -->
+    </div>
+  </main>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+  <div id="site-footer"></div>
 
-    const searchInput = document.getElementById("searchInput");
-    const businessList = document.getElementById("businessList");
-
-    async function fetchAndRenderBusinesses() {
+  <!-- Load header and footer -->
+  <script>
+    async function loadHTML(id, file) {
       try {
-        const querySnapshot = await getDocs(collection(db, "businesses"));
-        const businesses = [];
-        querySnapshot.forEach(doc => {
-          businesses.push({ id: doc.id, ...doc.data() });
-        });
+        const res = await fetch(file);
+        const html = await res.text();
+        document.getElementById(id).innerHTML = html;
+      } catch (err) {
+        console.error(`Failed to load ${file}`, err);
+      }
+    }
+    loadHTML("site-header", "includes/header.html");
+    loadHTML("site-footer", "includes/footer.html");
+  </script>
 
-        window.allBusinesses = businesses;
-        renderBusinesses(businesses);
+  <!-- Firebase business fetch and render logic -->
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-lite.js';
+
+    const searchInput = document.getElementById('searchInput');
+    const resultsContainer = document.getElementById('searchResults');
+
+    async function fetchBusinesses() {
+      try {
+        const snapshot = await getDocs(collection(db, "businesses"));
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       } catch (error) {
-        console.error("Error loading businesses:", error);
-        businessList.innerHTML = `<p>Error loading businesses.</p>`;
+        console.error("Error fetching businesses:", error);
+        resultsContainer.innerHTML = "<p>Error loading businesses. Check console for details.</p>";
+        return [];
       }
     }
 
-    function renderBusinesses(businesses) {
-      if (!businesses.length) {
-        businessList.innerHTML = '<p>No businesses found.</p>';
+    function renderResults(businesses) {
+      resultsContainer.innerHTML = "";
+      if (businesses.length === 0) {
+        resultsContainer.innerHTML = "<p>No businesses found.</p>";
         return;
       }
 
-      businessList.innerHTML = businesses.map(biz => `
-        <div class="business-card">
-          <h2>${biz.businessName || "Unnamed Business"}</h2>
-          <p>${biz.description || ""}</p>
-          ${biz.phone ? `<p><strong>Phone:</strong> ${biz.phone}</p
+      businesses.forEach(biz => {
+        const div = document.createElement("div");
+        div.className = "business-card";
+        div.innerHTML = `
+          <h3>${biz.businessName || "Unnamed Business"}</h3>
+          <p>${biz.description || "No description provided."}</p>
+          <p><strong>Phone:</strong> ${biz.phone || "N/A"}</p>
+          <p><strong>City:</strong> ${biz.city || "N/A"}</p>
+        `;
+        resultsContainer.appendChild(div);
+      });
+    }
+
+    async function runSearch() {
+      const query = searchInput.value.toLowerCase();
+      const allBusinesses = await fetchBusinesses();
+      const filtered = allBusinesses.filter(biz =>
+        (biz.businessName || "").toLowerCase().includes(query) ||
+        (biz.description || "").toLowerCase().includes(query) ||
+        (biz.category || "").toLowerCase().includes(query)
+      );
+      renderResults(filtered);
+    }
+
+    searchInput.addEventListener("input", runSearch);
+    runSearch();
+  </script>
+
+</body>
+</html>
