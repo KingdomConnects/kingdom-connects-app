@@ -2,124 +2,73 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Submit Your Business</title>
   <link rel="stylesheet" href="styles/style.css" />
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyD3Im6F3lWgMbJiA7plsDt_Rp9kCLTr6KU",
-      authDomain: "kingdom-commerce.firebaseapp.com",
-      projectId: "kingdom-commerce",
-      storageBucket: "kingdom-commerce.appspot.com",
-      messagingSenderId: "926457853462",
-      appId: "1:926457853462:web:eba8e9ecb2bb5ff43da737"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    window.submitForm = async function () {
-      const status = document.getElementById("status");
-      status.textContent = "";
-      status.className = "";
-
-      const churchCode = document.getElementById("church").value.trim();
-      if (!churchCode) {
-        status.textContent = "Please select a church.";
-        status.className = "error";
-        return;
-      }
-
-      try {
-        const churchRef = doc(db, "churches", churchCode);
-        const churchDoc = await getDoc(churchRef);
-
-        if (!churchDoc.exists()) {
-          throw new Error("Selected church does not exist in database.");
-        }
-
-        const data = {
-          business_name: document.getElementById("businessName").value.trim(),
-          contact_name: document.getElementById("yourName").value.trim(),
-          email: document.getElementById("contactEmail").value.trim(),
-          description: document.getElementById("description").value.trim(),
-          phone: document.getElementById("phone").value.trim(),
-          website: document.getElementById("website").value.trim(),
-          address_line1: document.getElementById("address1").value.trim(),
-          address_line2: document.getElementById("address2").value.trim(),
-          city: document.getElementById("city").value.trim(),
-          state: document.getElementById("state").value.trim(),
-          zip: document.getElementById("zip").value.trim(),
-          churchCode: churchCode,
-          created_at: serverTimestamp()
-        };
-
-        await addDoc(collection(db, "business_listings"), data);
-
-        status.textContent = "Submission successful!";
-        status.className = "success";
-        document.getElementById("businessForm").reset();
-      } catch (err) {
-        console.error("Submission error:", err);
-        status.textContent = "Error: " + err.message;
-        status.className = "error";
-      }
-    };
-  </script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </head>
 <body>
   <div class="form-container">
     <h1>Submit Your Business</h1>
-    <form id="businessForm" onsubmit="event.preventDefault(); submitForm();">
+    <form id="businessForm">
       <label>Business Name</label>
-      <input id="businessName" required />
+      <input type="text" name="business_name" required />
 
       <label>Your Name</label>
-      <input id="yourName" required />
+      <input type="text" name="owner_name" required />
 
       <label>Contact Email</label>
-      <input type="email" id="contactEmail" required />
+      <input type="email" name="email" required />
 
       <label>Brief Description</label>
-      <textarea id="description" rows="4" required></textarea>
+      <textarea name="description" required></textarea>
 
       <label>Phone Number</label>
-      <input id="phone" required />
+      <input type="text" name="phone" required />
 
       <label>Website URL</label>
-      <input id="website" />
+      <input type="url" name="website" />
 
       <label>Address Line 1</label>
-      <input id="address1" required />
+      <input type="text" name="address_line1" required />
 
       <label>Address Line 2</label>
-      <input id="address2" />
+      <input type="text" name="address_line2" />
 
       <label>City</label>
-      <input id="city" required />
+      <input type="text" name="city" required />
 
       <label>State</label>
-      <input id="state" required />
+      <input type="text" name="state" required />
 
       <label>ZIP Code</label>
-      <input id="zip" required />
+      <input type="text" name="zip_code" required />
 
       <label>Select Your Church</label>
-      <select id="church" required>
-        <option value="">-- Select --</option>
-        <option value="ETNcvTpmNmIKLJfz9fm">Foundation Church</option>
-        <option value="abc123ExampleID">Englewood Faith</option>
-        <option value="northportChapel987">North Port Chapel</option>
-        <!-- Add more using actual church document IDs -->
+      <select name="church_id" id="churchSelect" required>
+        <option value="">Loading churches...</option>
       </select>
 
       <button type="submit">Submit</button>
     </form>
-    <div id="status" class="form-status"></div>
+    <div id="formMessage"></div>
   </div>
-</body>
-</html>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyD3Im6F3lWgMbJiA7plsDt_Rp9kCLTr6KU",
+      authDomain: "kingdom-commerce.firebaseapp.com",
+      projectId: "kingdom-commerce",
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const form = document.getElementById("businessForm");
+    const messageBox = document.getElementById("formMessage");
+    const churchSelect = document.getElementById("churchSelect");
+
+    // Load churches dynamically into dropdown
+    db.collection("churches").get().then(snapshot => {
+      churchSelect.innerHTML =
