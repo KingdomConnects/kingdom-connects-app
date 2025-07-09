@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Submit Your Business</title>
   <link rel="stylesheet" href="styles/style.css" />
   <script type="module">
@@ -14,64 +14,119 @@
       getDoc,
       addDoc
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  apiKey: "AIzaSyD3Im6F3lWgMbJiA7plsDt_Rp9kCLTr6KU",
+  authDomain: "kingdom-commerce.firebaseapp.com",
   projectId: "kingdom-commerce",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  storageBucket: "kingdom-commerce.appspot.com",
+  messagingSenderId: "926457853462",
+  appId: "1:926457853462:web:eba8e9ecb2bb5ff43da737"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 window.addEventListener("DOMContentLoaded", async () => {
-  const churchDropdown = document.getElementById("church");
-  const churchSnapshot = await getDocs(collection(db, "churches"));
-  churchSnapshot.forEach(doc => {
-    const option = document.createElement("option");
-    option.value = doc.id;
-    option.textContent = doc.data().name;
-    churchDropdown.appendChild(option);
+  const churchSelect = document.getElementById("church");
+  const statusBox = document.getElementById("status");
+
+  try {
+    const snapshot = await getDocs(collection(db, "churches"));
+    snapshot.forEach((docSnap) => {
+      const option = document.createElement("option");
+      option.value = docSnap.id;
+      option.textContent = docSnap.data().name;
+      churchSelect.appendChild(option);
+    });
+  } catch (err) {
+    statusBox.textContent = "Error loading churches.";
+    statusBox.className = "error";
+  }
+
+  document.getElementById("businessForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    statusBox.textContent = "";
+    statusBox.className = "";
+
+    const data = {
+      business_name: document.getElementById("businessName").value,
+      contact_name: document.getElementById("yourName").value,
+      email: document.getElementById("contactEmail").value,
+      description: document.getElementById("description").value,
+      phone: document.getElementById("phone").value,
+      website: document.getElementById("website").value,
+      address_line1: document.getElementById("address1").value,
+      address_line2: document.getElementById("address2").value,
+      city: document.getElementById("city").value,
+      state: document.getElementById("state").value,
+      zip_code: document.getElementById("zip").value,
+      church_id: churchSelect.value,
+      created_at: new Date().toISOString()
+    };
+
+    try {
+      const churchRef = doc(db, "churches", data.church_id);
+      const churchDoc = await getDoc(churchRef);
+      if (!churchDoc.exists()) {
+        throw new Error("Selected church does not exist.");
+      }
+
+      await addDoc(collection(db, "business_listings"), data);
+      statusBox.textContent = "Business submitted successfully!";
+      statusBox.className = "success";
+      document.getElementById("businessForm").reset();
+    } catch (err) {
+      statusBox.textContent = "Error: " + err.message;
+      statusBox.className = "error";
+    }
   });
 });
 
-window.handleSubmit = async function(event) {
-  event.preventDefault();
-  const status = document.getElementById("status");
-  status.textContent = "";
-  const form = event.target;
+  </script>
+</head>
+<body>
+  <main class="form-container">
+    <h1>Submit Your Business</h1>
+    <form id="businessForm">
+      <label>Business Name</label>
+      <input id="businessName" required /><label>Your Name</label>
+  <input id="yourName" required />
 
-  const data = {
-    business_name: form.business_name.value,
-    name: form.name.value,
-    email: form.email.value,
-    description: form.description.value,
-    phone: form.phone.value,
-    website: form.website.value,
-    address_line1: form.address1.value,
-    address_line2: form.address2.value,
-    city: form.city.value,
-    state: form.state.value,
-    zip_code: form.zip.value,
-    church: form.church.value,
-    created_at: new Date().toISOString()
-  };
+  <label>Contact Email</label>
+  <input type="email" id="contactEmail" required />
 
-  console.log("Submitting data:", data);
+  <label>Brief Description</label>
+  <textarea id="description" rows="4" required></textarea>
 
-  const churchRef = doc(db, "churches", data.church);
-  const churchSnap = await getDoc(churchRef);
-  if (!churchSnap.exists()) {
-    status.textContent = "Error: Selected church does not exist.";
-    status.className = "error";
-    return;
-  }
+  <label>Phone Number</label>
+  <input id="phone" required />
 
-  try {
-    await addDoc(collection(db, "business_listings"), data);
-    status.textContent = "Business submitted successfully!";
-    status.className = "success";
-    form.reset();
-  } catch (error) {
+  <label>Website URL</label>
+  <input id="website" />
 
+  <label>Address Line 1</label>
+  <input id="address1" required />
+
+  <label>Address Line 2</label>
+  <input id="address2" />
+
+  <label>City</label>
+  <input id="city" required />
+
+  <label>State</label>
+  <input id="state" required />
+
+  <label>ZIP Code</label>
+  <input id="zip" required />
+
+  <label>Select Your Church</label>
+  <select id="church" required>
+    <option value="">-- Select a Church --</option>
+  </select>
+
+  <button type="submit">Submit</button>
+  <div id="status"></div>
+</form>
+
+  </main>
+</body>
+</html>
