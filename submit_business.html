@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -13,136 +12,66 @@
       getDocs,
       doc,
       getDoc,
-      setDoc,
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+      addDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "kingdom-commerce",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
 
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      projectId: "kingdom-commerce",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
-    };
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+window.addEventListener("DOMContentLoaded", async () => {
+  const churchDropdown = document.getElementById("church");
+  const churchSnapshot = await getDocs(collection(db, "churches"));
+  churchSnapshot.forEach(doc => {
+    const option = document.createElement("option");
+    option.value = doc.id;
+    option.textContent = doc.data().name;
+    churchDropdown.appendChild(option);
+  });
+});
 
-    const churchSelect = document.addEventListener("DOMContentLoaded", async () => {
-      const churchDropdown = document.getElementById("church");
-      const churchSnapshot = await getDocs(collection(db, "churches"));
-      churchSnapshot.forEach(doc => {
-        const option = document.createElement("option");
-        option.value = doc.id;
-        option.textContent = doc.data().name;
-        churchDropdown.appendChild(option);
-      });
-    });
+window.handleSubmit = async function(event) {
+  event.preventDefault();
+  const status = document.getElementById("status");
+  status.textContent = "";
+  const form = event.target;
 
-    async function handleSubmit(event) {
-      event.preventDefault();
-      const status = document.getElementById("status");
-      status.textContent = "";
+  const data = {
+    business_name: form.business_name.value,
+    name: form.name.value,
+    email: form.email.value,
+    description: form.description.value,
+    phone: form.phone.value,
+    website: form.website.value,
+    address_line1: form.address1.value,
+    address_line2: form.address2.value,
+    city: form.city.value,
+    state: form.state.value,
+    zip_code: form.zip.value,
+    church: form.church.value,
+    created_at: new Date().toISOString()
+  };
 
-      const form = event.target;
-      const churchId = form.church.value;
-      const churchRef = doc(db, "churches", churchId);
-      const churchSnap = await getDoc(churchRef);
+  console.log("Submitting data:", data);
 
-      if (!churchSnap.exists()) {
-        status.textContent = "Error: Selected church does not exist.";
-        status.className = "error";
-        return;
-      }
+  const churchRef = doc(db, "churches", data.church);
+  const churchSnap = await getDoc(churchRef);
+  if (!churchSnap.exists()) {
+    status.textContent = "Error: Selected church does not exist.";
+    status.className = "error";
+    return;
+  }
 
-      const data = {
-        business_name: form.business_name.value,
-        name: form.name.value,
-        email: form.email.value,
-        description: form.description.value,
-        phone: form.phone.value,
-        website: form.website.value,
-        address_line1: form.address1.value,
-        address_line2: form.address2.value,
-        city: form.city.value,
-        state: form.state.value,
-        zip_code: form.zip.value,
-        church: churchId,
-        created_at: new Date().toISOString()
-      };
+  try {
+    await addDoc(collection(db, "business_listings"), data);
+    status.textContent = "Business submitted successfully!";
+    status.className = "success";
+    form.reset();
+  } catch (error) {
 
-      try {
-        await setDoc(doc(collection(db, "businesses")), data);
-        status.textContent = "Business submitted successfully!";
-        status.className = "success";
-        form.reset();
-      } catch (error) {
-        status.textContent = "Error submitting business. Try again.";
-        status.className = "error";
-        console.error(error);
-      }
-    }
-
-    window.handleSubmit = handleSubmit;
-  </script>
-</head>
-<body>
-  <main class="form-container">
-    <h1>Submit Your Business</h1>
-    <form onsubmit="handleSubmit(event)">
-      <label>Business Name
-        <input type="text" name="business_name" required />
-      </label>
-
-      <label>Your Name
-        <input type="text" name="name" required />
-      </label>
-
-      <label>Contact Email
-        <input type="email" name="email" required />
-      </label>
-
-      <label>Brief Description
-        <textarea name="description" required></textarea>
-      </label>
-
-      <label>Phone Number
-        <input type="tel" name="phone" required />
-      </label>
-
-      <label>Website URL
-        <input type="url" name="website" />
-      </label>
-
-      <label>Address Line 1
-        <input type="text" name="address1" />
-      </label>
-
-      <label>Address Line 2
-        <input type="text" name="address2" />
-      </label>
-
-      <label>City
-        <input type="text" name="city" />
-      </label>
-
-      <label>State
-        <input type="text" name="state" />
-      </label>
-
-      <label>ZIP Code
-        <input type="text" name="zip" />
-      </label>
-
-      <label>Select Your Church
-        <select id="church" name="church" required>
-          <option value="">-- Select --</option>
-        </select>
-      </label>
-
-      <button type="submit">Submit</button>
-      <div id="status" class="status"></div>
-    </form>
-  </main>
-</body>
-</html>
