@@ -4,84 +4,57 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Member Businesses – Kingdom Connect</title>
   <link rel="stylesheet" href="styles/style.css" />
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      getDocs,
-      query,
-      orderBy
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";const firebaseConfig = {
-  apiKey: "AIzaSyD3Im6F3lWgMbJiA7plsDt_Rp9kCLTr6KU",
-  authDomain: "kingdom-commerce.firebaseapp.com",
-  projectId: "kingdom-commerce"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-let allBusinesses = [];
-
-async function fetchBusinesses() {
-  const q = query(collection(db, "businesses"), orderBy("businessName"));
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-}
-
-function renderResults(term = "") {
-  const results = document.getElementById("results");
-  results.innerHTML = "";
-  const filtered = allBusinesses.filter(biz =>
-    (biz.businessName || biz.name || "").toLowerCase().includes(term) ||
-    (biz.description || "").toLowerCase().includes(term) ||
-    (biz.category || "").toLowerCase().includes(term)
-  );
-
-  if (filtered.length === 0) {
-    results.innerHTML = "<p>No results found.</p>";
-    return;
-  }
-
-  filtered.forEach(biz => {
-    const div = document.createElement("div");
-    div.className = "business-card";
-    div.innerHTML = `
-      <h3>${biz.businessName || biz.name || "Unnamed Business"}</h3>
-      <p>${biz.description || "No description provided."}</p>
-      <p><strong>Phone:</strong> ${biz.phone || "N/A"}</p>
-      <p><strong>City:</strong> ${biz.city || "N/A"}</p>
-    `;
-    results.appendChild(div);
-  });
-}
-
-async function runSearch() {
-  try {
-    document.getElementById("results").innerHTML = "<p>Loading...</p>";
-    allBusinesses = await fetchBusinesses();
-    console.log("Loaded businesses:", allBusinesses);
-    renderResults();
-  } catch (error) {
-    console.error("Error loading businesses:", error);
-    document.getElementById("results").innerHTML = "<p>Error loading businesses.</p>";
-  }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("searchInput").addEventListener("input", e => {
-    renderResults(e.target.value.toLowerCase());
-  });
-  runSearch();
-});
-
-  </script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
 </head>
 <body>
-  <div class="container">
-    <h1>Member Businesses</h1>
+  <div class="page-container">
+    <h1 class="page-title">Member Businesses</h1>
     <input type="text" id="searchInput" placeholder="Search by name, description, or category..." />
-    <div id="results"></div>
-  </div>
-</body>
-</html>
+    <div id="businessList"></div>
+  </div>  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD9YzHekf81gqSy2rxuXco3KP2cM4Z_KjY",
+      authDomain: "kingdom-commerce.firebaseapp.com",
+      projectId: "kingdom-commerce",
+      storageBucket: "kingdom-commerce.appspot.com",
+      messagingSenderId: "507563048014",
+      appId: "1:507563048014:web:be0916a57d520c2d32d830"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const searchInput = document.getElementById("searchInput");
+    const businessList = document.getElementById("businessList");
+
+    async function fetchAndRenderBusinesses() {
+      try {
+        const querySnapshot = await getDocs(collection(db, "businesses"));
+        const businesses = [];
+        querySnapshot.forEach(doc => {
+          businesses.push({ id: doc.id, ...doc.data() });
+        });
+
+        window.allBusinesses = businesses;
+        renderBusinesses(businesses);
+      } catch (error) {
+        console.error("Error loading businesses:", error);
+        businessList.innerHTML = `<p>Error loading businesses.</p>`;
+      }
+    }
+
+    function renderBusinesses(businesses) {
+      if (!businesses.length) {
+        businessList.innerHTML = '<p>No businesses found.</p>';
+        return;
+      }
+
+      businessList.innerHTML = businesses.map(biz => `
+        <div class="business-card">
+          <h2>${biz.businessName || "Unnamed Business"}</h2>
+          <p>${biz.description || ""}</p>
+          ${biz.phone ? `<p><strong>Phone:</strong> ${biz.phone}</p
