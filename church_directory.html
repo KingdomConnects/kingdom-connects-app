@@ -1,64 +1,66 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Church Directory – Kingdom Connect</title>
   <link rel="stylesheet" href="styles/style.css" />
-  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script defer>
-    // Initialize Firebase
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-      appId: "YOUR_APP_ID"
-    };
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      query,
+      orderBy
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";const firebaseConfig = {
+  apiKey: "AIzaSyD3Im6F3lWgMbJiA7plsDt_Rp9kCLTr6KU",
+  authDomain: "kingdom-commerce.firebaseapp.com",
+  projectId: "kingdom-commerce"
+};
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-    document.addEventListener("DOMContentLoaded", async () => {
-      const churchListDiv = document.getElementById("churchList");
-      churchListDiv.innerHTML = "<p>Loading churches...</p>";
+document.addEventListener("DOMContentLoaded", async () => {
+  const churchList = document.getElementById("churchList");
+  const statusMessage = document.getElementById("statusMessage");
 
-      try {
-        const snapshot = await db.collection("churches").get();
+  statusMessage.textContent = "Loading churches...";
 
-        if (snapshot.empty) {
-          churchListDiv.innerHTML = "<p>No churches found in the database.</p>";
-          console.warn("No churches found.");
-          return;
-        }
+  try {
+    const q = query(collection(db, "churches"), orderBy("name"));
+    const querySnapshot = await getDocs(q);
 
-        const list = document.createElement("ul");
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          const item = document.createElement("li");
-          item.textContent = data.name || "(Unnamed Church)";
-          list.appendChild(item);
-        });
+    if (querySnapshot.empty) {
+      statusMessage.textContent = "No churches found.";
+      return;
+    }
 
-        churchListDiv.innerHTML = "";
-        churchListDiv.appendChild(list);
-        console.log("Churches loaded successfully.");
+    statusMessage.textContent = "";
+    const list = document.createElement("ul");
 
-      } catch (error) {
-        churchListDiv.innerHTML = "<p>Error loading church list.</p>";
-        console.error("Error fetching churches:", error);
-      }
+    querySnapshot.forEach((doc) => {
+      const church = doc.data();
+      const item = document.createElement("li");
+      item.textContent = church.name || "Unnamed Church";
+      list.appendChild(item);
     });
+
+    churchList.appendChild(list);
+    console.log("Church list loaded.");
+  } catch (error) {
+    console.error("Error loading churches:", error);
+    statusMessage.textContent = "Error loading churches: " + error.message;
+  }
+});
+
   </script>
 </head>
 <body>
   <div class="container">
     <h1>Church Directory</h1>
-    <div id="churchList">
-      <!-- Churches will be inserted here -->
-    </div>
+    <div id="statusMessage"></div>
+    <div id="churchList"></div>
   </div>
 </body>
 </html>
