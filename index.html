@@ -2,54 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kingdom Connect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kingdom Connects</title>
   <link rel="stylesheet" href="styles/style.css" />
-</head>
-<body>
-  <div class="container">
-    <h1>Welcome to Kingdom Connect</h1>
-
-    <button class="action-button" onclick="navigateWithMessage('church_directory.html')">
-      Find a Church
-    </button>
-
-    <button class="action-button" onclick="navigateWithMessage('business.html')">
-      View Member Businesses
-    </button>
-
-    <button class="action-button" onclick="navigateWithMessage('submit_business.html')">
-      List Your Business
-    </button>
-
-    <div id="statusMessage" class="message"></div>
-
-    <p class="footer-note">
-      Bringing churches and Christian-owned businesses together.
-    </p>
-  </div>
-
   <script>
-    function navigateWithMessage(target) {
-      const messageBox = document.getElementById('statusMessage');
-      fetch(target, { method: 'HEAD' })
-        .then(res => {
-          if (res.ok) {
-            messageBox.textContent = 'Navigating to: ' + target;
-            messageBox.className = 'message success';
-            setTimeout(() => {
-              window.location.href = target;
-            }, 500);
-          } else {
-            throw new Error('Page not found');
-          }
-        })
-        .catch(err => {
-          console.warn('Navigation error:', err);
-          messageBox.textContent = 'Error: Could not navigate to "' + target + '".';
-          messageBox.className = 'message error';
-        });
+    function handleMouseOver(btn) {
+      btn.style.opacity = "0.9";
+    }
+
+    function handleMouseOut(btn) {
+      btn.style.opacity = "1";
+    }
+
+    function handleClick(btn) {
+      const feedback = document.getElementById("feedback");
+      feedback.textContent = `You clicked: ${btn.textContent}`;
     }
   </script>
+</head>
+<body>
+  <div class="page-wrap full-height">
+
+    <header>
+      <h1 class="page-title">Kingdom Connects</h1>
+    </header>
+
+    <main>
+      <div class="button-section">
+        <a href="submit_business.html" class="action-button"
+           onmouseover="handleMouseOver(this)"
+           onmouseout="handleMouseOut(this)"
+           onclick="handleClick(this)">List Your Business</a>
+
+        <a href="business.html" class="action-button"
+           onmouseover="handleMouseOver(this)"
+           onmouseout="handleMouseOut(this)"
+           onclick="handleClick(this)">View Directory</a>
+
+        <a href="about.html" class="action-button"
+           onmouseover="handleMouseOver(this)"
+           onmouseout="handleMouseOut(this)"
+           onclick="handleClick(this)">About This Project</a>
+
+        <p id="feedback" class="feedback-message"></p>
+      </div>
+    </main>
+
+    <footer>
+      <p class="footer-text">© 2025 Kingdom Connects. All rights reserved.</p>
+    </footer>
+
+  </div>
 </body>
 </html>
