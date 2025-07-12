@@ -15,12 +15,15 @@ body {
   box-sizing: border-box;
 }
 
+
 .business-card {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.06);
   padding: 16px;
+  margin: 16px 0;
   border-radius: 12px;
-  margin-bottom: 16px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 /* === ACTION BUTTONS (FULL-WIDTH) === */
