@@ -4,9 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Member Businesses</title>
-  <link rel="stylesheet" href="styles/style.css" />
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
@@ -16,7 +14,7 @@
       <input type="text" id="searchInput" placeholder="Search by name, description, or city" />
     </div>
 
-    <div id="businessList" class="card-list"></div>
+    <div class="card-list" id="businessList"></div>
 
     <div class="button-container">
       <a href="submit_business.html" class="main-button">List Your Business</a>
@@ -24,13 +22,13 @@
   </div>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_AUTH_DOMAIN",
-      projectId: "YOUR_PROJECT_ID",
+      apiKey: "AIzaSyD3Im6F3lWgMbJiA7plsDt_Rp9kCLTr6KU",
+      authDomain: "kingdom-commerce.firebaseapp.com",
+      projectId: "kingdom-commerce",
     };
 
     const app = initializeApp(firebaseConfig);
@@ -41,7 +39,7 @@
 
     let allBusinesses = [];
 
-    async function fetchBusinesses() {
+    async function loadBusinesses() {
       try {
         const querySnapshot = await getDocs(collection(db, "business_listings"));
         allBusinesses = querySnapshot.docs.map(doc => doc.data());
@@ -53,30 +51,11 @@
 
     function displayBusinesses(businesses) {
       businessList.innerHTML = "";
+
       businesses.forEach(biz => {
         const card = document.createElement("div");
         card.className = "business-card";
         card.innerHTML = `
           <h2>${biz.businessName || "Unnamed Business"}</h2>
-          <p><strong>Description:</strong> ${biz.description || "No description"}</p>
-          <p><strong>Contact:</strong> ${biz.email || "N/A"} ${biz.phone ? `| ${biz.phone}` : ""}</p>
-          <p><strong>Location:</strong> ${biz.city || ""}${biz.state ? `, ${biz.state}` : ""}</p>
-        `;
-        businessList.appendChild(card);
-      });
-    }
-
-    searchInput.addEventListener("input", () => {
-      const searchTerm = searchInput.value.toLowerCase();
-      const filtered = allBusinesses.filter(biz =>
-        (biz.businessName || "").toLowerCase().includes(searchTerm) ||
-        (biz.description || "").toLowerCase().includes(searchTerm) ||
-        (biz.city || "").toLowerCase().includes(searchTerm)
-      );
-      displayBusinesses(filtered);
-    });
-
-    fetchBusinesses();
-  </script>
-</body>
-</html>
+          <p><strong>Description:</strong> ${biz.description || "N/A"}</p>
+          <p><strong>Contact:</strong> ${biz.email || "N/A"} ${biz
