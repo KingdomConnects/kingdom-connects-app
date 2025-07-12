@@ -6,7 +6,7 @@ body {
   color: #ffffff;
 }
 
-/* === CONTAINER FIX === */
+/* === CONTAINER === */
 .container {
   width: 100%;
   max-width: 100%;
@@ -15,7 +15,7 @@ body {
   box-sizing: border-box;
 }
 
-/* === ACTION BUTTON (TRUE MOBILE FULL-WIDTH) === */
+/* === ACTION BUTTONS (FULL-WIDTH) === */
 .action-button {
   width: 100%;
   padding: 16px;
@@ -58,56 +58,10 @@ body {
   color: #ff4444;
 }
 
-/* === FORM CONTAINER === */
-.form-container {
-  width: 98%;
-  max-width: 700px;
-  margin: 2rem auto;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 1.5rem;
-  border-radius: 16px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  color: #ffffff;
-}
-
-/* === FORM INPUTS === */
-input[type="text"],
-input[type="email"],
-input[type="tel"],
-input[type="url"],
-input[type="password"],
-select,
-textarea {
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0 16px 0;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 1rem;
-  box-sizing: border-box;
-}
-
-/* === HEADINGS AND FOOTER TEXT === */
-h1, h2, h3 {
-  text-align: center;
-  font-family: "Orbitron", "Segoe UI", sans-serif;
-}
-
+/* === FOOTER NOTE === */
 .footer-note {
   margin-top: 2rem;
   text-align: center;
   font-size: 0.95rem;
   opacity: 0.8;
-}
-
-/* === RESPONSIVE (Extra Safety) === */
-@media (max-width: 600px) {
-  .action-button {
-    width: 100%;
-  }
-
-  .form-container {
-    padding: 1rem;
-  }
 }
