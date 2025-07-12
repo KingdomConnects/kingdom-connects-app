@@ -4,31 +4,33 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Member Businesses</title>
-  <link rel="stylesheet" href="styles/style.css" />
+  <link rel="stylesheet" href="styles/styles.css" />
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
 </head>
 <body>
   <div class="container">
-    <h1>Member Businesses</h1>
+    <h1 class="page-title">Member Businesses</h1>
 
-    <input type="text" id="searchInput" placeholder="Search by name, description, or city" class="search-input" />
+    <div class="search-wrapper">
+      <input type="text" id="searchInput" placeholder="Search by name, description, or city" />
+    </div>
 
-    <div id="businessList"></div>
+    <div id="businessList" class="card-list"></div>
 
-    <a href="submit_business.html" class="action-button">List Your Business</a>
+    <div class="button-container">
+      <a href="submit_business.html" class="main-button">List Your Business</a>
+    </div>
   </div>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      getDocs
-    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
     const firebaseConfig = {
-      apiKey: "AIzaSyD3Im6F3lWgMbJiA7plsDt_Rp9kCLTr6KU",
-      authDomain: "kingdom-commerce.firebaseapp.com",
-      projectId: "kingdom-commerce",
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
     };
 
     const app = initializeApp(firebaseConfig);
@@ -37,51 +39,44 @@
     const businessList = document.getElementById("businessList");
     const searchInput = document.getElementById("searchInput");
 
-    let businesses = [];
+    let allBusinesses = [];
 
-    async function loadBusinesses() {
+    async function fetchBusinesses() {
       try {
         const querySnapshot = await getDocs(collection(db, "business_listings"));
-        businesses = querySnapshot.docs.map(doc => doc.data());
-        displayBusinesses(businesses);
+        allBusinesses = querySnapshot.docs.map(doc => doc.data());
+        displayBusinesses(allBusinesses);
       } catch (error) {
-        businessList.innerHTML = `<p class="message error">Error loading businesses: ${error.message}</p>`;
+        businessList.innerHTML = `<p class="error">Error loading businesses: ${error.message}</p>`;
       }
     }
 
-    function displayBusinesses(list) {
+    function displayBusinesses(businesses) {
       businessList.innerHTML = "";
-
-      if (list.length === 0) {
-        businessList.innerHTML = "<p>No businesses found.</p>";
-        return;
-      }
-
-      list.forEach(biz => {
+      businesses.forEach(biz => {
         const card = document.createElement("div");
-        card.className = "business-card"; // simple class, style if desired
+        card.className = "business-card";
         card.innerHTML = `
           <h2>${biz.businessName || "Unnamed Business"}</h2>
-          <p><strong>Description:</strong> ${biz.description || "N/A"}</p>
-          <p><strong>Contact:</strong> ${biz.email || "N/A"} | ${biz.phone || "N/A"}</p>
-          <p><strong>Location:</strong> ${biz.city || ""}, ${biz.state || ""}</p>
-          ${biz.website ? `<p><a href="${biz.website}" target="_blank">Visit Website</a></p>` : ""}
+          <p><strong>Description:</strong> ${biz.description || "No description"}</p>
+          <p><strong>Contact:</strong> ${biz.email || "N/A"} ${biz.phone ? `| ${biz.phone}` : ""}</p>
+          <p><strong>Location:</strong> ${biz.city || ""}${biz.state ? `, ${biz.state}` : ""}</p>
         `;
         businessList.appendChild(card);
       });
     }
 
     searchInput.addEventListener("input", () => {
-      const term = searchInput.value.toLowerCase();
-      const filtered = businesses.filter(biz =>
-        (biz.businessName || "").toLowerCase().includes(term) ||
-        (biz.description || "").toLowerCase().includes(term) ||
-        (biz.city || "").toLowerCase().includes(term)
+      const searchTerm = searchInput.value.toLowerCase();
+      const filtered = allBusinesses.filter(biz =>
+        (biz.businessName || "").toLowerCase().includes(searchTerm) ||
+        (biz.description || "").toLowerCase().includes(searchTerm) ||
+        (biz.city || "").toLowerCase().includes(searchTerm)
       );
       displayBusinesses(filtered);
     });
 
-    loadBusinesses();
+    fetchBusinesses();
   </script>
 </body>
 </html>
