@@ -4,17 +4,82 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kingdom Connect</title>
-  <link rel="stylesheet" href="styles/style.css" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* TEMP STYLES for interaction and debug feedback */
+    .action-button {
+      padding: 12px 20px;
+      margin: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(45deg, #2255aa, #3388dd);
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .action-button:hover {
+      background: linear-gradient(45deg, #3388dd, #55aaff);
+      transform: scale(1.05);
+    }
+
+    .action-button:active {
+      background: #1a3e70;
+      transform: scale(0.97);
+    }
+
+    #statusMessage {
+      margin-top: 1rem;
+      text-align: center;
+      font-weight: bold;
+      padding: 0.5rem;
+    }
+
+    .success {
+      color: green;
+    }
+
+    .error {
+      color: red;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <h1>Welcome to Kingdom Connect</h1>
 
-    <button class="action-button" onclick="window.location.href='church_directory.html'">Find a Church</button>
-    <button class="action-button" onclick="window.location.href='business.html'">View Member Businesses</button>
-    <button class="action-button" onclick="window.location.href='submit_business.html'">List Your Business</button>
+    <button class="action-button" onclick="navigateWithMessage('church_directory.html')">Find a Church</button>
+    <button class="action-button" onclick="navigateWithMessage('business.html')">View Member Businesses</button>
+    <button class="action-button" onclick="navigateWithMessage('submit_business.html')">List Your Business</button>
 
     <p class="footer-note">Bringing churches and Christian-owned businesses together.</p>
+
+    <div id="statusMessage"></div>
   </div>
+
+  <script>
+    function navigateWithMessage(target) {
+      const messageBox = document.getElementById('statusMessage');
+      fetch(target, { method: 'HEAD' })
+        .then(res => {
+          if (res.ok) {
+            messageBox.textContent = 'Navigating to: ' + target;
+            messageBox.className = 'success';
+            setTimeout(() => {
+              window.location.href = target;
+            }, 500);
+          } else {
+            throw new Error('Page not found');
+          }
+        })
+        .catch(err => {
+          console.warn('Navigation error:', err);
+          messageBox.textContent = 'Error: Could not navigate to "' + target + '".';
+          messageBox.className = 'error';
+        });
+    }
+  </script>
 </body>
 </html>
