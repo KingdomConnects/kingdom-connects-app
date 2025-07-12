@@ -10,52 +10,57 @@
   <div class="form-container">
     <h1>Submit Your Business</h1>
     <form id="businessForm">
-      <label>Business Name</label>
+      <label for="businessName">Business Name</label>
       <input type="text" name="businessName" required />
 
-      <label>Your Name</label>
+      <label for="yourName">Your Name</label>
       <input type="text" name="yourName" required />
 
-      <label>Contact Email</label>
+      <label for="email">Contact Email</label>
       <input type="email" name="email" required />
 
-      <label>Brief Description</label>
+      <label for="description">Brief Description</label>
       <textarea name="description" required></textarea>
 
-      <label>Phone Number</label>
+      <label for="phone">Phone Number</label>
       <input type="tel" name="phone" required />
 
-      <label>Website URL</label>
+      <label for="website">Website URL</label>
       <input type="url" name="website" />
 
-      <label>Address Line 1</label>
+      <label for="address1">Address Line 1</label>
       <input type="text" name="address1" required />
 
-      <label>Address Line 2</label>
+      <label for="address2">Address Line 2</label>
       <input type="text" name="address2" />
 
-      <label>City</label>
+      <label for="city">City</label>
       <input type="text" name="city" required />
 
-      <label>State</label>
+      <label for="state">State</label>
       <input type="text" name="state" required />
 
-      <label>ZIP Code</label>
+      <label for="zip">ZIP Code</label>
       <input type="text" name="zip" required />
 
-      <label>Select Your Church</label>
+      <label for="churchId">Select Your Church</label>
       <select name="churchId" id="churchId" required>
         <option value="">-- Select --</option>
       </select>
 
-      <button type="submit" id="submitBtn">Submit</button>
+      <button type="submit" class="action-button">Submit</button>
       <div id="message" class="message"></div>
     </form>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, getDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      addDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyD3Im6F3lWgMbJiA7plsDt_Rp9kCLTr6KU",
@@ -66,70 +71,43 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    // Populate church dropdown
     const churchSelect = document.getElementById("churchId");
-    const form = document.getElementById("businessForm");
-    const messageBox = document.getElementById("message");
+    getDocs(collection(db, "churches")).then(snapshot => {
+      snapshot.forEach(doc => {
+        const option = document.createElement("option");
+        option.value = doc.id;
+        option.textContent = doc.data().name;
+        churchSelect.appendChild(option);
+      });
+    });
 
-    async function loadChurches() {
-      try {
-        const snap = await getDocs(collection(db, "churches"));
-        snap.forEach(doc => {
-          const option = document.createElement("option");
-          option.value = doc.id;
-          option.textContent = doc.data().name || "[Unnamed Church]";
-          churchSelect.appendChild(option);
-        });
-      } catch (err) {
-        console.error("Failed to load churches:", err);
-        messageBox.textContent = "Error loading church list.";
-        messageBox.className = "message error";
-      }
-    }
+    // Form submit logic
+    const form = document.getElementById("businessForm");
+    const messageDiv = document.getElementById("message");
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      messageBox.textContent = "";
-      messageBox.className = "message";
-
-      const data = Object.fromEntries(new FormData(form));
-      const churchId = data.churchId;
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
 
       try {
-        const churchRef = doc(db, "churches", churchId);
-        const churchSnap = await getDoc(churchRef);
-        if (!churchSnap.exists()) {
-          messageBox.textContent = "Error: Selected church does not exist.";
-          messageBox.className = "message error";
-          return;
-        }
-
-        await addDoc(collection(db, "businesses"), {
-          businessName: data.businessName,
-          yourName: data.yourName,
-          email: data.email,
-          description: data.description,
-          phone: data.phone,
-          website: data.website,
-          address1: data.address1,
-          address2: data.address2,
-          city: data.city,
-          state: data.state,
-          zip: data.zip,
-          churchId: churchId,
-          submittedAt: new Date()
+        await addDoc(collection(db, "business_listings_full"), {
+          ...data,
+          listing_status: "pending",
+          pro_status: "free",
+          created_at: new Date().toISOString()
         });
 
-        messageBox.textContent = "Success! Your business has been submitted.";
-        messageBox.className = "message success";
+        messageDiv.textContent = "Submission successful!";
+        messageDiv.className = "message success";
         form.reset();
-      } catch (err) {
-        console.error("Submission error:", err);
-        messageBox.textContent = "Error: " + err.message;
-        messageBox.className = "message error";
+      } catch (error) {
+        console.error("Error submitting form:", error);
+        messageDiv.textContent = "An error occurred. Please try again.";
+        messageDiv.className = "message error";
       }
     });
-
-    loadChurches();
   </script>
 </body>
 </html>
