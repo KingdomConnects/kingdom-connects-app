@@ -16,50 +16,7 @@
       document.getElementById("feedback").textContent = `You clicked: ${btn.textContent}`;
     }
   </script>
-  <!-- Firebase app + DB initialized here -->
   <script type="module" src="js/firebase_config.js"></script>
-  <script type="module">
-    import { db } from "./js/firebase_config.js";
-    import {
-      collection,
-      getDocs,
-      query,
-      orderBy
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-    document.addEventListener("DOMContentLoaded", async () => {
-      const churchList = document.getElementById("churchList");
-      const statusMessage = document.getElementById("statusMessage");
-
-      statusMessage.textContent = "Loading churches...";
-
-      try {
-        const q = query(collection(db, "churches"), orderBy("name"));
-        const querySnapshot = await getDocs(q);
-
-        if (querySnapshot.empty) {
-          statusMessage.textContent = "No churches found.";
-          return;
-        }
-
-        statusMessage.textContent = "";
-        const list = document.createElement("ul");
-
-        querySnapshot.forEach((doc) => {
-          const church = doc.data();
-          const item = document.createElement("li");
-          item.textContent = church.name || "Unnamed Church";
-          list.appendChild(item);
-        });
-
-        churchList.appendChild(list);
-        console.log("Church list loaded.");
-      } catch (error) {
-        console.error("Error loading churches:", error);
-        statusMessage.textContent = "Error loading churches: " + error.message;
-      }
-    });
-  </script>
 </head>
 <body>
   <div class="page-wrap full-height">
@@ -70,7 +27,55 @@
     <main class="main-content">
       <h2>Church Directory</h2>
       <div id="statusMessage"></div>
-      <div id="churchList"></div>
+      <div id="churchList" class="card-list"></div>
+
+      <script type="module">
+        import { db } from "./js/firebase_config.js";
+        import {
+          collection,
+          getDocs,
+          query,
+          orderBy
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        document.addEventListener("DOMContentLoaded", async () => {
+          const churchList = document.getElementById("churchList");
+          const statusMessage = document.getElementById("statusMessage");
+
+          statusMessage.textContent = "Loading churches...";
+
+          try {
+            const q = query(collection(db, "churches"), orderBy("name"));
+            const querySnapshot = await getDocs(q);
+
+            if (querySnapshot.empty) {
+              statusMessage.textContent = "No churches found.";
+              return;
+            }
+
+            statusMessage.textContent = "";
+
+            querySnapshot.forEach((doc) => {
+              const church = doc.data();
+              if (!church.name) return;
+
+              const card = document.createElement("div");
+              card.className = "business-card";
+
+              const title = document.createElement("h2");
+              title.textContent = church.name;
+
+              card.appendChild(title);
+              churchList.appendChild(card);
+            });
+
+            console.log("Church list loaded.");
+          } catch (error) {
+            console.error("Error loading churches:", error);
+            statusMessage.textContent = "Error loading churches: " + error.message;
+          }
+        });
+      </script>
     </main>
 
     <footer>
