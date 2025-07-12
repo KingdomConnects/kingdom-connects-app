@@ -3,57 +3,63 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(to bottom, #0d1a3a, #0e1e4a); /* Dark blue gradient */
+  background: linear-gradient(to bottom, #0d1a3a, #0e1e4a);
   color: #ffffff;
 }
 
-/* Main content container */
-.container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-/* Page title styling */
-.page-title {
-  text-align: center;
-  font-size: 2rem;
-  margin-bottom: 20px;
-}
-
-/* === SEARCH BAR === */
-
-/* Wrapper to center the search input */
-.search-wrapper {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 24px;
-}
-
-/* Input field styling */
-
-form {
+.page-wrap {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-}
-
-form label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 0.25rem;
-}
-/* Form styles */
-
-form input,
-form textarea,
-form select {
-  display: block;
-  width: 100%;
+  min-height: 100vh;
+  padding: 2rem;
   box-sizing: border-box;
 }
 
+header, footer {
+  text-align: center;
+  padding: 1rem 0;
+}
 
+.page-title {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* === CONTAINERS === */
+.container,
+.form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.main-content {
+  flex: 1;
+}
+
+/* === ANCHOR LINKS === */
+a {
+  color: #00bfff;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #00bfff;
+}
+
+a:hover {
+  opacity: 0.85;
+}
+
+.nav-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding: 1rem 0;
+}
+
+/* === SEARCH BAR === */
 #searchInput {
   width: 100%;
   padding: 14px 18px;
@@ -62,77 +68,46 @@ form select {
   border: 1px solid rgba(255,255,255,0.2);
   background: rgba(255,255,255,0.08);
   color: white;
-  backdrop-filter: blur(4px); /* soft glass effect */
+  backdrop-filter: blur(4px);
+  margin-bottom: 1rem;
 }
 
-/* input type text */
-input[type="text"] {
-  width: 100%;
-  max-width: 480px;
-  padding: 0.75rem 1rem;
-  margin: 1rem 0;
-  border: none;
-  border-radius: 1rem;
-  font-size: 1rem;
-  color: #fff;
-  background: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-input[type="text"]::placeholder {
-  color: #ccc;
-}
-
-input[type="text"]:focus {
-  outline: none;
-  background: rgba(255, 255, 255, 0.12);
-}
-/* Placeholder text color */
 #searchInput::placeholder {
   color: #cccccc;
 }
 
 /* === BUSINESS LISTING CARDS === */
-
-/* Container for business card list */
 .card-list {
   display: flex;
   flex-direction: column;
-  gap: 20px; /* vertical spacing between cards */
+  gap: 20px;
 }
 
-/* Individual business card block */
 .business-card {
-  background: rgba(255,255,255,0.05); /* light transparent background */
+  background: rgba(255,255,255,0.05);
   border-radius: 16px;
   padding: 16px;
   box-shadow: 0 0 8px rgba(0,0,0,0.3);
   transition: transform 0.2s ease;
 }
 
-/* Slight hover zoom effect */
 .business-card:hover {
   transform: scale(1.01);
 }
 
-/* Business card title */
 .business-card h2 {
   margin-top: 0;
   font-size: 1.3rem;
   color: white;
-}e
+}
 
-/* Business card text fields */
 .business-card p {
   margin: 6px 0;
   font-size: 15px;
   line-height: 1.4;
 }
 
-/* === BOTTOM ACTION BUTTON === */
-
-/* Wrapper for the
-
+/* === FORM STYLES === */
 form {
   display: flex;
   flex-direction: column;
@@ -162,4 +137,52 @@ form select {
 form input::placeholder,
 form textarea::placeholder {
   color: #ccc;
+}
+
+/* === BUTTONS === */
+.action-button {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  padding: 1rem;
+  background: linear-gradient(to right, #ff6600, #ffa600);
+  border: none;
+  border-radius: 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  transition: opacity 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  margin: 1rem auto 0;
+}
+
+.action-button:hover {
+  opacity: 0.9;
+}
+
+/* === MESSAGES === */
+.message {
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  margin-top: 1rem;
+}
+
+.message.success {
+  background: rgba(0, 128, 0, 0.2);
+  color: #00ff88;
+}
+
+.message.error {
+  background: rgba(128, 0, 0, 0.2);
+  color: #ff6666;
+}
+
+/* === FOOTER === */
+footer {
+  margin-top: auto;
+  font-size: 0.9rem;
+  color: #aaa;
+  text-align: center;
 }
