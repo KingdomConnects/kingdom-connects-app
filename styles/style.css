@@ -1,22 +1,112 @@
-/* Global Styles */ html, body { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; background: linear-gradient(to bottom right, #0d1a3d, #1b263b); color: white; overflow-y: auto; box-sizing: border-box; }
+/* === GENERAL LAYOUT === */
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(to bottom right, #0b1e3f, #102e66);
+  color: #ffffff;
+}
 
-/* Main Form Layout */ .form-container { max-width: 540px; width: 90%; margin: 40px auto; padding: 2rem; background-color: rgba(255, 255, 255, 0.06); border-radius: 14px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.4); backdrop-filter: blur(6px); }
+.container {
+  width: 98%;
+  margin: 0 auto;
+  padding: 1rem;
+  box-sizing: border-box;
+}
 
-h1 { text-align: center; font-size: 1.8rem; color: #ffa726; margin-bottom: 1.5rem; }
+/* === BUTTON STYLING === */
+.action-button {
+  display: block;
+  width: 100%;
+  max-width: 600px;
+  padding: 14px 16px;
+  margin: 12px auto;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(45deg, #2255aa, #3388dd);
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  box-sizing: border-box;
+}
 
-label { display: block; margin-top: 1rem; font-weight: bold; color: #ffffff; }
+.action-button:hover {
+  background: linear-gradient(45deg, #3388dd, #55aaff);
+  transform: scale(1.02);
+}
 
-input, textarea, select { width: 100%; padding: 0.75rem; margin-top: 0.3rem; border: none; border-radius: 8px; font-size: 1rem; background-color: #f2f2f2; color: #000; box-sizing: border-box; }
+.action-button:active {
+  background: #1a3e70;
+  transform: scale(0.98);
+}
 
-textarea { resize: vertical; min-height: 100px; }
+/* === MESSAGING STYLES === */
+.message {
+  margin-top: 1rem;
+  font-weight: bold;
+  text-align: center;
+}
 
-button[type="submit"] { margin-top: 2rem; background-color: #ff8c00; color: white; border: none; padding: 0.9rem; font-size: 1.1rem; border-radius: 10px; cursor: pointer; width: 100%; box-shadow: 0 0 12px rgba(255, 140, 0, 0.5); transition: all 0.3s ease; }
+.success {
+  color: #00cc66;
+}
 
-button[type="submit"]:hover { background-color: #ffa726; box-shadow: 0 0 16px rgba(255, 140, 0, 0.7); }
+.error {
+  color: #ff4444;
+}
 
-/* Feedback messages */ #status.success { margin-top: 1rem; padding: 0.75rem; background-color: #28a745; color: white; border-radius: 8px; text-align: center; }
+/* === FORM CONTAINER === */
+.form-container {
+  width: 98%;
+  max-width: 700px;
+  margin: 2rem auto;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1.5rem;
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+}
 
-#status.error { margin-top: 1rem; padding: 0.75rem; background-color: #c0392b; color: white; border-radius: 8px; text-align: center; }
+/* === FORM INPUTS === */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+select,
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0 16px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
 
-/* Responsive Tweaks */ @media (max-width: 480px) { .form-container { padding: 1.2rem; } h1 { font-size: 1.5rem; } }
+/* === HEADINGS AND FOOTER TEXT === */
+h1, h2, h3 {
+  text-align: center;
+  font-family: "Orbitron", "Segoe UI", sans-serif;
+}
 
+.footer-note {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.95rem;
+  opacity: 0.8;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 600px) {
+  .action-button {
+    width: 95%;
+  }
+
+  .form-container {
+    padding: 1rem;
+  }
+}
