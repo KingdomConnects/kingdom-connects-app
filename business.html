@@ -1,83 +1,86 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Member Businesses</title>
   <link rel="stylesheet" href="styles/style.css" />
 </head>
 <body>
-  <div class="page-container">
-    <h1 class="page-title">Member Businesses</h1>
-    <input type="text" id="searchInput" placeholder="Search by name, description, or category..." />
-    <div id="businessList"></div>
-  </div>  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  <div class="container">
+    <h1>Member Businesses</h1>
+    <input type="text" id="searchInput" placeholder="Search by name, description, or city" />
+    <div id="businessList" class="business-list"></div>
+    <div id="errorMessage" class="message error"></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import {
       getFirestore,
       collection,
-      getDocs,
-      query,
-      where
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyD3Im6F3lWgMbJiA7plsDt_Rp9kCLTr6KU",
       authDomain: "kingdom-commerce.firebaseapp.com",
-      projectId: "kingdom-commerce"
+      projectId: "kingdom-commerce",
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
     const businessList = document.getElementById("businessList");
+    const errorMessage = document.getElementById("errorMessage");
     const searchInput = document.getElementById("searchInput");
 
-    let allBusinesses = [];
+    let businesses = [];
 
     async function loadBusinesses() {
       try {
-        const snapshot = await getDocs(collection(db, "businesses"));
-        allBusinesses = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        renderBusinesses(allBusinesses);
+        const querySnapshot = await getDocs(collection(db, "business_listings"));
+        businesses = querySnapshot.docs.map(doc => doc.data());
+        displayBusinesses(businesses);
       } catch (error) {
         console.error("Error loading businesses:", error);
-        businessList.innerHTML = `<p style="color:red">Error loading businesses: ${error.message}</p>`;
+        errorMessage.textContent = "Error loading businesses: " + error.message;
       }
     }
 
-    function renderBusinesses(data) {
+    function displayBusinesses(list) {
       businessList.innerHTML = "";
-      if (data.length === 0) {
+
+      if (list.length === 0) {
         businessList.innerHTML = "<p>No businesses found.</p>";
         return;
       }
-      data.forEach(biz => {
-        const div = document.createElement("div");
-        div.className = "business-card";
-        div.innerHTML = `
+
+      list.forEach(biz => {
+        const card = document.createElement("div");
+        card.className = "business-card";
+        card.innerHTML = `
           <h2>${biz.businessName || "Unnamed Business"}</h2>
-          <p>${biz.description || "No description provided."}</p>
-          <p><strong>Phone:</strong> ${biz.phone || "N/A"}</p>
-          <p><strong>City:</strong> ${biz.city || "N/A"}</p>
-          <p><strong>Church ID:</strong> ${biz.churchId || "N/A"}</p>
+          <p><strong>Description:</strong> ${biz.description || "N/A"}</p>
+          <p><strong>Contact:</strong> ${biz.email || "N/A"} | ${biz.phone || "N/A"}</p>
+          <p><strong>Location:</strong> ${biz.city || ""}, ${biz.state || ""}</p>
+          <p><strong>Website:</strong> <a href="${biz.website || "#"}" target="_blank">${biz.website || "N/A"}</a></p>
         `;
-        businessList.appendChild(div);
+        businessList.appendChild(card);
       });
     }
 
     searchInput.addEventListener("input", () => {
       const term = searchInput.value.toLowerCase();
-      const filtered = allBusinesses.filter(biz => {
-        return (
-          (biz.businessName || "").toLowerCase().includes(term) ||
-          (biz.description || "").toLowerCase().includes(term) ||
-          (biz.category || "").toLowerCase().includes(term) ||
-          (biz.city || "").toLowerCase().includes(term)
-        );
-      });
-      renderBusinesses(filtered);
+      const filtered = businesses.filter(biz =>
+        (biz.businessName || "").toLowerCase().includes(term) ||
+        (biz.description || "").toLowerCase().includes(term) ||
+        (biz.city || "").toLowerCase().includes(term)
+      );
+      displayBusinesses(filtered);
     });
 
     loadBusinesses();
-  </script></body>
+  </script>
+</body>
 </html>
