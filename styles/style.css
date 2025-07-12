@@ -27,6 +27,13 @@ header, footer {
   font-weight: bold;
 }
 
+.main-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
 /* === CONTAINERS === */
 .container,
 .form-container {
@@ -102,7 +109,7 @@ a:hover {
 .business-card p {
   margin: 6px 0;
   font-size: 15px;
-  line-height: 1.4;
+    line-height: 1.4;
 }
 
 /* === FORM STYLES === */
