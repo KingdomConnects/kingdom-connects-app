@@ -25,6 +25,42 @@ header, footer {
   font-size: 2rem;
   font-weight: bold;
 }
+/* === BUSINESS LISTING CARDS === */
+
+/* Container for business card list */
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* vertical spacing between cards */
+}
+
+/* Individual business card block */
+.business-card {
+  background: rgba(255,255,255,0.05); /* light transparent background */
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.3);
+  transition: transform 0.2s ease;
+}
+
+/* Slight hover zoom effect */
+.business-card:hover {
+  transform: scale(1.01);
+}
+
+/* Business card title */
+.business-card h2 {
+  margin-top: 0;
+  font-size: 1.3rem;
+  color: white;
+}
+
+/* Business card text fields */
+.business-card p {
+  margin: 6px 0;
+  font-size: 15px;
+  line-height: 1.4;
+}
 
 /* Button area */
 .button-section {
