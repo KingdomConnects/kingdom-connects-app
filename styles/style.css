@@ -65,3 +65,38 @@ body {
   font-size: 0.95rem;
   opacity: 0.8;
 }
+
+/* === FORM CONTAINER === */
+.form-container {
+  width: 100%;
+  max-width: 700px;
+  margin: 2rem auto;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1.5rem;
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+  box-sizing: border-box;
+}
+
+/* === FORM FIELD STYLES === */
+form label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+form input,
+form select,
+form textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 0.3rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  background: white;
+  color: #000;
+}
