@@ -1,12 +1,14 @@
 // js/firebase-config.js
-// Shared Firebase config for Kingdom Connects
-// 🔒 Do not add sensitive keys until ready for production
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-export const firebaseConfig = {
-  // apiKey: "YOUR_API_KEY",
-  // authDomain: "your-project-id.firebaseapp.com",
-  // projectId: "your-project-id",
-  // storageBucket: "your-project-id.appspot.com",
-  // messagingSenderId: "your-sender-id",
-  // appId: "your-app-id"
+const firebaseConfig = {
+  apiKey: "AIzaSyD3Im6F3lWgMbJiA7plsDt_Rp9kCLTr6KU",
+  authDomain: "kingdom-commerce.firebaseapp.com",
+  projectId: "kingdom-commerce"
 };
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+export { app, db };
