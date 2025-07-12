@@ -69,8 +69,20 @@
               churchList.appendChild(card);
             });
           } catch (error) {
-            console.error("Error loading churches:", error);
-            statusMessage.textContent = "Error loading churches: " + error.message;
+            console.error("🔥 Firebase error:", error);
+
+            statusMessage.style.color = "orange";
+            statusMessage.style.backgroundColor = "#330000";
+            statusMessage.style.padding = "1rem";
+            statusMessage.style.border = "1px solid red";
+            statusMessage.style.marginTop = "1rem";
+            statusMessage.style.borderRadius = "8px";
+
+            statusMessage.innerHTML = `
+              <strong>⚠️ Error loading churches:</strong><br/>
+              ${error.message}<br/>
+              <small style="color:#ccc">Check firebase-config.js, Firestore rules, or internet access.</small>
+            `;
           }
         });
       </script>
