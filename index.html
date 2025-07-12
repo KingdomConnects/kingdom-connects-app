@@ -1,33 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Kingdom Connects</title>
-  <link rel="stylesheet" href="styles/style.css" />
+  <link rel="stylesheet" href="styles/style.css"/>
   <script>
     function handleMouseOver(btn) {
       btn.style.opacity = "0.9";
     }
-
     function handleMouseOut(btn) {
       btn.style.opacity = "1";
     }
-
     function handleClick(btn) {
-      const feedback = document.getElementById("feedback");
-      feedback.textContent = `You clicked: ${btn.textContent}`;
+      document.getElementById("feedback").textContent = `You clicked: ${btn.textContent}`;
     }
   </script>
 </head>
 <body>
   <div class="page-wrap full-height">
-
     <header>
       <h1 class="page-title">Kingdom Connects</h1>
     </header>
 
-    <main>
+    <main class="main-content">
       <div class="button-section">
         <a href="submit_business.html" class="action-button"
            onmouseover="handleMouseOver(this)"
@@ -51,7 +47,6 @@
     <footer>
       <p class="footer-text">© 2025 Kingdom Connects. All rights reserved.</p>
     </footer>
-
   </div>
 </body>
 </html>
