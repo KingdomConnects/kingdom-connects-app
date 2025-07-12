@@ -31,10 +31,8 @@ header, footer {
 /* === CONTAINERS === */
 .container,
 .form-container {
-  max-width: 600px;
   margin: 0 auto;
-  padding: 1rem;
-}
+  }
 
 
 
