@@ -16,7 +16,8 @@
       document.getElementById("feedback").textContent = `You clicked: ${btn.textContent}`;
     }
   </script>
-  <script type="module" src="js/firebase_config.js"></script>
+  <!-- ✅ Correct file name for config -->
+  <script type="module" src="js/firebase-config.js"></script>
 </head>
 <body>
   <div class="page-wrap full-height">
@@ -30,7 +31,7 @@
       <div id="churchList" class="card-list"></div>
 
       <script type="module">
-        import { db } from "./js/firebase_config.js";
+        import { db } from "./js/firebase-config.js";
         import {
           collection,
           getDocs,
@@ -68,8 +69,6 @@
               card.appendChild(title);
               churchList.appendChild(card);
             });
-
-            console.log("Church list loaded.");
           } catch (error) {
             console.error("Error loading churches:", error);
             statusMessage.textContent = "Error loading churches: " + error.message;
