@@ -36,7 +36,7 @@
 
         async function loadBusinesses() {
           try {
-            const snapshot = await getDocs(collection(db, "businesses"));
+            const snapshot = await getDocs(collection(db, "business_listings"));
             allBusinesses = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             renderBusinesses(allBusinesses);
           } catch (error) {
