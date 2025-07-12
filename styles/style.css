@@ -3,61 +3,131 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(to bottom right, #0c1c3b, #0a1740);
+  background: linear-gradient(to bottom, #0d1a3a, #0e1e4a);
   color: #ffffff;
 }
 
 /* === PAGE WRAPPER === */
 .page-wrap {
-  max-width: 700px;
+  max-width: 100%;
+  width: 100%;
+  padding: 1.25rem;
   margin: 0 auto;
-  padding: 20px;
   background: rgba(255, 255, 255, 0.03);
-  border-radius: 16px;
+  border-radius: 1rem;
   backdrop-filter: blur(6px);
+}
+
+/* === FULL HEIGHT CONTAINER === */
+.full-height {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 /* === HEADER === */
 .page-title {
   text-align: center;
   font-size: 2rem;
-  margin-bottom: 30px;
+  margin-bottom: 1.875rem;
+}
+
+/* === SEARCH BAR === */
+.search-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+#searchInput {
+  width: 100%;
+  padding: 0.875rem 1.125rem;
+  font-size: 1rem;
+  border-radius: 0.75rem;
+  border: 0.0625rem solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.08);
+  color: white;
+  backdrop-filter: blur(4px);
+}
+
+#searchInput::placeholder {
+  color: #cccccc;
+}
+
+/* === BUSINESS LISTING CARDS === */
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.business-card {
+  background: rgba(255,255,255,0.05);
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: 0 0 0.5rem rgba(0,0,0,0.3);
+  transition: transform 0.2s ease;
+}
+
+.business-card:hover {
+  transform: scale(1.01);
+}
+
+.business-card h2 {
+  margin-top: 0;
+  font-size: 1.3rem;
+  color: white;
+}
+
+.business-card p {
+  margin: 0.375rem 0;
+  font-size: 0.9375rem;
+  line-height: 1.4;
 }
 
 /* === BUTTON SECTION === */
 .button-section {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin: 30px 0;
+  gap: 1rem;
+  margin: 1.875rem 0;
 }
 
-/* Full-width gradient buttons */
-.main-button {
+/* === ACTION BUTTON === */
+.action-button {
   display: block;
   width: 100%;
-  padding: 16px;
+  padding: 1rem;
+  margin: 0.625rem 0;
   background: linear-gradient(to right, #ff6600, #ffaa33);
   color: white;
   font-weight: bold;
-  font-size: 18px;
+  font-size: 1.125rem;
   border: none;
-  border-radius: 12px;
+  border-radius: 0.75rem;
   text-align: center;
   text-decoration: none;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.3);
   transition: background 0.3s ease;
 }
 
-.main-button:hover {
+.action-button:hover {
   background: linear-gradient(to right, #ffaa33, #ff6600);
   cursor: pointer;
+}
+
+/* === FEEDBACK MESSAGE === */
+.feedback-message {
+  text-align: center;
+  margin-top: 0.625rem;
+  font-size: 0.9375rem;
 }
 
 /* === FOOTER === */
 .footer-text {
   text-align: center;
-  margin-top: 40px;
-  font-size: 14px;
+  margin-top: 2.5rem;
+  font-size: 0.875rem;
   color: #bbbbbb;
 }
