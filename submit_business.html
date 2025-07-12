@@ -29,7 +29,7 @@
       <input type="url" name="website" />
 
       <label for="address1">Address Line 1</label>
-      <input type="text" name="address1" required />
+      <input type="text" name="address1" />
 
       <label for="address2">Address Line 2</label>
       <input type="text" name="address2" />
@@ -71,18 +71,17 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Populate church dropdown
+    // ✅ Correct: use document ID as churchId value
     const churchSelect = document.getElementById("churchId");
     getDocs(collection(db, "churches")).then(snapshot => {
       snapshot.forEach(doc => {
         const option = document.createElement("option");
-        option.value = doc.id;
+        option.value = doc.id; // send real doc ID
         option.textContent = doc.data().name;
         churchSelect.appendChild(option);
       });
     });
 
-    // Form submit logic with debugging
     const form = document.getElementById("businessForm");
     const messageDiv = document.getElementById("message");
 
@@ -91,10 +90,8 @@
       const formData = new FormData(form);
       const data = Object.fromEntries(formData.entries());
 
-      console.log("Submitting form data:", data);  // DEBUG
-
       try {
-        await addDoc(collection(db, "business_listings_full"), {
+        await addDoc(collection(db, "business_listings"), {
           ...data,
           listing_status: "pending",
           pro_status: "free",
@@ -105,7 +102,7 @@
         messageDiv.className = "message success";
         form.reset();
       } catch (error) {
-        console.error("Submission error:", error);  // DEBUG
+        console.error("Submission error:", error);
         messageDiv.textContent = "Error: " + error.message;
         messageDiv.className = "message error";
       }
