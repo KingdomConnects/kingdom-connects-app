@@ -1,55 +1,112 @@
-/* Global Reset */
-* {
-  box-sizing: border-box;
+/* Global Styles */
+body {
   margin: 0;
   padding: 0;
-}
-
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #0a1d3a, #102c5a);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(180deg, #0d1a3a, #0e1e4a);
   color: #ffffff;
-  padding: 20px 10px;
-  line-height: 1.5;
 }
 
-/* Header */
-h1, h2, h3 {
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1.page-title {
   text-align: center;
+  font-size: 2rem;
   margin-bottom: 20px;
 }
 
-/* Buttons */
-.button {
-  display: block;
-  width: 90%;
-  max-width: 600px;
-  margin: 12px auto;
-  padding: 14px;
-  background: linear-gradient(to right, #ff6600, #ffaa33);
-  border: none;
-  border-radius: 12px;
-  font-size: 18px;
-  font-weight: bold;
-  color: white;
-  text-align: center;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.1s ease;
+/* Search Bar */
+.search-wrapper {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
 }
 
-.button:hover {
-  background: linear-gradient(to right, #ffaa33, #ff6600);
+#searchInput {
+  width: 100%;
+  max-width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  border: none;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+#searchInput::placeholder {
+  color: #cccccc;
+}
+
+/* Business Cards */
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.business-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.3);
+  transition: transform 0.2s ease;
+}
+
+.business-card:hover {
   transform: scale(1.02);
 }
 
-.button:active {
-  transform: scale(0.98);
+.business-card h2 {
+  margin-top: 0;
+  font-size: 1.4rem;
+  color: #ffffff;
 }
 
-/* Search Input */
-#searchInput {
-  width: 90%;
-  max-width: 600px;
-  margin: 20px auto 30px auto;
-  padding: 14px 18px;
-  font-size: 18
+.business-card p {
+  margin: 6px 0;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.business-card strong {
+  color: #ffffff;
+}
+
+/* Main Button */
+.button-container {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.main-button {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 16px;
+  background: linear-gradient(90deg, #ff6600, #ffaa00);
+  color: #ffffff;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 18px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  transition: background 0.3s ease;
+}
+
+.main-button:hover {
+  background: linear-gradient(90deg, #ffaa00, #ff6600);
+  cursor: pointer;
+}
+
+/* Error Styling */
+.error {
+  color: #ff4444;
+  text-align: center;
+  margin-top: 20px;
+}
