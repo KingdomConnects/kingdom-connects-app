@@ -25,7 +25,6 @@ body {
   backdrop-filter: blur(4px);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
-
 /* === ACTION BUTTONS (FULL-WIDTH) === */
 .action-button {
   width: 100%;
