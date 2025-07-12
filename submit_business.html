@@ -71,15 +71,17 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // ✅ Correct: use document ID as churchId value
+    // ✅ Load actual document IDs for churchId
     const churchSelect = document.getElementById("churchId");
     getDocs(collection(db, "churches")).then(snapshot => {
       snapshot.forEach(doc => {
         const option = document.createElement("option");
-        option.value = doc.id; // send real doc ID
-        option.textContent = doc.data().name;
+        option.value = doc.id; // <-- this is CRITICAL: doc.id, not label
+        option.textContent = doc.data().name || "Unnamed Church";
         churchSelect.appendChild(option);
       });
+    }).catch(error => {
+      console.error("Error loading churches:", error);
     });
 
     const form = document.getElementById("businessForm");
@@ -92,7 +94,18 @@
 
       try {
         await addDoc(collection(db, "business_listings"), {
-          ...data,
+          businessName: data.businessName,
+          yourName: data.yourName,
+          email: data.email,
+          description: data.description,
+          phone: data.phone,
+          website: data.website,
+          address1: data.address1,
+          address2: data.address2,
+          city: data.city,
+          state: data.state,
+          zip: data.zip,
+          churchId: data.churchId, // ✅ This will be the doc ID
           listing_status: "pending",
           pro_status: "free",
           created_at: new Date().toISOString()
