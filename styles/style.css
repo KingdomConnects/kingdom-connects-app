@@ -88,7 +88,7 @@ a:hover {
   gap: 20px;
 }
 
-.business-card {
+.qbusiness-card {
   background: rgba(255,255,255,0.05);
   border-radius: 16px;
   padding: 16px;
@@ -148,14 +148,13 @@ form textarea::placeholder {
 .action-button {
   display: block;
   width: 100%;
-  max-width: 320px;
   padding: 1rem;
   background: linear-gradient(to right, #ff6600, #ffa600);
   border: none;
   border-radius: 1rem;
   font-size: 1rem;
   font-weight: bold;
-  color: white;
+  color: #000;
   text-align: center;
   text-decoration: none;
   transition: opacity 0.3s ease;
