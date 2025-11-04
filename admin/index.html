@@ -5,54 +5,72 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Admin Dashboard – Kingdom Connects</title>
 
-  <!-- Local copies so phone paths are painless -->
-  <link rel="stylesheet" href="styles/layout.css">
-  <link rel="stylesheet" href"="styles/theme.css">
-  <link rel="stylesheet" href="styles/buttons.css">
-  <link rel="stylesheet" href="styles/forms.css">
-  <link rel="stylesheet" href="styles/overrides.css">
-</head>
+  <!-- Correct paths (admin/ is one level below site root) -->
+  <link rel="stylesheet" href="../styles/layout.css">
+  <link rel="stylesheet" href="../styles/theme.css">
+  <link rel="stylesheet" href="../styles/buttons.css">
+  <link rel="stylesheet" href="../styles/forms.css">
+  <link rel="stylesheet" href="../styles/overrides.css">
 
+  <!-- Minimal inline fallback so you can immediately see structure if a path is wrong -->
+  <style>
+    /* Remove after you confirm external CSS is loading */
+    :root{--bg:#0b1220;--card:#141c2b;--text:#e8eefc;--muted:#9bb2d0;--accent:#d6b14d}
+    html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+    a{color:var(--accent);text-decoration:none}
+    .admin-header{border-bottom:1px solid #23324a;background:#0f1726}
+    .header-wrap{max-width:1100px;margin:auto;display:flex;gap:12px;align-items:center;padding:14px 16px}
+    .logo{height:36px;width:auto}
+    .title{font-weight:700;margin:0;font-size:20px}
+    .title .accent{color:var(--accent)}
+    nav a{margin-right:14px;opacity:.9}
+    nav a.nav-public{margin-left:auto;opacity:1}
+    .container{max-width:1100px;margin:24px auto;padding:0 16px}
+    .card{background:var(--card);border:1px solid #23324a;border-radius:14px;padding:18px}
+    .meta{color:var(--muted);margin-top:-6px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:16px}
+    .btn{background:#1b2740;color:var(--text);border:1px solid #2a3a5b;padding:12px 14px;border-radius:12px;font-weight:600}
+    .btn:active{transform:translateY(1px)}
+    footer{color:var(--muted);text-align:center;margin:40px 0 24px}
+    @media (hover:hover){.btn:hover{border-color:var(--accent)}}
+  </style>
+</head>
 <body>
   <header class="admin-header">
-    <div class="header-content">
-      <img src="../library/images/kingdom-connect-logo-300.png" alt="Kingdom Connects" class="logo">
-      <h1>Kingdom Connects <span class="accent">Admin</span></h1>
-      <nav class="nav admin-nav">
+    <div class="header-wrap">
+      <img class="logo" src="../library/images/kingdom-connect-logo-300.png" alt="Kingdom Connects">
+      <h1 class="title">Kingdom Connects <span class="accent">Admin</span></h1>
+      <nav class="admin-nav" aria-label="Admin">
         <a href="./index.html">Dashboard</a>
         <a href="./admin_manage_businesses.html">Businesses</a>
         <a href="./admin_users.html">Users</a>
         <a href="./admin_moderate_reviews.html">Reviews</a>
         <a href="./admin_pending_submissions.html">Submissions</a>
         <a href="./admin_settings.html">Settings</a>
-        <a href="../index.html" class="nav-public">← Public</a>
+        <a class="nav-public" href="../index.html">← Public</a>
       </nav>
     </div>
   </header>
 
-  <main class="main-content">
-    <section class="page-content">
-      <div class="card">
-        <h2 class="gold-metallic">Admin Dashboard</h2>
-        <p class="meta">Only signed-in admins can view. <em>(Auth guard disabled while building.)</em></p>
+  <main class="container">
+    <div class="card">
+      <h2 style="margin:0 0 6px 0">Admin Dashboard</h2>
+      <p class="meta">Only signed-in admins can view. <em>(Auth guard disabled while building.)</em></p>
 
-        <div class="admin-grid">
-          <button class="action-button">Manage Churches</button>
-          <button class="action-button">Manage Businesses</button>
-          <button class="action-button">Pending Submissions</button>
-          <button class="action-button">Moderate Reviews</button>
-          <button class="action-button">Manage Users</button>
-          <button class="action-button">Site Settings</button>
-        </div>
+      <div class="grid" role="grid">
+        <a class="btn" href="./admin_manage_churches.html" role="button">Manage Churches</a>
+        <a class="btn" href="./admin_manage_businesses.html" role="button">Manage Businesses</a>
+        <a class="btn" href="./admin_pending_submissions.html" role="button">Pending Submissions</a>
+        <a class="btn" href="./admin_moderate_reviews.html" role="button">Moderate Reviews</a>
+        <a class="btn" href="./admin_users.html" role="button">Manage Users</a>
+        <a class="btn" href="./admin_settings.html" role="button">Site Settings</a>
       </div>
-    </section>
+    </div>
   </main>
 
-  <footer class="footer">
-    <small>© 2025 Kingdom Connects</small>
-  </footer>
+  <footer><small>© 2025 Kingdom Connects</small></footer>
 
-  <!-- Leave guard off until paths are centralized again -->
-  <!-- <script type="module" src="../admin-js/admin_components.js?v=1"></script> -->
+  <!-- Keep scripts off until routes are finalized -->
+  <!-- <script type="module" src="./admin.js"></script> -->
 </body>
 </html>
