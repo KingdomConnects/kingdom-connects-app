@@ -1,7 +1,15 @@
-<!-- Admin-only header (using shared styles, no inline CSS) -->
+<!-- Admin-only header (shared styles, no inline CSS) -->
 <header class="header admin-header">
   <div class="header-content">
-    <img src="/library/images/kingdom-connects-logo-300.png" alt="Kingdom Connects" class="logo">
+    <img
+      class="logo"
+      src="../library/images/kingdom-connects-logo-300.png"
+      alt="Kingdom Connects"
+      width="40" height="40"
+      loading="eager" decoding="async"
+      onerror="this.onerror=null;this.src='../library/images/kingdom-connects-logo-large.png';"
+    >
+
     <h1>Kingdom Connects <span class="accent">Admin</span></h1>
 
     <nav class="nav admin-nav">
@@ -11,7 +19,7 @@
       <a href="./admin_moderate_reviews.html">Reviews</a>
       <a href="./admin_pending_submissions.html">Submissions</a>
       <a href="./admin_settings.html">Settings</a>
-      <a href="../index.html" class="nav-public">← Public</a>
+      <a class="nav-public" href="../index.html">← Public</a>
       <button id="adminSignOut" class="action-button danger">Sign out</button>
     </nav>
   </div>
