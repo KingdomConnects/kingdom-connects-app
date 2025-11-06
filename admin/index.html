@@ -1,44 +1,46 @@
-<!doctype html>
-<html lang="en" data-theme="dark">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin Dashboard — Kingdom Connects</title>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kingdom Connects — Admin</title>
 
-  <!-- Core site styles -->
-  <link rel="stylesheet" href="../styles/layout.css">
-  <link rel="stylesheet" href="../styles/theme.css">
-  <link rel="stylesheet" href="../styles/buttons.css">
-  <link rel="stylesheet" href="../styles/forms.css">
-  <link rel="stylesheet" href="../styles/overrides.css">
-</head>
+    <!-- Use the same global styles as the public site -->
+    <link rel="stylesheet" href="../styles/theme.css" />
+    <link rel="stylesheet" href="../styles/layout.css" />
+    <link rel="stylesheet" href="../styles/overrides.css" />
+    <!-- Leave these alone (you asked not to touch them) -->
+    <link rel="stylesheet" href="../styles/buttons.css" />
+    <link rel="stylesheet" href="../styles/forms.css" />
+  </head>
+  <body class="is-admin">
+    <!-- Injected by admin_components.js -->
+    <div id="admin-header"></div>
 
-<body class="admin">
+    <!-- Shared wrapper structure so margins/gutters match public pages -->
+    <div class="page-wrap">
+      <main class="main-content" role="main" aria-label="Admin Dashboard">
+        <section class="page-content">
+          <article class="card">
+            <h1 class="gold">Admin Dashboard</h1>
+            <p class="muted">Use the tiles below to manage content and settings.</p>
 
-  <!-- Header injected by admin_components.js -->
-  <div id="admin-header"></div>
+            <div class="grid-3">
+              <a class="action-button btn-gold" href="./manage_churches.html">Manage Churches</a>
+              <a class="action-button btn-gold" href="./manage_businesses.html">Manage Businesses</a>
+              <a class="action-button btn-gold" href="./pending_submissions.html">Pending Submissions</a>
+              <a class="action-button btn-gold" href="./moderate_reviews.html">Moderate Reviews</a>
+              <a class="action-button btn-gold" href="./users.html">Manage Users</a>
+              <a class="action-button btn-gold" href="./settings.html">Site Settings</a>
+            </div>
+          </article>
+        </section>
+      </main>
 
-  <main class="admin-container" role="main" aria-label="Admin Dashboard">
-    <section class="admin-card">
-      <h1 class="admin-title">Admin Dashboard</h1>
-      <p class="admin-intro">Quick links to common admin actions</p>
+      <!-- Injected by admin_components.js -->
+      <div id="admin-footer"></div>
+    </div>
 
-      <div class="admin-grid" role="grid">
-        <a class="btn btn-admin" href="./admin_manage_churches.html">Manage Churches</a>
-        <a class="btn btn-admin" href="./admin_manage_businesses.html">Manage Businesses</a>
-        <a class="btn btn-admin" href="./admin_pending_submissions.html">Pending Submissions</a>
-        <a class="btn btn-admin" href="./admin_moderate_reviews.html">Moderate Reviews</a>
-        <a class="btn btn-admin" href="./admin_users.html">Manage Users</a>
-        <a class="btn btn-admin" href="./admin_settings.html">Site Settings</a>
-      </div>
-    </section>
-  </main>
-
-  <!-- Footer injected by admin_components.js -->
-  <div id="admin-footer"></div>
-
-  <!-- JS-only header/footer generator -->
-  <script src="./admin-js/admin_components.js" defer></script>
-
-</body>
+    <script src="./admin_components.js" defer></script>
+  </body>
 </html>

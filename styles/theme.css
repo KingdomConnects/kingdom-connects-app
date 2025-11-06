@@ -1,164 +1,339 @@
-/* =========================================
-   Kingdom Connects — theme (V4 visuals only)
-   Visuals (colors, surfaces, effects); no layout
-   ========================================= */
+/* ========================================================================== */
+/* Kingdom Connects — THEME (Design Tokens + Base Theme)                      */
+/* Purpose: Centralize colors, typography, spacing, and component theming.    */
+/* IMPORTANT: Buttons and forms are NOT styled here (see buttons.css/forms.css)*/
+/* ========================================================================== */
 
-/* ===== Dark (default) ===== */
-:root,
-html[data-theme="dark"]{
-  --page-bg: #0f243a;
-  --text: #e8f3ff;
 
-  --header-bg: linear-gradient(180deg,#2f6bcb 0%, #1e4e9a 100%);
-  --header-fg: #ffffff;
+/* ==========================================================================
+   SECTION 1 — BASE TOKENS (Dark defaults)
+   - Define every variable used by layout/overrides/components so nothing breaks
+   - Components consume tokens; avoid hardcoded colors in component rules
+   ========================================================================== */
+:root {
+  /* ----- Brand & Neutrals ----- */
+  --brand:        #1e3a8a;     /* deep navy (primary) */
+  --brand-2:      #0ea5e9;     /* cyan/sky (accent)   */
+  --gold:         #f5c249;     /* golden accent       */
 
-  --panel-bg: #0c1e34;
+  --ink:          #e5e7eb;     /* primary text on dark */
+  --ink-muted:    #cbd5e1;     /* secondary text on dark */
 
-  --menu-bg: #0e2036;
-  --menu-link: #dfeaff;
-  --menu-hover: rgba(255,255,255,.08);
+  --bg:           #0b1426;     /* page background */
+  --panel:        #121e35;     /* base panel surface */
+  --panel-bg:     var(--panel);
+  --panel-fg:     var(--ink);
 
-  --btn-fg:#0fe0ff;
+  --line-soft:    rgba(255,255,255,0.08);
+  --line-strong:  rgba(255,255,255,0.16);
 
-  --footer-fg:#f7d48c;
-  --footer-link:#f7d48c;
+  /* ----- Links ----- */
+  --link:         #93c5fd;
+  --link-hover:   #bfdbfe;
 
-  --social-bg:white;
-  --social-fg:#0a2438;
+  /* ----- Header / Nav ----- */
+  --header-bg:    linear-gradient(180deg, #0d1b34 0%, #0a1630 100%);
+  --header-fg:    var(--ink);
 
-  /* Controls */
-  --control-h: 28px;            /* toggle (+/-) height */
-  --toggle-ring: rgba(255,255,255,.35);
-  --toggle-icon: 18px;          /* dot size on left/right */
+  /* Mobile dropdown menu panel */
+  --menu-bg:      rgba(8,17,34,.94);
+  --menu-link:    #dbeafe;
+  --menu-hover:   rgba(255,255,255,.08);
+
+  /* ----- Footer ----- */
+  --footer-bg:    #0a1222;
+  --footer-fg:    var(--ink);
+  --footer-link:  var(--link);
+
+  /* ----- Social icon buttons ----- */
+  --social-bg:    rgba(255,255,255,.06);
+  --social-fg:    var(--ink);
+
+  /* ----- Layout metrics ----- */
+  --container:    min(1120px, 94vw);
+  --gutter:       clamp(14px, 3.2vw, 28px);
+
+  /* ----- Elevation + Radii ----- */
+  --shadow-1:     0 4px 12px rgba(0,0,0,0.25);
+  --shadow-2:     0 10px 24px rgba(0,0,0,0.35);
+
+  --radius-sm:    10px;
+  --radius-md:    16px;
+  --radius-lg:    22px;
+
+  /* ----- Spacing (8px grid) ----- */
+  --space-1:      4px;
+  --space-2:      8px;
+  --space-3:      12px;
+  --space-4:      16px;
+  --space-5:      20px;
+  --space-6:      24px;
+  --space-7:      32px;
+  --space-8:      40px;
+  --space-9:      48px;
+
+  /* ----- Typography ----- */
+  --font-system:  ui-sans-serif, -apple-system, Segoe UI, Roboto, Inter, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+  --font-mono:    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+
+  --text-base:    16px;
+  --lh-base:      1.55;
+
+  /* Heading sizes (responsive) */
+  --h1:           clamp(26px, 2.4vw, 36px);
+  --h2:           clamp(22px, 2.0vw, 30px);
+  --h3:           clamp(18px, 1.7vw, 24px);
+
+  /* ----- Settings / Toggle tokens (used by settings menu & theme switch) ----- */
+  --settings-bg:  #ffffff;     /* settings panel is bright by design */
+  --settings-fg:  #0d2540;
+  --settings-border: rgba(0,0,0,.14);
+
+  --control-h:    32px;        /* toggle control height */
+  --toggle-icon:  8px;         /* small dot icons on toggle rail */
+  --toggle-ring:  rgba(255,255,255,.45);
 }
 
-/* ===== Light ===== */
-html[data-theme="light"]{
-  --page-bg: #f3f7ff;
-  --text: #0d2540;
 
-  --header-bg: linear-gradient(180deg,#dfeaff 0%, #bed6ff 100%);
-  --header-fg: #102443;
+/* ==========================================================================
+   SECTION 2 — LIGHT THEME OVERRIDES
+   - If your site supports light mode via <html data-theme="light">, adjust here
+   ========================================================================== */
+html[data-theme="light"] {
+  --ink:         #0c223b;
+  --ink-muted:   #5b6b7d;
 
-  --panel-bg: #ffffff;
+  --bg:          #f7f9fc;
+  --panel:       #ffffff;
+  --panel-bg:    var(--panel);
+  --panel-fg:    var(--ink);
 
-  --menu-bg: #ffffff;
-  --menu-link: #102443;
-  --menu-hover: rgba(16,36,67,.08);
+  --line-soft:   rgba(0,0,0,0.08);
+  --line-strong: rgba(0,0,0,0.16);
 
-  --btn-fg:#0d2540;
+  --link:        #1d4ed8;
+  --link-hover:  #1e40af;
 
-  --footer-fg:#20406f;
-  --footer-link:#20406f;
+  --header-bg:   linear-gradient(180deg, #e8eefb 0%, #dfe7fb 100%);
+  --header-fg:   #0b1324;
 
-  --social-bg:#1c9ee9;
-  --social-fg:#ffffff;
+  --menu-bg:     rgba(255,255,255,.98);
+  --menu-link:   #0b182e;
+  --menu-hover:  rgba(0,0,0,.06);
 
-  --toggle-ring: rgba(0,0,0,.35);
+  --footer-bg:   #eef2ff;
+  --footer-fg:   #0b1324;
+  --footer-link: #1d4ed8;
+
+  --social-bg:   rgba(0,0,0,.06);
+  --social-fg:   #0b1220;
+
+  /* Settings panel remains white in both modes (keeps UI consistent) */
+  --settings-bg: #ffffff;
+  --settings-fg: #0d2540;
+  --settings-border: rgba(0,0,0,.14);
 }
 
-/* ===== Base hooks (no layout) ===== */
-html, body { background: var(--page-bg); color: var(--text); }
 
-/* Header + menu colors */
-.site-header{ background: var(--header-bg); color: var(--header-fg); }
-.menu-toggle { color: var(--header-fg); }
-.menu-toggle .bar { background: currentColor; }
+/* ==========================================================================
+   SECTION 3 — BASE RESET & GLOBALS
+   ========================================================================== */
 
-/* Dropdown navigation */
-.nav-links{
-  background: var(--menu-bg);
-  border: 1px solid rgba(255,255,255,.08);
-}
-html[data-theme="light"] .nav-links{ border-color: rgba(0,0,0,.08); }
-.nav-links a{ color: var(--menu-link); }
-.nav-links a:hover{ background: var(--menu-hover); }
+*,
+*::before,
+*::after { box-sizing: border-box; }
 
-/* Settings panel default surface (overridden to white below) */
-#settingsMenu{
-  background: transparent;
-  color: var(--menu-link);
-  border-radius: 16px;
-  border: 1.5px solid var(--toggle-ring);
-  box-shadow: 0 10px 24px rgba(0,0,0,.35);
+html {
+  font-size: var(--text-base);
+  -webkit-text-size-adjust: 100%;
 }
 
-/* Content card */
-.page-content{
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--bg);
+  font-family: var(--font-system);
+  line-height: var(--lh-base);
+  text-rendering: optimizeLegibility;
+}
+
+/* Headings & body copy */
+h1, h2, h3, h4 { margin: 0 0 var(--space-4); line-height: 1.25; font-weight: 700; color: var(--ink); }
+h1 { font-size: var(--h1); }
+h2 { font-size: var(--h2); }
+h3 { font-size: var(--h3); }
+
+p { margin: 0 0 var(--space-5); color: var(--ink); }
+small, .muted { color: var(--ink-muted); }
+
+/* Lists */
+ul, ol { margin: 0 0 var(--space-5) var(--space-6); padding: 0; }
+
+/* Links */
+a { color: var(--link); text-decoration: none; }
+a:hover, a:focus { color: var(--link-hover); text-decoration: underline; }
+
+/* Media */
+img, picture, svg, video { max-width: 100%; height: auto; display: block; }
+
+
+/* ==========================================================================
+   SECTION 4 — COMPONENT VISUALS (no buttons/forms)
+   - Structural layout (wrappers, grid templates) are in layout.css
+   - This section only provides visual skins that consume tokens
+   ========================================================================== */
+
+/* Header & Footer skins */
+.header {
+  color: var(--header-fg);
+  background: var(--header-bg);
+  box-shadow: var(--shadow-1);
+}
+.footer {
+  color: var(--footer-fg);
+  background: var(--footer-bg);
+  border-top: 1px solid var(--line-strong);
+}
+
+/* Cards / Panels */
+.card, .panel {
   background: var(--panel-bg);
-  color: var(--text);
-  border: 1px solid rgba(255,255,255,.10);
+  color: var(--panel-fg);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1);
 }
-html[data-theme="light"] .page-content{ border-color: rgba(0,0,0,.06); }
+.card > h1, .card > h2, .card > h3 { color: var(--ink); }
 
-/* Links & simple content buttons */
-a { color: #cfe0ff; }
-a:hover { text-decoration: underline; }
+/* Content region tint (kept neutral; layout/overrides controls spacing) */
+.page-content { background: transparent; }
 
-/* ===== Footer + social buttons ===== */
-.site-footer{ color: var(--footer-fg); }
-.footer-nav a, .back-to-top{ color: var(--footer-link); }
+/* Simple grid visual defaults (actual grid columns in layout.css) */
+.grid-2, .grid-3, .grid-4 { gap: var(--space-5); }
 
-/* Social buttons (global defaults) */
-.social-btn{
-  display:inline-flex; align-items:center; justify-content:center;
-  width: 38px; height: 38px; border-radius: 50%;
-  background: var(--social-bg);
-  color: var(--social-fg);
-  box-shadow:
-    0 0 0 2px var(--toggle-ring),
-    0 10px 18px rgba(0,0,0,.25);
-  text-decoration: none;
-  transition: transform .15s ease, opacity .15s ease;
-}
-.social-btn:hover{ transform: scale(1.06); opacity: .95; }
-
-/* ===== Accessible focus ===== */
-:focus-visible{ outline: 2px solid #00c8ff; outline-offset: 2px; }
-
-/* =========================================
-   Settings controls (DOT icons + transparent track)
-   ========================================= */
-
-#settingsMenu .theme-toggle{
-  display: inline-grid;
-  grid-template-columns: var(--toggle-icon) calc(var(--control-h) * 2) var(--toggle-icon);
-  align-items: center;
-  column-gap: 8px;
-  padding: 0; margin: 0; border: 0; background: transparent;
-  line-height: 0; vertical-align: middle;
-}
-
-/* Dot “icons” (filled/ring) */
-#settingsMenu .theme-toggle::before,
-#settingsMenu .theme-toggle::after{
-  content: ""; display: block;
-  width: var(--toggle-icon); height: var(--toggle-icon); border-radius: 50%;
-  background: transparent; box-shadow: 0 0 0 2px currentColor inset;
-}
-/* LIGHT: left filled, right ring */
-html[data-theme="light"] #settingsMenu .theme-toggle::before{ background: currentColor; box-shadow: none; }
-html[data-theme="light"] #settingsMenu .theme-toggle::after { background: transparent; box-shadow: 0 0 0 2px currentColor inset; }
-/* DARK: left ring, right filled */
-html[data-theme="dark"]  #settingsMenu .theme-toggle::before{ background: transparent; box-shadow: 0 0 0 2px currentColor inset; }
-html[data-theme="dark"]  #settingsMenu .theme-toggle::after { background: currentColor; box-shadow: none; }
-
-/* Track: keep it TRANSPARENT */
-#settingsMenu .theme-toggle .toggle-track{
-  grid-column: 2;
-  position: relative; display: block; overflow: hidden;
-  width: calc(var(--control-h) * 2) !important;
-  height: var(--control-h) !important;
+/* Badges */
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
   border-radius: 999px;
-  background: transparent !important;
-  box-shadow: none !important;
-  border: 1.6px solid var(--toggle-ring);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid var(--line-soft);
+  color: var(--ink);
 }
 
-/* Thumb (movement handled by layout) */
-#settingsMenu .theme-toggle .toggle-thumb{
+/* Rules / dividers */
+.hr, .rule { width: 100%; height: 1px; background: var(--line-soft); margin: var(--space-6) 0; }
+
+/* Tables (basic visuals only) */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--panel-bg);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.table th, .table td {
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--line-soft);
+  color: var(--ink);
+}
+.table th {
+  text-align: left;
+  font-weight: 600;
+  background: color-mix(in srgb, var(--panel-bg) 85%, #000 15%);
+}
+
+/* Alerts (info/success/warn/error) */
+.alert {
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line-soft);
+  background: color-mix(in srgb, var(--panel-bg) 92%, #0c152a 8%);
+}
+.alert.info    { border-color: rgba(14,165,233,.35); }
+.alert.success { border-color: rgba(34,197,94,.35); }
+.alert.warn    { border-color: rgba(234,179,8,.35); }
+.alert.error   { border-color: rgba(239,68,68,.35); }
+
+
+/* ==========================================================================
+   SECTION 5 — SETTINGS MENU & THEME TOGGLE
+   - Self-contained visuals for the settings dropdown & theme switch
+   ========================================================================== */
+
+/* Settings menu shell */
+#settingsMenu {
+  background: var(--settings-bg) !important;
+  color: var(--settings-fg) !important;
+  border: 1.5px solid var(--settings-border) !important;
+  border-radius: 16px;
+  box-shadow: 0 14px 32px rgba(0,0,0,.22), 0 2px 6px rgba(0,0,0,.12);
+  backdrop-filter: saturate(140%) blur(2px);
+}
+
+/* Rows within settings */
+#settingsMenu .setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 10px 0;
+}
+#settingsMenu .setting-row > span { flex: 1; }
+
+/* Toggle control (track + thumb + tiny dot icons) */
+#settingsMenu .theme-toggle {
+  --control-h: var(--control-h);  /* inherits */
+  --toggle-icon: var(--toggle-icon);
+  --toggle-ring: var(--toggle-ring);
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: auto auto; /* icons | track */
+  align-items: center;
+  gap: 8px;
+  color: #0d2540;
+}
+
+/* Dot “icons” (left/right) */
+#settingsMenu .theme-toggle::before,
+#settingsMenu .theme-toggle::after {
+  content: "";
+  display: block;
+  width: var(--toggle-icon);
+  height: var(--toggle-icon);
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: 0 0 0 2px currentColor inset;
+}
+
+/* Light: left filled, right ring */
+html[data-theme="light"] #settingsMenu .theme-toggle::before { background: currentColor; box-shadow: none; }
+html[data-theme="light"] #settingsMenu .theme-toggle::after  { background: transparent; box-shadow: 0 0 0 2px currentColor inset; }
+/* Dark: left ring, right filled */
+html[data-theme="dark"]  #settingsMenu .theme-toggle::before { background: transparent; box-shadow: 0 0 0 2px currentColor inset; }
+html[data-theme="dark"]  #settingsMenu .theme-toggle::after  { background: currentColor; box-shadow: none; }
+
+/* Track */
+#settingsMenu .theme-toggle .toggle-track {
+  grid-column: 2;
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  width: calc(var(--control-h) * 2);
+  height: var(--control-h);
+  border-radius: 999px;
+  background: transparent;
+  border: 1.6px solid var(--toggle-ring);
+  box-sizing: border-box;
+}
+
+/* Thumb (position animated by theme) */
+#settingsMenu .theme-toggle .toggle-thumb {
   --gap: 3px;
-  position: absolute; top: var(--gap); left: var(--gap);
+  position: absolute;
+  top: var(--gap);
+  left: var(--gap);
   width: calc(var(--control-h) - (var(--gap) * 2));
   height: calc(var(--control-h) - (var(--gap) * 2));
   border-radius: 50%;
@@ -166,359 +341,13 @@ html[data-theme="dark"]  #settingsMenu .theme-toggle::after { background: curren
   box-shadow: 0 1px 0 rgba(0,0,0,.15), 0 0 0 2px rgba(0,0,0,.2) inset;
   transition: transform .2s ease;
 }
-html[data-theme="light"] #settingsMenu .theme-toggle .toggle-thumb{
+
+/* Light: slide right (so left dot = filled) */
+html[data-theme="light"] #settingsMenu .theme-toggle .toggle-thumb {
   transform: translateX(var(--control-h));
 }
 
-/* ===== OVERRIDE: Settings menu should be WHITE */
-:root,
-html[data-theme="dark"]{
-  --settings-bg: #ffffff;
-  --settings-fg: #0d2540;
-  --settings-border: rgba(0,0,0,.14);
-}
-html[data-theme="light"]{
-  --settings-bg: #ffffff;
-  --settings-fg: #0d2540;
-  --settings-border: rgba(0,0,0,.14);
-}
-#settingsMenu{
-  background: var(--settings-bg) !important;
-  color: var(--settings-fg) !important;
-  border: 1.5px solid var(--settings-border) !important;
-}
-
-/* ===== Footer (navy panel + refined socials) ===== */
-.site-footer {
-  background: #081529 !important;
-  color: #E9F2FF !important;
-  border-top: 1px solid rgba(255,215,0,0.25) !important;
-  border-radius: 16px 16px 0 0;
-  text-align: center;
-  padding: 2rem 1rem;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
-}
-.site-footer .page-content,
-.site-footer .card {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-.site-footer a:hover { color: #FFD700 !important; }
-
-.site-footer{ --social-size: 32px; --social-gap: 12px; }
-@media (min-width: 480px){ .site-footer{ --social-size: 34px; --social-gap: 14px; } }
-
-.site-footer .socials{ display:flex; gap:var(--social-gap); justify-content:center; }
-
-.site-footer .social-btn{
-  width: var(--social-size);
-  height: var(--social-size);
-  border-radius: 999px;
-  background: transparent !important;
-  color: #FFD700 !important;
-  box-shadow:
-    inset 0 0 0 2px #FFD700 !important,
-    0 8px 14px rgba(0,0,0,.35) !important;
-  text-decoration: none;
-  font-weight: 800;
-  font-size: .95rem;
-  letter-spacing: .4px;
-  transition: transform .15s ease, filter .15s ease, box-shadow .15s ease;
-}
-.site-footer .social-btn:hover{
-  transform: translateY(-1px);
-  filter: brightness(1.06);
-  box-shadow:
-    inset 0 0 0 2px #FFD700 !important,
-    0 10px 18px rgba(0,0,0,.40) !important;
-}
-
-/* =========================
-   Business directory bits
-   ========================= */
-:root { --gold: #FFD700; }
-
-.biz-title{
-  color: var(--gold);
-  margin: 0 0 .5rem;
-  line-height: 1.15;
-  font-size: 1.4rem;
-  font-weight: 800;
-}
-
-/* inline-error replacement used by business.html JS */
-.error-box{
-  color: #f7d48c;
-  background: #2a0e0e;
-  padding: 1rem;
-  border-radius: 10px;
-  border: 1px solid rgba(255,215,0,0.25);
-}
-
-/* tiny spacing utility */
-.mt-16{ margin-top: 1rem; }
-
-/* =========================
-   Gold heading styles (H2)
-   ========================= */
-:root {
-  --gold-solid: #FFD700;
-  --gold-hi:    #FFF4B0;
-  --gold-mid:   #FFD700;
-  --gold-low:   #DAA520;
-  --gold-deep:  #B8860B;
-}
-h2.gold{ color: var(--gold-solid); text-shadow: 0 1px 0 rgba(0,0,0,.25); }
-
-h2.gold-metallic{
-  color: transparent;
-  background-image: linear-gradient(180deg, var(--gold-hi) 0%, var(--gold-mid) 32%, var(--gold-low) 64%, var(--gold-deep) 100%);
-  -webkit-background-clip: text; background-clip: text;
-  text-shadow: 0 1px 0 rgba(0,0,0,.25), 0 6px 18px rgba(0,0,0,.25);
-}
-html[data-theme="light"] h2.gold-metallic{
-  text-shadow: 0 1px 0 rgba(255,255,255,.3), 0 6px 14px rgba(0,0,0,.15);
-}
-
-/* Center indicator: A↕ (clear meaning) */
-.font-size-controls::before{
-  content: "A↕";
-  order: 2;
-  font-weight: 900;
-  letter-spacing: .2px;
-  padding: 2px 8px;
-  border-radius: 8px;
-  color: #FFD700;
-  background: rgba(255,215,0,.14);
-  box-shadow: inset 0 0 0 1px rgba(255,215,0,.35), 0 4px 10px rgba(0,0,0,.18);
-}
-.font-size-controls > :first-child{ order: 1; }
-.font-size-controls > :last-child { order: 3; }
-
-/* ================================
-   Settings menu polish (light 3D)
-   ================================ */
-
-/* Panel: softer white, depth, gentle border */
-#settingsMenu{
-  background: linear-gradient(180deg, #ffffff, #f5f7fb);
-  border: 1px solid rgba(8,21,41,.08);
-  box-shadow:
-    0 10px 28px rgba(8,21,41,.28),
-    0 2px 0 rgba(255,255,255,.9) inset;
-}
-
-/* Section headings stay dark/navy for readability */
-#settingsMenu h3, #settingsMenu .section-title{
-  color: #0d2540;
-}
-
-/* ================================
-   Theme selector / toggle clarity
-   Works whether it's a switch or radio dots
-   ================================ */
-
-/* If you use a track + thumb switch */
-#settingsMenu .theme-toggle .toggle-track{
-  height: 28px; width: 50px;
-  background: rgba(8,21,41,.15);
-  border-radius: 999px;
-  border: 1.5px solid rgba(8,21,41,.25);
-  box-shadow: inset 0 2px 3px rgba(0,0,0,.12);
-}
-#settingsMenu .theme-toggle .toggle-thumb{
-  height: 24px; width: 24px;
-  margin: 1px;
-  border-radius: 50%;
-  background: linear-gradient(180deg,#fefefe,#e7ecf5);
-  box-shadow: 0 1px 0 rgba(0,0,0,.18), 0 6px 10px rgba(0,0,0,.18);
-}
-
-/* If you use circular options (◯ ● ●): give them a ring */
-#settingsMenu .theme-options .option{
-  width: 22px; height: 22px;
-  border-radius: 50%;
-  border: 2px solid rgba(8,21,41,.35);
-  background: #fff;
-  box-shadow: 0 2px 6px rgba(8,21,41,.15);
-}
-#settingsMenu .theme-options .option.is-active{
-  background: #0d2540;
-  border-color: #0d2540;
-  box-shadow: 0 2px 10px rgba(8,21,41,.28);
-}
-
-/* ================================
-   Font-size controls: – [A a] +
-   Same height as buttons, much lighter
-   ================================ */
-
-.font-size-controls{
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 4px 8px;
-  border-radius: 999px;
-  background: rgba(8,21,41,.06);
-  border: 1px solid rgba(8,21,41,.12);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.6);
-}
-
-/* – / + buttons */
-.font-size-controls button{
-  appearance: none;
-  width: 36px; height: 28px;          /* height matches center badge */
-  border: 0;
-  border-radius: 999px;
-  display: grid; place-items: center;
-  font-weight: 800;
-  background: #eef3ff;
-  color: #102443;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.65), 0 6px 10px rgba(8,21,41,.15);
-  transition: transform .12s ease, filter .15s ease;
-}
-.font-size-controls button:hover{ transform: translateY(-1px); }
-.font-size-controls button:active{ transform: translateY(0); filter: brightness(.96); }
-
-/* Center badge: thin, not heavy; same height as buttons */
-.font-size-controls::before{
-  content: "";
-  order: 2;
-  width: 44px; height: 28px;          /* same height as buttons */
-  border-radius: 8px;
-  background:
-    linear-gradient(180deg, rgba(255,215,0,.12), rgba(255,215,0,.08));
-  box-shadow:
-    inset 0 0 0 1px rgba(255,215,0,.45),
-    0 2px 6px rgba(8,21,41,.12);
-
-  /* Elegant "A a" as lightweight SVG (gold) */
-  background-image: url("data:image/svg+xml;utf8,\
-<svg xmlns='http://www.w3.org/2000/svg' width='44' height='28' viewBox='0 0 44 28'>\
-  <text x='12' y='19' font-family='system-ui,Segoe UI,Roboto,Arial' font-size='14' font-weight='800' fill='%23FFD24D'>A</text>\
-  <text x='26' y='19' font-family='system-ui,Segoe UI,Roboto,Arial' font-size='11' font-weight='800' fill='%23FFD24D'>a</text>\
-</svg>");
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-/* Ensure the – is left, + is right */
-.font-size-controls > :first-child{ order: 1; }
-.font-size-controls > :last-child { order: 3; }
-
-/* On light theme keep contrast */
-html[data-theme="light"] .font-size-controls{
-  background: rgba(8,21,41,.04);
-  border-color: rgba(8,21,41,.12);
-}
-
-/* Center indicator: A↕ (no pill/background, same size as buttons) */
-.font-size-controls::before{
-  content: "A↕";
-  order: 2;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 36px;   /* match button width */
-  height: 28px;      /* match button height */
-  font-weight: 800;
-  font-size: 15px;   /* a touch larger for clarity */
-  line-height: 1;
-  color: #0d2540;    /* black/navy */
-  background: none;
-  border: 0;
-  box-shadow: none;
-}
-
-/* High-contrast thumb on DARK theme */
-html[data-theme="dark"] #settingsMenu .theme-toggle .toggle-track{
-  background: rgba(255,255,255,.22) !important;         /* lighter rail */
-  border-color: rgba(255,255,255,.30) !important;
-}
-
-html[data-theme="dark"] #settingsMenu .theme-toggle .toggle-thumb{
-  background: linear-gradient(180deg, #1b2f51, #0d2540) !important; /* dark thumb */
-  border: 2px solid #ffffff !important;                                /* white ring */
-  box-shadow:
-    0 0 0 2px rgba(255,255,255,.45),                                   /* outer glow for clarity */
-    0 6px 12px rgba(0,0,0,.35) !important;
-}
-/* ---------------------------------------
-   Toggle: visible rail + perfectly centered thumb
-   --------------------------------------- */
-#settingsMenu .theme-toggle .toggle-track,
-#settingsMenu .theme-toggle .toggle-thumb{
-  box-sizing: border-box; /* borders won't shift sizing */
-}
-
-#settingsMenu .theme-toggle .toggle-track{
-  position: relative;
-  width: 56px;
-  height: 32px;
-  border-radius: 999px;
-  background: rgba(8,21,41,.18) !important;        /* rail fill (dark-ish on light bg) */
-  border: 2px solid rgba(8,21,41,.45) !important;   /* strong visible outline */
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.55),            /* inner highlight */
-    0 0 0 1px rgba(8,21,41,.05);                    /* hairline outer */
-}
-
-#settingsMenu .theme-toggle .toggle-thumb{
-  position: absolute;
-  left: 2px;                                        /* rests on left edge */
-  top: 50%;                                         /* always vertical-center */
-  transform: translateY(-50%);
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: linear-gradient(180deg,#ffffff,#e9eef6) !important;
-  border: 2px solid #0d2540 !important;             /* crisp ring so it’s visible */
-  box-shadow: 0 1px 0 rgba(0,0,0,.18), 0 6px 10px rgba(0,0,0,.18) !important;
-  transition: left .15s ease;
-}
-
-/* ON state: slide to exact right edge */
-#settingsMenu .theme-toggle.is-on .toggle-thumb{
-  left: calc(100% - 2px - 28px);
-}
-
-/* ---- Dark theme tuning: brighter rail + white ring thumb ---- */
-html[data-theme="dark"] #settingsMenu .theme-toggle .toggle-track{
-  background: rgba(255,255,255,.22) !important;
-  border-color: rgba(255,255,255,.60) !important;
-}
-html[data-theme="dark"] #settingsMenu .theme-toggle .toggle-thumb{
-  background: linear-gradient(180deg,#1b2f51,#0d2540) !important;
-  border-color: #ffffff !important;                 /* white ring */
-  box-shadow: 0 0 0 2px rgba(255,255,255,.35), 0 6px 12px rgba(0,0,0,.35) !important;
-}
-
-/* ===============================
-   Theme toggle (final calibrated)
-   =============================== */
-#settingsMenu .theme-toggle .toggle-track {
-  position: relative;
-  width: 56px;
-  height: 32px;
-  border-radius: 999px;
-  box-sizing: border-box;
-  display: inline-block;
-}
-
-#settingsMenu .theme-toggle .toggle-thumb {
-  position: absolute;
-  top: 50%;
-  left: 2px;
-  transform: translateY(-50%);
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  box-sizing: border-box;
-  transition: left 0.2s ease;
-}
-
-/* --- Light Theme --- */
+/* Optional calibrated look for a glossy toggle (kept subtle) */
 html[data-theme="light"] #settingsMenu .theme-toggle .toggle-track {
   background: #d0d7e3;
   border: 2px solid #9faec5;
@@ -530,384 +359,68 @@ html[data-theme="light"] #settingsMenu .theme-toggle .toggle-thumb {
   box-shadow: 0 1px 0 rgba(0,0,0,.18), 0 6px 10px rgba(0,0,0,.18);
 }
 
-/* --- Dark Theme --- */
 html[data-theme="dark"] #settingsMenu .theme-toggle .toggle-track {
-  background: rgba(255,255,255,.2);
-  border: 2px solid rgba(255,255,255,.65);
-  box-shadow: inset 0 1px 1px rgba(0,0,0,.5);
+  background: rgba(255,255,255,.22);
+  border: 2px solid rgba(255,255,255,.60);
 }
 html[data-theme="dark"] #settingsMenu .theme-toggle .toggle-thumb {
   background: linear-gradient(180deg,#1b2f51,#0d2540);
-  border: 2px solid #fff;
-  box-shadow: 0 0 0 2px rgba(255,255,255,.3), 0 6px 12px rgba(0,0,0,.35);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 2px rgba(255,255,255,.35), 0 6px 12px rgba(0,0,0,.35);
 }
 
-/* When in light mode, thumb slides right */
-html[data-theme="light"] #settingsMenu .theme-toggle .toggle-thumb {
-  left: calc(100% - 2px - 28px);
+
+/* ==========================================================================
+   SECTION 6 — UTILITIES (tiny helpers; low-specificity)
+   ========================================================================== */
+.text-center { text-align: center; }
+.text-right  { text-align: right; }
+.dim         { opacity: .85; }
+.hidden      { display: none !important; }
+
+/* Space utilities (margin-bottom) */
+.mb-0 { margin-bottom: 0 !important; }
+.mb-2 { margin-bottom: var(--space-2) !important; }
+.mb-3 { margin-bottom: var(--space-3) !important; }
+.mb-4 { margin-bottom: var(--space-4) !important; }
+.mb-5 { margin-bottom: var(--space-5) !important; }
+.mb-6 { margin-bottom: var(--space-6) !important; }
+.mt-6 { margin-top: var(--space-6) !important; }
+
+/* Width helpers */
+.w-full { width: 100%; }
+
+
+/* ==========================================================================
+   SECTION 7 — ADMIN MODE (Subtle token-only tint)
+   - Do not change component class rules. Only nudge tokens so all components
+     inherit the “Admin” look automatically when <body class="is-admin">.
+   ========================================================================== */
+body.is-admin {
+  /* Slightly deeper header gradient and panel tint */
+  --header-bg:  linear-gradient(180deg, #102443 0%, #0d2540 100%);
+  --panel-bg:   color-mix(in srgb, var(--panel-bg) 92%, #061225 8%);
+  --footer-fg:  #e3eaff;
+  --footer-link:#e3eaff;
+
+  /* Optional: thin gold-leaning borders (used by settings panes/cards) */
+  --settings-border: rgba(255, 215, 0, .25);
 }
 
-/* ===============================
-   Settings dropdown panel styling
-   =============================== */
 
-/* Base: catch the panel inside the settings menu */
-#settingsMenu > *,
-#settingsMenu .panel,
-#settingsMenu .menu,
-#settingsMenu .dropdown,
-#settingsMenu .settings-card {
-  border-radius: 16px !important;
-  padding: 16px 20px !important;
-  border: 1px solid rgba(13,37,64,.12) !important;   /* subtle edge */
-  box-shadow:
-    0 14px 32px rgba(0,0,0,.22),
-    0 2px 6px rgba(0,0,0,.12),
-    inset 0 1px 0 rgba(255,255,255,.65) !important;   /* gentle inner highlight */
-  backdrop-filter: saturate(140%) blur(2px);          /* a touch of depth (supported browsers) */
-}
-
-/* Light theme: gentle cool gradient, not pure white */
-html[data-theme="light"] #settingsMenu > *,
-html[data-theme="light"] #settingsMenu .panel,
-html[data-theme="light"] #settingsMenu .menu,
-html[data-theme="light"] #settingsMenu .dropdown,
-html[data-theme="light"] #settingsMenu .settings-card {
-  background: linear-gradient(180deg, #ffffff 0%, #f2f6fc 100%) !important;
-}
-
-/* Dark theme: keep it light enough to float, but cooler to reduce glare */
-html[data-theme="dark"] #settingsMenu > *,
-html[data-theme="dark"] #settingsMenu .panel,
-html[data-theme="dark"] #settingsMenu .menu,
-html[data-theme="dark"] #settingsMenu .dropdown,
-html[data-theme="dark"] #settingsMenu .settings-card {
-  background: linear-gradient(/* =========================================================
-   Kingdom Connects — THEME
-   - Light/Dark tokens
-   - Gold palette + utilities
-   - Settings dropdown panel
-   - Theme toggle (track + thumb)
-   - Font size controls (– A↕ +)
-   ========================================================= */
-
-/* ---------- Base tokens (Light defaults) ---------- */
-:root{
-  --base-font-size:16px;
-
-  /* Core text & surfaces */
-  --page-bg:#f7f9fc;
-  --text:#0c223b;
-  --muted:#5b6b7d;
-
-  --surface-1:#ffffff;  /* cards, popovers */
-  --surface-2:#eef3f8;  /* subtle containers */
-  --surface-3:#d7e1ec;  /* outlines/dividers */
-
-  /* Header/Footer tints (gradients are in layout.css) */
-  --header-bg-start:#6aa4ff;
-  --header-bg-end:#b7d2ff;
-  --header-fg:#0c223b;
-
-  --footer-bg:#0b1e35;
-  --footer-fg:#cfe2ff;
-
-  /* Controls */
-  --control-bg:#f2f5f9;
-  --control-fg:#0c223b;
-
-  /* Toggle parts */
-  --toggle-track:#d0d7e2;     /* rail outline (light) */
-  --toggle-thumb:#ffffff;     /* thumb fill (light) */
-  --toggle-thumb-icon:#0c223b;
-
-  /* Shadows */
-  --shadow-pop: 0 10px 30px rgba(3, 20, 40, 0.25);
-}
-
-/* ---------- Dark theme overrides ---------- */
-html[data-theme="dark"]{
-  --page-bg:#0a1b2f;
-  --text:#dfe9f7;
-  --muted:#9fb1c6;
-
-  --surface-1:#f9fbff;   /* we keep the dropdown panel light to “float” */
-  --surface-2:#e9f0f9;
-  --surface-3:#163552;
-
-  --header-bg-start:#1a57b8;
-  --header-bg-end:#215ed1;
-  --header-fg:#e9f2ff;
-
-  --footer-bg:#0a1a2d;
-  --footer-fg:#c8ddff;
-
-  --control-bg:#0e223a;
-  --control-fg:#e7f0ff;
-
-  /* Dark-mode toggle rail outline (your request: dark blue) */
-  --toggle-track:#0d2540;     /* deep navy border color on rail */
-  --toggle-thumb:#102844;     /* darker thumb in dark */
-  --toggle-thumb-icon:#e7f0ff;
-
-  --shadow-pop: 0 16px 40px rgba(0, 10, 25, .55);
-}
-
-/* Apply page background & text */
-html, body{
-  background:var(--page-bg);
-  color:var(--text);
-  font-size:var(--base-font-size);
-}
-
-/* =========================================================
-   GOLD ACCENT SUITE — reusable tokens & tiny utilities
-   ========================================================= */
-:root{
-  --gold-50:  #FFF7DB;
-  --gold-100: #FBE8A6;
-  --gold-200: #F7D36E;
-  --gold-300: #F3C545;
-  --gold-400: #F0C23B;   /* primary brand gold */
-  --gold-500: #D6A81F;
-  --gold-600: #B58B12;
-  --gold-700: #936E07;
-  --gold-800: #6F5200;
-  --gold-900: #553E00;
-
-  --gold-grad-start: var(--gold-400);
-  --gold-grad-end:   #FFE98A;
-  --gold-ring:       color-mix(in oklab, var(--gold-400) 65%, white 35%);
-  --gold-shadow-md:  0 8px 24px rgba(136, 93, 0, .28);
-  --gold-shadow-sm:  0 2px 8px rgba(136, 93, 0, .22);
-}
-
-html[data-theme="dark"]{
-  --gold-grad-start: color-mix(in oklab, var(--gold-400) 86%, white 14%);
-  --gold-grad-end:   color-mix(in oklab, var(--gold-400) 62%, white 38%);
-  --gold-ring:       color-mix(in oklab, var(--gold-400) 70%, white 30%);
-}
-
-/* Text utilities */
-.gold,
-.text-gold       { color: var(--gold-400) !important; }
-.text-gold-deep  { color: var(--gold-500) !important; }
-
-/* Metallic headline (used on index) */
-.gold-metallic,
-.text-gold-metallic{
-  color: var(--gold-400) !important;
-  text-shadow:
-    0 1px 0 rgba(255,255,255,.08),
-    0 2px 4px rgba(0,0,0,.25),
-    0 0 .5px var(--gold-700);
-}
-
-/* Background utilities (optional) */
-.bg-gold-soft{
-  background: linear-gradient(180deg, var(--gold-50), color-mix(in oklab, var(--gold-50) 60%, white 40%));
-  color: var(--text);
-}
-.bg-gold-glow{
-  background: radial-gradient(120% 100% at 50% -10%, var(--gold-grad-end), transparent 60%);
-}
-
-/* Rings / borders */
-.ring-gold{ outline: 2px solid var(--gold-ring); outline-offset: 2px; }
-.border-gold{ border: 1px solid var(--gold-400) !important; }
-
-/* Small helpers */
-.badge-gold{
-  display:inline-flex; align-items:center; gap:.4ch;
-  padding:.25rem .55rem;
-  font-weight:700; font-size:.825rem; letter-spacing:.2, #f9fbff 0%, #e9f0f9 100%) !important;
-  border-color: rgba(255,255,255,.14) !important;     /* slightly brighter rim on dark */
-}
-
-/* ===============================
-   PATCH — Settings dropdown & toggle
-   =============================== */
-
-/* 1) Settings dropdown: gradient panel (not stark white) */
-#settingsMenu{
-  background:
-    radial-gradient(160% 120% at 15% -20%, rgba(255,255,255,.25), transparent 40%),
-    linear-gradient(180deg, #ffffff 0%, #f2f6fc 100%) !important;
-  border: 1px solid rgba(13,37,64,.12) !important;
-}
-
-/* Title/header: NO border/box, stays plain */
-#settingsMenu .settings-header,
-#settingsMenu .menu-header,
-#settingsMenu .dropdown-header,
-#settingsMenu .panel > .header,
-#settingsMenu .panel > header,
-#settingsMenu .menu > header,
-#settingsMenu h2.menu-title,
-#settingsMenu h3.menu-title{
-  background: transparent !important;
-  border: 0 !important;        /* remove title border */
-  box-shadow: none !important;
-}
-
-/* 2) Toggle rail: ensure geometry + outlines + centering */
-#settingsMenu .theme-toggle .toggle-track{
-  position: relative !important;
-  display: inline-block !important;
-  width: 56px !important;
-  height: 32px !important;
-  border-radius: 999px !important;
-  background: #dfe5ef !important;                 /* light rail fill */
-  border: 2px solid var(--toggle-ring) !important;
-}
-
-/* Dark mode: rail outline = deep navy (visible) */
-html[data-theme="dark"] #settingsMenu .theme-toggle .toggle-track{
-  background: rgba(255,255,255,.18) !important;
-  border-color: #0d2540 !important;               /* dark blue outline */
-}
-
-/* Thumb: always vertically centered */
-#settingsMenu .theme-toggle .toggle-thumb{
-  position: absolute !important;
-  left: 2px !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  margin: 0 !important;
-  width: 28px !important;
-  height: 28px !important;
-  border-radius: 50% !important;
-  transition: left .18s ease !important;
-  z-index: 1 !important;
-}
-
-/* Light mode: DARK thumb so it reads on white/gray */
-html[data-theme="light"] #settingsMenu .theme-toggle .toggle-thumb{
-  background: linear-gradient(180deg,#142d50,#0d2540) !important;
-  border: 2px solid #ffffff !important;           /* crisp white ring */
-  box-shadow: 0 1px 0 rgba(0,0,0,.18), 0 6px 10px rgba(0,0,0,.18) !important;
-  left: calc(100% - 2px - 28px) !important;       /* slide right in light */
-}
-
-/* Dark mode: keep strong white ring */
-html[data-theme="dark"] #settingsMenu .theme-toggle .toggle-thumb{
-  background: linear-gradient(180deg,#1b2f51,#0d2540) !important;
-  border: 2px solid #ffffff !important;
-  box-shadow: 0 0 0 2px rgba(255,255,255,.30), 0 6px 12px rgba(0,0,0,.35) !important;
-}
-
-/* ================================
-   FINAL POLISHED PATCH — Settings dropdown + toggle
-   ================================ */
-
-/* 1. Dropdown background: soft gradient + rounded blur card */
-#settingsMenu {
-  background: linear-gradient(180deg, #ffffff 0%, #f4f6fa 100%) !important;
-  border: none !important;
-  border-radius: 18px !important;
-  box-shadow:
-    0 16px 32px rgba(0,0,0,0.25),
-    0 6px 12px rgba(0,0,0,0.15),
-    inset 0 1px 0 rgba(255,255,255,0.65) !important;
-  backdrop-filter: blur(14px) !important;
-  -webkit-backdrop-filter: blur(14px) !important;
-  overflow: hidden !important;
-}
-
-/* 2. Remove header box or border entirely */
-#settingsMenu h4 {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  margin: 0 0 8px 0 !important;
-  padding: 0 !important;
-}
-
-/* 3. Toggle track (light mode baseline) */
-#settingsMenu .theme-toggle .toggle-track {
-  border: 2px solid var(--toggle-ring) !important;
-  border-radius: 999px !important;
-  background: #dfe5ef !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.55) !important;
-}
-
-/* Dark mode: deeper blue outline */
-html[data-theme="dark"] #settingsMenu .theme-toggle .toggle-track {
-  background: rgba(255,255,255,0.18) !important;
-  border-color: #0d2540 !important;
-  box-shadow: inset 0 1px 1px rgba(0,0,0,0.45) !important;
-}
-
-/* 4. Toggle thumb alignment and contrast */
-#settingsMenu .theme-toggle .toggle-thumb {
-  position: absolute !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  left: 2px !important;
-  width: 28px !important;
-  height: 28px !important;
-  border-radius: 50% !important;
-  transition: left 0.18s ease !important;
-}
-
-/* Light mode: darker, bolder thumb */
-html[data-theme="light"] #settingsMenu .theme-toggle .toggle-thumb {
-  background: linear-gradient(180deg, #1b2f51, #0d2540) !important;
-  border: 2px solid #ffffff !important;
-  box-shadow:
-    0 1px 2px rgba(0,0,0,0.25),
-    0 6px 10px rgba(0,0,0,0.18) !important;
-}
-
-/* Dark mode: white-ringed thumb */
-html[data-theme="dark"] #settingsMenu .theme-toggle .toggle-thumb {
-  background: linear-gradient(180deg, #1b2f51, #0d2540) !important;
-  border: 2px solid #ffffff !important;
-  box-shadow:
-    0 0 0 2px rgba(255,255,255,0.3),
-    0 6px 12px rgba(0,0,0,0.35) !important;
-}
-
-.admin-header {
-  background: linear-gradient(180deg,#08162d,#0e2347);
-  color:#fff;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:12px 20px;
-  border-bottom:2px solid #f8d14b;
-  box-shadow:0 2px 10px rgba(0,0,0,0.4);
-}
-
-.admin-logo {
-  height:45px;
-  margin-right:10px;
-}
-
-.admin-header h1 {
-  font-size:1.2rem;
-  font-weight:700;
-}
-
-.back-button {
-  background:#f8d14b;
-  color:#000;
-  padding:8px 16px;
-  border-radius:10px;
-  text-decoration:none;
-  font-weight:600;
-}
-
-.back-button:hover {
-  background:#ffd84f;
-}
-
-.admin-footer {
-  background:#08162d;
-  color:#aaa;
-  text-align:center;
-  padding:15px 10px;
-  font-size:0.9rem;
-  border-top:1px solid #333;
-  margin-top:40px;
+/* ==========================================================================
+   SECTION 8 — PRINT
+   ========================================================================== */
+@media print {
+  body { color: #111; background: #fff; }
+  .header, .footer {
+    background: none !important;
+    color: #111 !important;
+    box-shadow: none !important;
+  }
+  .card, .panel {
+    box-shadow: none !important;
+    border-color: #ddd !important;
+  }
+  a { color: #0645ad; text-decoration: underline; }
 }

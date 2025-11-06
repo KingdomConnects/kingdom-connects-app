@@ -1,88 +1,149 @@
-/* =========================================================
-   Kingdom Connects — overrides.css  (v3.2 clean)
-   Scope: Page-content polish + layout only.
-   DO NOT style .site-header or .site-footer visuals here.
-   ========================================================= */
+/* ========================================================================== */
+/* Kingdom Connects — OVERRIDES (Content polish + gentle visual tweaks)       */
+/* Purpose: Pad the content area, refine cards, and add small, shared flourishes*/
+/* Notes:                                                                     */
+/* - No button or form visuals live here (see buttons.css / forms.css)        */
+/* - Uses only tokens defined in theme.css                                    */
+/* - Structure (containers, grids) is in layout.css                           */
+/* ========================================================================== */
 
-/* ---------------------------------------
-   CONTENT (safe to main area only)
-   --------------------------------------- */
+
+/* ==========================================================================
+   SECTION 1 — PAGE CONTENT PADDING & FLOW
+   - Keep page content breathing and consistent across pages
+   ========================================================================== */
+
 .page-content {
-  /* Optional roomier default padding:
-  --content-gap: clamp(16px, 3vw, 28px);
-  padding: var(--content-gap);
-  */
+  padding: clamp(16px, 2.8vw, 28px);
+  border-radius: var(--radius-lg);
+  /* Transparent background so theme/page visuals can shine through */
+  background: transparent;
 }
 
-/* Typographic scale */
-.page-content h1 { font-size: clamp(26px, 3.2vw, 36px); line-height: 1.15; margin: 0 0 12px; }
-.page-content h2 { font-size: clamp(20px, 2.6vw, 28px); line-height: 1.2;  margin: 18px 0 10px; }
-.page-content p  { margin: 10px 0; }
-
-/* Spacing helpers */
-.page-content .section { padding-block: clamp(12px, 2.4vw, 24px); }
-.page-content .stack  { display: flex; flex-direction: column; gap: var(--stack-gap, 14px); }
-.page-content .stack-lg { --stack-gap: 22px; }
-.page-content .stack-xl { --stack-gap: 28px; }
-
-/* Content grids */
-.page-content .grid-2,
-.page-content .grid-3 { display: grid; gap: clamp(12px, 2.2vw, 20px); }
-@media (min-width: 720px) {
-  .page-content .grid-2 { grid-template-columns: 1fr 1fr; }
-  .page-content .grid-3 { grid-template-columns: repeat(3, 1fr); }
+/* Space articles/sections inside page content */
+.page-content > article,
+.page-content > section {
+  margin-bottom: clamp(18px, 2.2vw, 28px);
 }
 
-/* Content cards (NOT header/footer cards) */
-.page-content .card{
-  border-radius: 14px;
-  padding: clamp(12px, 2vw, 18px);
-  background: color-mix(in srgb, var(--panel-bg) 92%, transparent);
-  border: 1px solid rgba(255,255,255,.08);
-  box-shadow: 0 10px 22px rgba(0,0,0,.22);
-}
-html[data-theme="light"] .page-content .card{
-  border-color: rgba(0,0,0,.06);
-  box-shadow: 0 10px 22px rgba(0,0,0,.10);
+/* Tighten last child spacing */
+.page-content > :last-child {
+  margin-bottom: 0;
 }
 
-/* Content buttons */
-.page-content .btn,
-.page-content a.btn{
-  display: inline-block;
-  padding: 10px 14px;
-  border-radius: 10px;
-  text-decoration: none;
-  border: 1px solid rgba(255,255,255,.15);
-}
-.page-content .btn.primary,
-.page-content a.btn.primary{
-  background: #f4c24d; color: #0b0f19; border-color: transparent; font-weight: 700;
+
+/* ==========================================================================
+   SECTION 2 — CARD POLISH (gentle visual refinement only)
+   - Cards already get core visuals from theme.css
+   - Here we do internal padding and mild hover depth for interactivity
+   ========================================================================== */
+
+.card {
+  padding: clamp(16px, 2.4vw, 24px);
+  transition: box-shadow .18s ease, transform .18s ease, border-color .18s ease;
 }
 
-/* ---------------------------------------
-   LAYOUT ONLY: sticky footer (robust)
-   --------------------------------------- */
-html, body { height: 100%; }
-.page-wrap{
-  display: flex; flex-direction: column;
-  min-height: 100vh; min-height: 100dvh;
+/* Slight lift on hover/focus for interactive cards */
+.card:hover,
+.card:focus-within {
+  box-shadow: var(--shadow-2);
+  border-color: var(--line-strong);
+  transform: translateY(-1px);
 }
-#header{ flex: 0 0 auto; }
-main.main-content{ flex: 1 0 auto; min-height: 0; }
-#footer{ flex: 0 0 auto; margin-top: auto; }
 
-/* Fallback if a page ever lacks .page-wrap */
-body:has(#header, #footer):not(:has(.page-wrap)){
-  display: flex; flex-direction: column;
-  min-height: 100vh; min-height: 100dvh;
+/* Headline spacing inside cards */
+.card > h1,
+.card > h2,
+.card > h3 {
+  margin-bottom: var(--space-4);
 }
-body:has(#header, #footer):not(:has(.page-wrap)) main.main-content{ flex: 1 0 auto; }
-body:has(#header, #footer):not(:has(.page-wrap)) #footer{ flex: 0 0 auto; margin-top: auto; }
 
-/* Row alignment for settings (label | control) */
-#settingsMenu .setting-row{
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 12px; margin: 10px 0;
+/* Paragraph rhythm inside cards */
+.card p + p {
+  margin-top: var(--space-3);
 }
-#settingsMenu .setting-row > span{ flex: 1; }
+
+
+/* ==========================================================================
+   SECTION 3 — SECTION HEADERS & SUBTLE RULES
+   ========================================================================== */
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: var(--space-5);
+}
+
+.section-header .title {
+  font-weight: 800;
+  color: var(--ink);
+  font-size: var(--h2);
+}
+
+.section-header .sub {
+  color: var(--ink-muted);
+  font-weight: 500;
+}
+
+/* Soft dividing rule to separate blocks when needed */
+.rule-soft {
+  height: 1px;
+  width: 100%;
+  background: var(--line-soft);
+  margin: var(--space-6) 0;
+}
+
+
+/* ==========================================================================
+   SECTION 4 — STICKY FOOTER ASSIST
+   - Works with the layout.css flex column structure
+   - Ensures footer stays at the bottom even with little content
+   ========================================================================== */
+
+.site-footer {
+  margin-top: auto;
+}
+
+
+/* ==========================================================================
+   SECTION 5 — TABLE POLISH (builds on theme.css .table)
+   ========================================================================== */
+
+.table--flush {
+  border-radius: var(--radius-md);
+  overflow: hidden; /* clip inner cell hover highlights cleanly */
+}
+
+.table tr:hover td {
+  background: color-mix(in srgb, var(--panel-bg) 96%, #000 4%);
+}
+
+
+/* ==========================================================================
+   SECTION 6 — ADMIN-ONLY HINTS (token-based, non-invasive)
+   - These cues appear only when <body class="is-admin"> is active
+   - We do NOT introduce new colors; we use tokens from theme.css
+   ========================================================================== */
+
+body.is-admin .card {
+  border-color: var(--settings-border); /* faint gold-leaning edge */
+}
+
+body.is-admin .section-header .title {
+  text-shadow: 0 0 1px rgba(0,0,0,.25);
+}
+
+
+/* ==========================================================================
+   SECTION 7 — SMALL UTILITIES (kept tiny, low-specificity)
+   ========================================================================== */
+
+.pad-0 { padding: 0 !important; }
+.pad-sm { padding: var(--space-3) !important; }
+.pad-md { padding: var(--space-5) !important; }
+.pad-lg { padding: var(--space-7) !important; }
+
+.gap-sm > * + * { margin-top: var(--space-3); }
+.gap-md > * + * { margin-top: var(--space-5); }
+.gap-lg > * + * { margin-top: var(--space-7); }
