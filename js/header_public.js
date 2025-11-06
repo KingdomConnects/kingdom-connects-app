@@ -1,13 +1,13 @@
-// Public header with hamburger + gear (relative paths only)
+// Public header with hamburger + gear dropdown (theme + font size) — relative paths only
 (function () {
   var slot = document.getElementById("header");
   if (!slot) return;
 
   // Persist keys
   var LS_THEME = "kc_theme";
-  var LS_SCALE = "kc_font_scale"; // 85-140
+  var LS_SCALE = "kc_font_scale"; // 85–140
 
-  // Apply saved theme/scale
+  // Apply saved settings immediately
   var html = document.documentElement;
   var theme = localStorage.getItem(LS_THEME);
   if (theme === "light" || theme === "dark") html.setAttribute("data-theme", theme);
@@ -16,7 +16,7 @@
   scale = Math.max(85, Math.min(140, scale));
   html.style.fontSize = scale + "%";
 
-  // Markup (classes only; no inline styles)
+  // Header markup (no inline styles)
   slot.innerHTML = `
 <header class="site-header" role="banner">
   <div class="header-inner">
@@ -26,7 +26,7 @@
     </a>
 
     <nav class="nav-wrap">
-      <button class="menu-toggle" id="kc-menu-toggle" aria-label="Menu" aria-expanded="false" aria-controls="kc-nav">
+      <button class="menu-toggle" id="kc-menu-toggle" aria-label="Menu" aria-expanded="false" aria-controls="kc-nav" type="button">
         <span class="bar"></span><span class="bar"></span><span class="bar"></span>
       </button>
       <ul class="nav-links" id="kc-nav" aria-label="Main Navigation">
@@ -37,15 +37,18 @@
     </nav>
 
     <div class="header-actions">
-      <button class="gear-toggle" id="kc-gear" aria-haspopup="true" aria-expanded="false" aria-controls="kc-controls" title="Display settings"></button>
+      <button class="gear-toggle" id="kc-gear" aria-haspopup="true" aria-expanded="false" aria-controls="kc-controls" title="Display settings" type="button">
+        <span class="gear-icon" aria-hidden="true">⚙️</span>
+        <span class="sr-only">Display settings</span>
+      </button>
       <div class="user-controls" id="kc-controls" hidden>
         <div class="ctrl-row">
-          <button class="ctrl-btn" id="kc-font-dec" aria-label="Smaller text">A−</button>
+          <button class="ctrl-btn" id="kc-font-dec" type="button" aria-label="Smaller text">A−</button>
           <span class="ctrl-readout" id="kc-font-readout">` + scale + `%</span>
-          <button class="ctrl-btn" id="kc-font-inc" aria-label="Larger text">A+</button>
+          <button class="ctrl-btn" id="kc-font-inc" type="button" aria-label="Larger text">A+</button>
         </div>
         <div class="ctrl-row">
-          <button class="ctrl-btn" id="kc-theme-toggle" aria-label="Toggle theme">🌙/🌞</button>
+          <button class="ctrl-btn" id="kc-theme-toggle" type="button" aria-label="Toggle theme">🌙/🌞</button>
         </div>
       </div>
     </div>
@@ -67,7 +70,7 @@
     });
   }
 
-  // Gear panel
+  // Gear dropdown
   var gear = document.getElementById("kc-gear");
   var panel = document.getElementById("kc-controls");
   if (gear && panel) {
@@ -81,18 +84,19 @@
     });
   }
 
-  // Font size
+  // Font size controls
   function setScale(val){
     val = Math.max(85, Math.min(140, parseInt(val,10)||100));
     html.style.fontSize = val + "%";
     localStorage.setItem(LS_SCALE, String(val));
     var r = document.getElementById("kc-font-readout");
     if (r) r.textContent = val + "%";
+    scale = val;
   }
   var inc = document.getElementById("kc-font-inc");
   var dec = document.getElementById("kc-font-dec");
-  if (inc) inc.addEventListener("click", function(){ setScale(scale = Math.min(140, scale + 10)); });
-  if (dec) dec.addEventListener("click", function(){ setScale(scale = Math.max(85,  scale - 10)); });
+  if (inc) inc.addEventListener("click", function(){ setScale(scale + 10); });
+  if (dec) dec.addEventListener("click", function(){ setScale(scale - 10); });
 
   // Theme toggle
   var themeBtn = document.getElementById("kc-theme-toggle");
