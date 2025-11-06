@@ -1,45 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kingdom Connects — Admin</title>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kingdom Connects</title>
 
-    <!-- Shared global styles -->
-    <link rel="stylesheet" href="../styles/theme.css" />
-    <link rel="stylesheet" href="../styles/layout.css" />
-    <link rel="stylesheet" href="../styles/overrides.css" />
-    <link rel="stylesheet" href="../styles/buttons.css" />
-    <link rel="stylesheet" href="../styles/forms.css" />
-  </head>
+  <!-- Shared CSS -->
+  <link rel="stylesheet" href="styles/theme.css" />
+  <link rel="stylesheet" href="styles/layout.css" />
+  <link rel="stylesheet" href="styles/overrides.css" />
+  <link rel="stylesheet" href="styles/buttons.css" />
+  <link rel="stylesheet" href="styles/forms.css" />
+</head>
 
-  <body class="is-admin">
-    <!-- Slots that the script will fill -->
-    <div id="admin-header"></div>
+<body>
+  <!-- Header slot -->
+  <div id="header"></div>
 
-    <div class="page-wrap">
-      <main class="main-content" role="main" aria-label="Admin Dashboard">
-        <section class="page-content">
-          <article class="card">
-            <h1 class="gold">Admin Dashboard</h1>
-            <p class="muted">Use the tiles below to manage content and settings.</p>
+  <!-- Main Content -->
+  <main class="main-content" role="main">
+    <section class="page-content">
+      <article class="card center">
+        <h1 class="gold">Welcome to Kingdom Connects</h1>
+        <p class="muted">Building community, one connection at a time.</p>
 
-            <div class="grid-3">
-              <a class="action-button btn-gold" href="./manage_churches.html">Manage Churches</a>
-              <a class="action-button btn-gold" href="./manage_businesses.html">Manage Businesses</a>
-              <a class="action-button btn-gold" href="./pending_submissions.html">Pending Submissions</a>
-              <a class="action-button btn-gold" href="./moderate_reviews.html">Moderate Reviews</a>
-              <a class="action-button btn-gold" href="./users.html">Manage Users</a>
-              <a class="action-button btn-gold" href="./settings.html">Site Settings</a>
-            </div>
-          </article>
-        </section>
-      </main>
-    </div>
+        <div class="grid-3">
+          <a class="action-button btn-gold" href="church_directory.html">Church Directory</a>
+          <a class="action-button btn-gold" href="business.html">Business Listings</a>
+          <a class="action-button btn-gold" href="submit_business.html">Submit Your Business</a>
+        </div>
+      </article>
+    </section>
+  </main>
 
-    <div id="admin-footer"></div>
+  <!-- Footer slot -->
+  <div id="footer"></div>
 
-    <!-- Keep this script ON; it injects header and footer -->
-    <script src="./admin/admin_components.js" defer></script>
-  </body>
+  <!-- Injectors -->
+  <script src="js/header_public.js" defer></script>
+  <script src="js/footer_public.js" defer></script>
+</body>
 </html>
