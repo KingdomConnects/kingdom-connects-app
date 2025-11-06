@@ -1,4 +1,4 @@
-// Public header with top-right gear + mobile hamburger under it (relative paths only)
+// Public header with top-right gear (icon only) + mobile hamburger (relative paths only)
 (function () {
   var slot = document.getElementById("header");
   if (!slot) return;
@@ -33,9 +33,8 @@
 
     <!-- Fixed top-right stack -->
     <div class="actions-stack" id="kc-actions">
-      <button class="gear-toggle" id="kc-gear" aria-haspopup="true" aria-expanded="false" aria-controls="kc-controls" title="Display settings" type="button">
+      <button class="gear-toggle" id="kc-gear" aria-haspopup="true" aria-expanded="false" aria-controls="kc-controls" type="button">
         <span class="gear-icon" aria-hidden="true">⚙️</span>
-        <span class="sr-only">Display settings</span>
       </button>
 
       <button class="menu-toggle" id="kc-menu-toggle" aria-label="Menu" aria-expanded="false" aria-controls="kc-nav" type="button">
