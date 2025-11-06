@@ -1,16 +1,10 @@
-/* Kingdom Connects — Admin Components (fixed IDs + robust path check)
-   - Injects standard header/footer with id="header" / id="footer"
-   - Adds body.is-admin for subtle admin tint (theme.css)
-   - Runs on /admin and /admin/ paths (both work)
-*/
+/* Kingdom Connects — Admin Components (FINAL) */
 
 (() => {
-  // Run on /admin or /admin/ or deeper paths
   if (!/\/admin(?:\/|$)/.test(location.pathname)) return;
 
   function getBaseFromPath() {
     try {
-      // capture everything before "/admin" (with or without trailing slash)
       const m = location.pathname.match(/^(.*?)(\/admin(?:\/|$).*)$/);
       if (m && m[1] !== undefined) {
         return m[1].endsWith("/") ? m[1] : m[1] + "/";
@@ -55,9 +49,9 @@
       <h1 class="site-title">Kingdom Connects <span class="gold">Admin</span></h1>
     </a>
 
-    <nav class="nav-links" aria-label="Admin Navigation">
+    <ul class="nav-links" id="admin-nav" aria-label="Admin Navigation">
       ${NAV.map(i => `<li><a href="${i.href}">${i.label}</a></li>`).join("")}
-    </nav>
+    </ul>
 
     <div class="header-actions">
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="admin-nav">
@@ -88,15 +82,11 @@
   onReady(() => {
     document.body.classList.add("is-admin");
 
-    // Ensure mount points exist (compatible with your existing shells)
     const headerSlot = ensureSlot("admin-header", "prepend");
     headerSlot.innerHTML = headerHTML();
 
-    const nav = headerSlot.querySelector(".nav-links");
-    if (nav) nav.id = "admin-nav";
-
-    // Mobile toggle
-    const toggle = headerSlot.querySelector(".menu-toggle");
+    const nav = document.getElementById("admin-nav");
+    const toggle = document.querySelector(".menu-toggle");
     if (toggle && nav) {
       const setState = (open) => {
         toggle.setAttribute("aria-expanded", open ? "true" : "false");
@@ -115,8 +105,8 @@
     const footerSlot = ensureSlot("admin-footer", "append");
     footerSlot.innerHTML = footerHTML();
 
-    const yearSpan = document.querySelector("[data-admin-year]");
-    if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+    const y = document.querySelector("[data-admin-year]");
+    if (y) y.textContent = new Date().getFullYear();
 
     const logo = document.querySelector(".site-logo");
     if (logo) {
@@ -125,6 +115,6 @@
       }, { once: true });
     }
 
-    console.log("[KC admin-components] Header/footer injected; IDs present; admin tint active.");
+    console.log("[KC admin-components] Header/footer injected; admin tint active.");
   });
 })();

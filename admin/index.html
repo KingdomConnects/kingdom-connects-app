@@ -5,19 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Kingdom Connects — Admin</title>
 
-    <!-- Use the same global styles as the public site -->
+    <!-- Shared global styles -->
     <link rel="stylesheet" href="../styles/theme.css" />
     <link rel="stylesheet" href="../styles/layout.css" />
     <link rel="stylesheet" href="../styles/overrides.css" />
-    <!-- Leave these alone (you asked not to touch them) -->
     <link rel="stylesheet" href="../styles/buttons.css" />
     <link rel="stylesheet" href="../styles/forms.css" />
   </head>
+
   <body class="is-admin">
-    <!-- Injected by admin_components.js -->
+    <!-- Slots that the script will fill -->
     <div id="admin-header"></div>
 
-    <!-- Shared wrapper structure so margins/gutters match public pages -->
     <div class="page-wrap">
       <main class="main-content" role="main" aria-label="Admin Dashboard">
         <section class="page-content">
@@ -36,11 +35,11 @@
           </article>
         </section>
       </main>
-
-      <!-- Injected by admin_components.js -->
-      <div id="admin-footer"></div>
     </div>
 
+    <div id="admin-footer"></div>
+
+    <!-- Keep this script ON; it injects header and footer -->
     <script src="./admin_components.js" defer></script>
   </body>
 </html>
