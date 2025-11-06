@@ -1,9 +1,5 @@
 /* ========================================================================== */
 /* Kingdom Connects — OVERRIDES (Lean polish & shared tweaks)                 */
-/* Notes:                                                                     */
-/* - No button or form visuals here (see buttons.css / forms.css)             */
-/* - Uses tokens from theme.css; structure lives in layout.css                */
-/* - Keep this file small and purposeful                                      */
 /* ========================================================================== */
 
 
@@ -21,7 +17,7 @@
 
 
 /* ==========================================================================
-   2) CARD POLISH (gentle)
+   2) CARD POLISH
    ========================================================================== */
 .card {
   padding: clamp(16px, 2.4vw, 24px);
@@ -65,7 +61,7 @@
 
 
 /* ==========================================================================
-   6) ADMIN-ONLY HINTS (non-invasive)
+   6) ADMIN-ONLY HINTS
    ========================================================================== */
 body.is-admin .card { border-color: var(--settings-border); }
 body.is-admin .section-header .title { text-shadow: 0 0 1px rgba(0,0,0,.25); }
@@ -82,7 +78,7 @@ body.is-admin .section-header .title { text-shadow: 0 0 1px rgba(0,0,0,.25); }
 .gap-md > * + * { margin-top: var(--space-5); }
 .gap-lg > * + * { margin-top: var(--space-7); }
 
-/* Screen-reader helper (in case not defined elsewhere) */
+/* Screen-reader helper (if not elsewhere) */
 .sr-only {
   position: absolute !important;
   width: 1px; height: 1px; padding: 0; margin: -1px;
@@ -93,9 +89,10 @@ body.is-admin .section-header .title { text-shadow: 0 0 1px rgba(0,0,0,.25); }
 
 /* ==========================================================================
    8) SITE HEADER — NAV + FIXED TOP-RIGHT GEAR + HAMBURGER (MOBILE)
-   - Gear is always fixed at the top-right (transparent, icon-only)
-   - On desktop: inline nav is visible; hamburger hidden
-   - On mobile: hamburger shows under the gear; nav toggles .open
+   - Gear is aligned directly above the hamburger on the far right.
+   - Gear button is fully transparent (no white box).
+   - Extra vertical spacing between gear and hamburger.
+   - Dropdown panel is solid/opaque to avoid visual confusion.
    ========================================================================== */
 
 /* Core header layout */
@@ -116,4 +113,95 @@ body.is-admin .section-header .title { text-shadow: 0 0 1px rgba(0,0,0,.25); }
 
 /* Desktop inline nav */
 .nav-links {
-  list-style: none
+  list-style: none;
+  display: flex;
+  gap: var(--space-4, 16px);
+  margin: 0;
+  padding: 0;
+}
+.nav-links a { text-decoration: none; }
+
+/* Fixed top-right stack: gear above, hamburger below (mobile) */
+.actions-stack {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  flex-direction: column; /* vertical stack */
+  align-items: flex-end;  /* right edges line up */
+  gap: 16px;              /* ↑ increased spacing between gear & hamburger */
+  pointer-events: auto;
+}
+
+/* Gear button — fully transparent, icon only (no white background) */
+.gear-toggle {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent !important;   /* kill any inherited background */
+  box-shadow: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.gear-toggle:hover,
+.gear-toggle:active { background: transparent !important; box-shadow: none !important; }
+.gear-icon { font-size: 28px; line-height: 1; display: inline-block; background: transparent; }
+
+/* Hamburger (hidden on desktop) */
+.menu-toggle {
+  display: none; /* shown on mobile via media query */
+  width: 40px; height: 40px;
+  border: 0; background: transparent;
+  position: relative; cursor: pointer;
+}
+.menu-toggle .bar {
+  position: absolute; left: 8px; right: 8px; height: 2px; background: currentColor;
+}
+.menu-toggle .bar:nth-child(1){ top: 12px; }
+.menu-toggle .bar:nth-child(2){ top: 19px; }
+.menu-toggle .bar:nth-child(3){ top: 26px; }
+
+/* Gear dropdown panel — solid background (not transparent) */
+.user-controls {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 50;                                /* above hamburger */
+  min-width: 220px;
+  padding: var(--space-2, 8px) var(--space-3, 12px);
+  border-radius: var(--radius-md, 10px);
+  background-color: var(--panel-bg, #fff);    /* solid/opaque */
+  border: 1px solid var(--line-soft, rgba(0,0,0,.12));
+  box-shadow: var(--shadow-3, 0 6px 18px rgba(0,0,0,.16));
+}
+.user-controls[hidden] { display: none; }
+
+.user-controls .ctrl-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3, 12px);
+  padding: var(--space-2, 8px) 0;
+}
+.ctrl-btn {
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  padding: var(--space-1, 4px) var(--space-2, 8px);
+  border-radius: var(--radius-sm, 8px);
+}
+.ctrl-readout { font-variant-numeric: tabular-nums; }
+
+/* Mobile behavior */
+@media (max-width: 768px) {
+  /* Inline nav collapses; toggled via .open */
+  .nav-links { display: none; flex-direction: column; gap: 12px; margin-top: 12px; }
+  .nav-links.open { display: flex; }
+
+  /* Hamburger appears under gear */
+  .menu-toggle { display: inline-flex; }
+}
