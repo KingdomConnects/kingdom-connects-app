@@ -1,207 +1,195 @@
-/* ========================================================================== */
-/* Kingdom Connects — OVERRIDES (Lean polish & shared tweaks)                 */
-/* ========================================================================== */
+/* OVERRIDES — kept last in HTML so these win.
+   Fixes: gear transparency, vertical stack/spacing over hamburger,
+   solid dropdown backgrounds, z-index layering, mobile consistency. */
 
-
-/* ==========================================================================
-   1) PAGE CONTENT PADDING & FLOW
-   ========================================================================== */
-.page-content {
-  padding: clamp(16px, 2.8vw, 28px);
-  border-radius: var(--radius-lg);
-  background: transparent;
+/* Header shell */
+.kc-header {
+  position: relative;
+  z-index: 30;
+  background: var(--header-bg, #ffffff);
+  border-bottom: 1px solid rgba(0,0,0,.06);
 }
-.page-content > article,
-.page-content > section { margin-bottom: clamp(18px, 2.2vw, 28px); }
-.page-content > :last-child { margin-bottom: 0; }
 
-
-/* ==========================================================================
-   2) CARD POLISH
-   ========================================================================== */
-.card {
-  padding: clamp(16px, 2.4vw, 24px);
-  transition: box-shadow .18s ease, transform .18s ease, border-color .18s ease;
-}
-.card:hover,
-.card:focus-within {
-  box-shadow: var(--shadow-2);
-  border-color: var(--line-strong);
-  transform: translateY(-1px);
-}
-.card > h1, .card > h2, .card > h3 { margin-bottom: var(--space-4); }
-.card p + p { margin-top: var(--space-3); }
-
-
-/* ==========================================================================
-   3) SECTION HEADERS & RULES
-   ========================================================================== */
-.section-header {
-  display: flex;
-  align-items: baseline;
+.kc-header__inner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
   gap: 12px;
-  margin-bottom: var(--space-5);
-}
-.section-header .title { font-weight: 800; color: var(--ink); font-size: var(--h2); }
-.section-header .sub   { color: var(--ink-muted); font-weight: 500; }
-.rule-soft { height: 1px; width: 100%; background: var(--line-soft); margin: var(--space-6) 0; }
-
-
-/* ==========================================================================
-   4) STICKY FOOTER ASSIST
-   ========================================================================== */
-.site-footer { margin-top: auto; }
-
-
-/* ==========================================================================
-   5) TABLE POLISH
-   ========================================================================== */
-.table--flush { border-radius: var(--radius-md); overflow: hidden; }
-.table tr:hover td { background: color-mix(in srgb, var(--panel-bg) 96%, #000 4%); }
-
-
-/* ==========================================================================
-   6) ADMIN-ONLY HINTS
-   ========================================================================== */
-body.is-admin .card { border-color: var(--settings-border); }
-body.is-admin .section-header .title { text-shadow: 0 0 1px rgba(0,0,0,.25); }
-
-
-/* ==========================================================================
-   7) SMALL UTILITIES
-   ========================================================================== */
-.pad-0 { padding: 0 !important; }
-.pad-sm { padding: var(--space-3) !important; }
-.pad-md { padding: var(--space-5) !important; }
-.pad-lg { padding: var(--space-7) !important; }
-.gap-sm > * + * { margin-top: var(--space-3); }
-.gap-md > * + * { margin-top: var(--space-5); }
-.gap-lg > * + * { margin-top: var(--space-7); }
-
-/* Screen-reader helper (if not elsewhere) */
-.sr-only {
-  position: absolute !important;
-  width: 1px; height: 1px; padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0,0,1px,1px);
-  white-space: nowrap; border: 0;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 10px 16px;
 }
 
+/* Logo */
+.kc-logo__img {
+  display: block;
+  height: 40px;
+  width: auto;
+}
 
-/* ==========================================================================
-   8) SITE HEADER — NAV + FIXED TOP-RIGHT GEAR + HAMBURGER (MOBILE)
-   - Gear is aligned directly above the hamburger on the far right.
-   - Gear button is fully transparent (no white box).
-   - Extra vertical spacing between gear and hamburger.
-   - Dropdown panel is solid/opaque to avoid visual confusion.
-   ========================================================================== */
-
-/* Core header layout */
-.site-header .header-inner {
-  position: relative; /* allows absolute actions stack */
+/* Actions: gear stacked above burger */
+.kc-actions {
+  position: relative;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4, 16px);
+  flex-direction: column;    /* vertical stack */
+  align-items: flex-end;
+  gap: 14px;                 /* vertical space between gear & hamburger */
+  z-index: 40;
 }
 
-.brand {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-3, 12px);
-  text-decoration: none;
-}
-
-/* Desktop inline nav */
-.nav-links {
-  list-style: none;
-  display: flex;
-  gap: var(--space-4, 16px);
+/* Buttons */
+.kc-gear,
+.kc-burger {
+  appearance: none;
+  background: transparent;   /* force transparent surface */
+  border: none;
+  padding: 6px;
   margin: 0;
-  padding: 0;
+  cursor: pointer;
+  line-height: 0;
+  border-radius: 10px;
+  outline-offset: 2px;
 }
-.nav-links a { text-decoration: none; }
 
-/* Fixed top-right stack: gear above, hamburger below (mobile) */
-.actions-stack {
+.kc-gear:hover,
+.kc-burger:hover {
+  filter: brightness(0.96);
+}
+
+/* Gear icon — guaranteed transparent (SVG) */
+.kc-gear__icon {
+  display: block;
+  width: 24px;
+  height: 24px;
+  /* no background here */
+}
+
+/* Hamburger bars */
+.kc-burger__bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  margin: 4px 0;
+  background: currentColor;
+}
+
+/* Primary nav (solid dropdown) */
+.kc-nav {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  display: flex;
-  flex-direction: column; /* vertical stack */
-  align-items: flex-end;  /* right edges line up */
-  gap: 16px;              /* ↑ increased spacing between gear & hamburger */
+  right: 16px;
+  top: calc(100% + 10px);
+  background: var(--panel-bg, #ffffff);   /* SOLID background */
+  color: var(--panel-fg, inherit);
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 10px;
+  box-shadow: 0 6px 24px rgba(0,0,0,.12);
+  min-width: 220px;
+  padding: 8px;
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: opacity .16s ease, transform .16s ease;
+  z-index: 35;
+}
+
+.kc-nav.is-open {
+  opacity: 1;
+  transform: translateY(0);
   pointer-events: auto;
 }
 
-/* Gear button — fully transparent, icon only (no white background) */
-.gear-toggle {
-  width: 40px;
-  height: 40px;
-  border: none;
-  background: transparent !important;   /* kill any inherited background */
-  box-shadow: none !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+.kc-nav__list {
+  list-style: none;
+  margin: 0;
+  padding: 4px;
 }
-.gear-toggle:hover,
-.gear-toggle:active { background: transparent !important; box-shadow: none !important; }
-.gear-icon { font-size: 28px; line-height: 1; display: inline-block; background: transparent; }
 
-/* Hamburger (hidden on desktop) */
-.menu-toggle {
-  display: none; /* shown on mobile via media query */
-  width: 40px; height: 40px;
-  border: 0; background: transparent;
-  position: relative; cursor: pointer;
-}
-.menu-toggle .bar {
-  position: absolute; left: 8px; right: 8px; height: 2px; background: currentColor;
-}
-.menu-toggle .bar:nth-child(1){ top: 12px; }
-.menu-toggle .bar:nth-child(2){ top: 19px; }
-.menu-toggle .bar:nth-child(3){ top: 26px; }
-
-/* Gear dropdown panel — solid background (not transparent) */
-.user-controls {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 8px);
-  z-index: 50;                                /* above hamburger */
-  min-width: 220px;
-  padding: var(--space-2, 8px) var(--space-3, 12px);
-  border-radius: var(--radius-md, 10px);
-  background-color: var(--panel-bg, #fff);    /* solid/opaque */
-  border: 1px solid var(--line-soft, rgba(0,0,0,.12));
-  box-shadow: var(--shadow-3, 0 6px 18px rgba(0,0,0,.16));
-}
-.user-controls[hidden] { display: none; }
-
-.user-controls .ctrl-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3, 12px);
-  padding: var(--space-2, 8px) 0;
-}
-.ctrl-btn {
-  cursor: pointer;
-  border: 0;
-  background: transparent;
+.kc-nav__list a {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 8px;
+  text-decoration: none;
   color: inherit;
-  font: inherit;
-  padding: var(--space-1, 4px) var(--space-2, 8px);
-  border-radius: var(--radius-sm, 8px);
 }
-.ctrl-readout { font-variant-numeric: tabular-nums; }
 
-/* Mobile behavior */
-@media (max-width: 768px) {
-  /* Inline nav collapses; toggled via .open */
-  .nav-links { display: none; flex-direction: column; gap: 12px; margin-top: 12px; }
-  .nav-links.open { display: flex; }
+.kc-nav__list a:hover {
+  background: rgba(0,0,0,.06);
+}
 
-  /* Hamburger appears under gear */
-  .menu-toggle { display: inline-flex; }
+/* Gear panel (solid) */
+.kc-gear-panel {
+  position: absolute;
+  right: 16px;
+  top: calc(100% + 10px);
+  background: var(--panel-bg, #ffffff);   /* SOLID background */
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 10px;
+  box-shadow: 0 6px 24px rgba(0,0,0,.12);
+  min-width: 220px;
+  padding: 8px;
+  z-index: 36;  /* above nav */
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: opacity .16s ease, transform .16s ease;
+}
+
+.kc-gear.is-active + .kc-burger { /* no visual change; ensure stacking not affected */ }
+
+.kc-gear-panel[aria-hidden="false"] {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.kc-gear-panel__item {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: inherit;
+}
+
+.kc-gear-panel__item:hover {
+  background: rgba(0,0,0,.06);
+}
+
+.kc-gear-panel__sep {
+  border: 0;
+  height: 1px;
+  margin: 6px 8px;
+  background: rgba(0,0,0,.08);
+}
+
+/* Page spacing below header */
+.page-content {
+  padding: 20px 16px;
+}
+
+/* Responsive tweaks */
+@media (min-width: 768px) {
+  .kc-logo__img { height: 44px; }
+  .kc-actions { gap: 16px; } /* a bit more vertical space on larger screens */
+}
+
+/* Ensure the gear never gets a white box from legacy styles */
+.kc-gear,
+.kc-gear * {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* If any legacy .dropdown or .user-controls exist, harden them to solid */
+.user-controls,
+.dropdown,
+.menu-panel {
+  background: var(--panel-bg, #ffffff) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: 0 6px 24px rgba(0,0,0,.12);
+  border: 1px solid rgba(0,0,0,.08);
 }

@@ -1,108 +1,63 @@
-// Public header with top-right gear (icon only) + mobile hamburger (relative paths only)
+// PUBLIC HEADER (fixed): transparent gear, stacked over hamburger with spacing,
+// solid dropdown background, consistent z-index and mobile behavior.
+
 (function () {
-  var slot = document.getElementById("header");
-  if (!slot) return;
+  const headerTarget = document.getElementById('header');
+  if (!headerTarget) return;
 
-  // Persist keys
-  var LS_THEME = "kc_theme";
-  var LS_SCALE = "kc_font_scale"; // 85–140
+  // Header HTML
+  headerTarget.innerHTML = `
+    <header class="kc-header">
+      <div class="kc-header__inner">
+        <a class="kc-logo" href="index.html" aria-label="Kingdom Connects Home">
+          <img class="kc-logo__img" src="library/images/kingdom-connects-logo-300.png" alt="Kingdom Connects" />
+        </a>
 
-  // Apply saved settings immediately
-  var html = document.documentElement;
-  var theme = localStorage.getItem(LS_THEME);
-  if (theme === "light" || theme === "dark") html.setAttribute("data-theme", theme);
-  var scale = parseInt(localStorage.getItem(LS_SCALE) || "100", 10);
-  if (!Number.isFinite(scale)) scale = 100;
-  scale = Math.max(85, Math.min(140, scale));
-  html.style.fontSize = scale + "%";
+        <!-- Action stack: gear above hamburger -->
+        <div class="kc-actions" aria-label="Header controls">
+          <button class="kc-gear" id="kc-gear" aria-label="User/Settings menu" type="button">
+            <!-- Use an SVG so background is guaranteed transparent -->
+            <svg class="kc-gear__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                 width="24" height="24" aria-hidden="true" focusable="false">
+              <path d="M19.14,12.94a7.49,7.49,0,0,0,.05-.94,7.49,7.49,0,0,0-.05-.94l2.11-1.65a.5.5,0,0,0,.12-.64l-2-3.46a.5.5,0,0,0-.6-.22l-2.49,1a7.14,7.14,0,0,0-1.63-.94l-.38-2.64A.5.5,0,0,0,13,1H11a.5.5,0,0,0-.5.42L10.08,4.06a7.14,7.14,0,0,0-1.63.94l-2.49-1a.5.5,0,0,0-.6.22l-2,3.46a.5.5,0,0,0,.12.64L5.6,11.06a7.49,7.49,0,0,0-.05.94,7.49,7.49,0,0,0,.05.94L3.49,14.59a.5.5,0,0,0-.12.64l2,3.46a.5.5,0,0,0,.6.22l2.49-1a7.14,7.14,0,0,0,1.63.94l.42,2.64A.5.5,0,0,0,11,23h2a.5.5,0,0,0,.5-.42l.38-2.64a7.14,7.14,0,0,0,1.63-.94l2.49,1a.5.5,0,0,0,.6-.22l2-3.46a.5.5,0,0,0-.12-.64ZM12,15.5A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z"/>
+            </svg>
+          </button>
 
-  // Header markup
-  slot.innerHTML = `
-<header class="site-header" role="banner">
-  <div class="header-inner">
-    <a class="brand" href="index.html">
-      <img class="site-logo" src="library/images/kingdom-connects-logo-300.png" alt="Kingdom Connects Logo" width="48" height="48">
-      <span class="site-title">Kingdom Connects</span>
-    </a>
-
-    <ul class="nav-links" id="kc-nav" aria-label="Main Navigation">
-      <li><a href="church_directory.html">Churches</a></li>
-      <li><a href="business.html">Businesses</a></li>
-      <li><a href="submit_business.html">Submit</a></li>
-    </ul>
-
-    <!-- Fixed top-right stack -->
-    <div class="actions-stack" id="kc-actions">
-      <button class="gear-toggle" id="kc-gear" aria-haspopup="true" aria-expanded="false" aria-controls="kc-controls" type="button">
-        <span class="gear-icon" aria-hidden="true">⚙️</span>
-      </button>
-
-      <button class="menu-toggle" id="kc-menu-toggle" aria-label="Menu" aria-expanded="false" aria-controls="kc-nav" type="button">
-        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
-      </button>
-
-      <div class="user-controls" id="kc-controls" hidden>
-        <div class="ctrl-row">
-          <button class="ctrl-btn" id="kc-font-dec" type="button" aria-label="Smaller text">A−</button>
-          <span class="ctrl-readout" id="kc-font-readout">` + scale + `%</span>
-          <button class="ctrl-btn" id="kc-font-inc" type="button" aria-label="Larger text">A+</button>
-        </div>
-        <div class="ctrl-row">
-          <button class="ctrl-btn" id="kc-theme-toggle" type="button" aria-label="Toggle theme">🌙/🌞</button>
+          <button class="kc-burger" id="kc-burger" aria-label="Main menu" type="button" aria-expanded="false" aria-controls="kc-nav">
+            <span class="kc-burger__bar"></span>
+            <span class="kc-burger__bar"></span>
+            <span class="kc-burger__bar"></span>
+          </button>
         </div>
       </div>
-    </div>
-  </div>
-</header>
-`;
 
-  // Hamburger (mobile; CSS hides on desktop)
-  var btn = document.getElementById("kc-menu-toggle");
-  var nav = document.getElementById("kc-nav");
-  if (btn && nav) {
-    var open = false;
-    function set(v){ open=v; btn.setAttribute("aria-expanded", v?"true":"false"); nav.classList.toggle("open", v); }
-    btn.addEventListener("click", function(){ set(!open); });
-    document.addEventListener("click", function(e){
-      if(!open) return;
-      if(e.target.closest("#kc-menu-toggle") || e.target.closest("#kc-nav")) return;
-      set(false);
-    });
-  }
+      <!-- Solid dropdown panel -->
+      <nav id="kc-nav" class="kc-nav" aria-label="Primary">
+        <ul class="kc-nav__list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="business.html">Business Directory</a></li>
+          <li><a href="submit_business.html">Submit a Business</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </nav>
 
-  // Gear dropdown
-  var gear = document.getElementById("kc-gear");
-  var panel = document.getElementById("kc-controls");
-  if (gear && panel) {
-    var gopen = false;
-    function gset(v){ gopen=v; gear.setAttribute("aria-expanded", v?"true":"false"); panel.hidden = !v; }
-    gear.addEventListener("click", function(){ gset(!gopen); });
-    document.addEventListener("click", function(e){
-      if(!gopen) return;
-      if(e.target.closest("#kc-gear") || e.target.closest("#kc-controls")) return;
-      gset(false);
-    });
-  }
+      <!-- Solid gear panel -->
+      <div id="kc-gear-panel" class="kc-gear-panel" role="menu" aria-hidden="true">
+        <button class="kc-gear-panel__item" type="button">Sign In</button>
+        <button class="kc-gear-panel__item" type="button">Create Account</button>
+        <hr class="kc-gear-panel__sep" />
+        <button class="kc-gear-panel__item" type="button" id="kc-theme-toggle">Toggle Theme</button>
+      </div>
+    </header>
+  `;
 
-  // Font size controls
-  function setScale(val){
-    val = Math.max(85, Math.min(140, parseInt(val,10)||100));
-    html.style.fontSize = val + "%";
-    localStorage.setItem(LS_SCALE, String(val));
-    var r = document.getElementById("kc-font-readout");
-    if (r) r.textContent = val + "%";
-    scale = val;
-  }
-  var inc = document.getElementById("kc-font-inc");
-  var dec = document.getElementById("kc-font-dec");
-  if (inc) inc.addEventListener("click", function(){ setScale(scale + 10); });
-  if (dec) dec.addEventListener("click", function(){ setScale(scale - 10); });
+  // Behavior
+  const burger = document.getElementById('kc-burger');
+  const nav = document.getElementById('kc-nav');
+  const gear = document.getElementById('kc-gear');
+  const gearPanel = document.getElementById('kc-gear-panel');
+  const themeToggle = document.getElementById('kc-theme-toggle');
 
-  // Theme toggle
-  var themeBtn = document.getElementById("kc-theme-toggle");
-  function setTheme(t){ html.setAttribute("data-theme", t); localStorage.setItem(LS_THEME, t); }
-  if (themeBtn) themeBtn.addEventListener("click", function(){
-    var curr = html.getAttribute("data-theme") === "dark" ? "dark" : "light";
-    setTheme(curr === "dark" ? "light" : "dark");
-  });
-})();
+  function closeGearPanel() {
+    if (!gearPanel) return;
+    gearPanel.setAttribute('aria-hidden',
