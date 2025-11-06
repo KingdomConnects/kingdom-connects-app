@@ -1,17 +1,17 @@
-/* Kingdom Connects — Admin Components
-   Purpose: Inject standard site header/footer + Admin nav on /admin/* pages
-   Notes:
-   - Uses SAME classes as public header/footer so it inherits theme.css/layout.css/overrides.css
-   - Adds body.is-admin for subtle admin tint (defined in theme.css)
-   - No inline styles; no fetch
+/* Kingdom Connects — Admin Components (fixed IDs + robust path check)
+   - Injects standard header/footer with id="header" / id="footer"
+   - Adds body.is-admin for subtle admin tint (theme.css)
+   - Runs on /admin and /admin/ paths (both work)
 */
 
 (() => {
-  if (!/\/admin\//.test(location.pathname)) return;
+  // Run on /admin or /admin/ or deeper paths
+  if (!/\/admin(?:\/|$)/.test(location.pathname)) return;
 
   function getBaseFromPath() {
     try {
-      const m = location.pathname.match(/^(.*?)(\/admin\/.*)$/);
+      // capture everything before "/admin" (with or without trailing slash)
+      const m = location.pathname.match(/^(.*?)(\/admin(?:\/|$).*)$/);
       if (m && m[1] !== undefined) {
         return m[1].endsWith("/") ? m[1] : m[1] + "/";
       }
@@ -35,7 +35,6 @@
     return el;
   }
 
-  // Admin nav items (edit/order as you like)
   const NAV = [
     { href: `${BASE}admin/index.html`, label: "Dashboard" },
     { href: `${BASE}admin/manage_churches.html`, label: "Churches" },
@@ -47,9 +46,8 @@
   ];
 
   const headerHTML = () => `
-<header class="header site-header" role="banner">
+<header id="header" class="header site-header" role="banner">
   <div class="header-inner">
-    <!-- Brand -->
     <a class="brand" href="${BASE}admin/index.html">
       <img class="site-logo"
            src="${BASE}library/images/kingdom-connects-logo-300.png"
@@ -57,12 +55,10 @@
       <h1 class="site-title">Kingdom Connects <span class="gold">Admin</span></h1>
     </a>
 
-    <!-- Center nav (mobile collapses) -->
     <nav class="nav-links" aria-label="Admin Navigation">
       ${NAV.map(i => `<li><a href="${i.href}">${i.label}</a></li>`).join("")}
     </nav>
 
-    <!-- Right actions -->
     <div class="header-actions">
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="admin-nav">
         <span class="bar"></span><span class="bar"></span><span class="bar"></span>
@@ -75,7 +71,7 @@
 `;
 
   const footerHTML = () => `
-<footer class="footer site-footer" role="contentinfo">
+<footer id="footer" class="footer site-footer" role="contentinfo">
   <div class="footer-inner">
     <nav class="footer-nav" aria-label="Admin Footer">
       ${NAV.slice(0, 4).map(i => `<a href="${i.href}">${i.label}</a>`).join("")}
@@ -92,14 +88,14 @@
   onReady(() => {
     document.body.classList.add("is-admin");
 
+    // Ensure mount points exist (compatible with your existing shells)
     const headerSlot = ensureSlot("admin-header", "prepend");
     headerSlot.innerHTML = headerHTML();
 
-    // Give nav an id for a11y hook
     const nav = headerSlot.querySelector(".nav-links");
     if (nav) nav.id = "admin-nav";
 
-    // Mobile menu toggle
+    // Mobile toggle
     const toggle = headerSlot.querySelector(".menu-toggle");
     if (toggle && nav) {
       const setState = (open) => {
@@ -109,7 +105,6 @@
       };
       let open = false;
       toggle.addEventListener("click", () => { open = !open; setState(open); });
-      // Close on outside click (mobile)
       document.addEventListener("click", (e) => {
         if (!open) return;
         if (e.target.closest(".menu-toggle") || e.target.closest(".nav-links")) return;
@@ -117,15 +112,12 @@
       });
     }
 
-    // Footer
     const footerSlot = ensureSlot("admin-footer", "append");
     footerSlot.innerHTML = footerHTML();
 
-    // Auto-set footer year
     const yearSpan = document.querySelector("[data-admin-year]");
     if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
-    // Logo fallback
     const logo = document.querySelector(".site-logo");
     if (logo) {
       logo.addEventListener("error", () => {
@@ -133,6 +125,6 @@
       }, { once: true });
     }
 
-    console.log("[KC admin-components] Header/footer injected; nav wired; admin tint active.");
+    console.log("[KC admin-components] Header/footer injected; IDs present; admin tint active.");
   });
 })();
