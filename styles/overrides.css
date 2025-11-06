@@ -1,8 +1,8 @@
-/* OVERRIDES — kept last in HTML so these win.
-   Fixes: gear transparency, vertical stack/spacing over hamburger,
-   solid dropdown backgrounds, z-index layering, mobile consistency. */
+/* OVERRIDES — keep LAST in HTML so these win.
+   Ensures: gear always transparent, gear stacked above hamburger with spacing,
+   solid dropdown backgrounds, and stable z-index across viewports. */
 
-/* Header shell */
+/* Header */
 .kc-header {
   position: relative;
   z-index: 30;
@@ -21,64 +21,45 @@
 }
 
 /* Logo */
-.kc-logo__img {
-  display: block;
-  height: 40px;
-  width: auto;
-}
+.kc-logo__img { display:block; height:40px; width:auto; }
 
-/* Actions: gear stacked above burger */
+/* Gear stacked above hamburger with extra vertical space */
 .kc-actions {
   position: relative;
   display: flex;
-  flex-direction: column;    /* vertical stack */
+  flex-direction: column;
   align-items: flex-end;
-  gap: 14px;                 /* vertical space between gear & hamburger */
+  gap: 14px;
   z-index: 40;
 }
 
 /* Buttons */
-.kc-gear,
-.kc-burger {
+.kc-gear, .kc-burger {
   appearance: none;
-  background: transparent;   /* force transparent surface */
+  background: transparent;
   border: none;
   padding: 6px;
   margin: 0;
-  cursor: pointer;
   line-height: 0;
   border-radius: 10px;
-  outline-offset: 2px;
+  cursor: pointer;
 }
 
-.kc-gear:hover,
-.kc-burger:hover {
-  filter: brightness(0.96);
-}
+.kc-gear__icon { display:block; width:24px; height:24px; }
 
-/* Gear icon — guaranteed transparent (SVG) */
-.kc-gear__icon {
-  display: block;
-  width: 24px;
-  height: 24px;
-  /* no background here */
-}
+/* Guarantee no white box behind gear from any legacy styles */
+.kc-gear, .kc-gear * { background: transparent !important; box-shadow: none !important; }
 
 /* Hamburger bars */
-.kc-burger__bar {
-  display: block;
-  width: 22px;
-  height: 2px;
-  margin: 4px 0;
-  background: currentColor;
-}
+.kc-burger__bar { display:block; width:22px; height:2px; margin:4px 0; background: currentColor; }
 
-/* Primary nav (solid dropdown) */
-.kc-nav {
+/* SOLID dropdowns */
+.kc-nav,
+.kc-gear-panel {
   position: absolute;
   right: 16px;
   top: calc(100% + 10px);
-  background: var(--panel-bg, #ffffff);   /* SOLID background */
+  background: var(--panel-bg, #ffffff) !important;
   color: var(--panel-fg, inherit);
   border: 1px solid rgba(0,0,0,.08);
   border-radius: 10px;
@@ -89,7 +70,6 @@
   transform: translateY(-6px);
   pointer-events: none;
   transition: opacity .16s ease, transform .16s ease;
-  z-index: 35;
 }
 
 .kc-nav.is-open {
@@ -98,98 +78,42 @@
   pointer-events: auto;
 }
 
-.kc-nav__list {
-  list-style: none;
-  margin: 0;
-  padding: 4px;
-}
-
-.kc-nav__list a {
-  display: block;
-  padding: 10px 12px;
-  border-radius: 8px;
-  text-decoration: none;
-  color: inherit;
-}
-
-.kc-nav__list a:hover {
-  background: rgba(0,0,0,.06);
-}
-
-/* Gear panel (solid) */
-.kc-gear-panel {
-  position: absolute;
-  right: 16px;
-  top: calc(100% + 10px);
-  background: var(--panel-bg, #ffffff);   /* SOLID background */
-  border: 1px solid rgba(0,0,0,.08);
-  border-radius: 10px;
-  box-shadow: 0 6px 24px rgba(0,0,0,.12);
-  min-width: 220px;
-  padding: 8px;
-  z-index: 36;  /* above nav */
-  opacity: 0;
-  transform: translateY(-6px);
-  pointer-events: none;
-  transition: opacity .16s ease, transform .16s ease;
-}
-
-.kc-gear.is-active + .kc-burger { /* no visual change; ensure stacking not affected */ }
-
 .kc-gear-panel[aria-hidden="false"] {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
 }
 
+.kc-nav__list { list-style:none; margin:0; padding:4px; }
+.kc-nav__list a { display:block; padding:10px 12px; border-radius:8px; text-decoration:none; color:inherit; }
+.kc-nav__list a:hover { background: rgba(0,0,0,.06); }
+
 .kc-gear-panel__item {
-  display: block;
-  width: 100%;
-  padding: 10px 12px;
-  text-align: left;
-  background: transparent;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  color: inherit;
+  display:block;
+  width:100%;
+  padding:10px 12px;
+  text-align:left;
+  background:transparent;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
 }
+.kc-gear-panel__item:hover { background: rgba(0,0,0,.06); }
+.kc-gear-panel__sep { border:0; height:1px; margin:6px 8px; background: rgba(0,0,0,.08); }
 
-.kc-gear-panel__item:hover {
-  background: rgba(0,0,0,.06);
-}
-
-.kc-gear-panel__sep {
-  border: 0;
-  height: 1px;
-  margin: 6px 8px;
-  background: rgba(0,0,0,.08);
-}
-
-/* Page spacing below header */
-.page-content {
-  padding: 20px 16px;
-}
-
-/* Responsive tweaks */
-@media (min-width: 768px) {
-  .kc-logo__img { height: 44px; }
-  .kc-actions { gap: 16px; } /* a bit more vertical space on larger screens */
-}
-
-/* Ensure the gear never gets a white box from legacy styles */
-.kc-gear,
-.kc-gear * {
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-/* If any legacy .dropdown or .user-controls exist, harden them to solid */
-.user-controls,
-.dropdown,
-.menu-panel {
+/* Harden any legacy dropdown classes to solid if they exist */
+.user-controls, .dropdown, .menu-panel {
   background: var(--panel-bg, #ffffff) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   box-shadow: 0 6px 24px rgba(0,0,0,.12);
   border: 1px solid rgba(0,0,0,.08);
+}
+
+/* Minor spacing below header */
+.page-content { padding: 20px 16px; }
+
+@media (min-width:768px){
+  .kc-logo__img { height:44px; }
+  .kc-actions { gap:16px; }
 }
