@@ -1,4 +1,4 @@
-// Public header with hamburger + gear dropdown (theme + font size) — relative paths only
+// Public header with top-right gear + mobile hamburger under it (relative paths only)
 (function () {
   var slot = document.getElementById("header");
   if (!slot) return;
@@ -16,7 +16,7 @@
   scale = Math.max(85, Math.min(140, scale));
   html.style.fontSize = scale + "%";
 
-  // Header markup (no inline styles)
+  // Header markup
   slot.innerHTML = `
 <header class="site-header" role="banner">
   <div class="header-inner">
@@ -25,22 +25,23 @@
       <span class="site-title">Kingdom Connects</span>
     </a>
 
-    <nav class="nav-wrap">
-      <button class="menu-toggle" id="kc-menu-toggle" aria-label="Menu" aria-expanded="false" aria-controls="kc-nav" type="button">
-        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
-      </button>
-      <ul class="nav-links" id="kc-nav" aria-label="Main Navigation">
-        <li><a href="church_directory.html">Churches</a></li>
-        <li><a href="business.html">Businesses</a></li>
-        <li><a href="submit_business.html">Submit</a></li>
-      </ul>
-    </nav>
+    <ul class="nav-links" id="kc-nav" aria-label="Main Navigation">
+      <li><a href="church_directory.html">Churches</a></li>
+      <li><a href="business.html">Businesses</a></li>
+      <li><a href="submit_business.html">Submit</a></li>
+    </ul>
 
-    <div class="header-actions">
+    <!-- Fixed top-right stack -->
+    <div class="actions-stack" id="kc-actions">
       <button class="gear-toggle" id="kc-gear" aria-haspopup="true" aria-expanded="false" aria-controls="kc-controls" title="Display settings" type="button">
         <span class="gear-icon" aria-hidden="true">⚙️</span>
         <span class="sr-only">Display settings</span>
       </button>
+
+      <button class="menu-toggle" id="kc-menu-toggle" aria-label="Menu" aria-expanded="false" aria-controls="kc-nav" type="button">
+        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+      </button>
+
       <div class="user-controls" id="kc-controls" hidden>
         <div class="ctrl-row">
           <button class="ctrl-btn" id="kc-font-dec" type="button" aria-label="Smaller text">A−</button>
@@ -56,7 +57,7 @@
 </header>
 `;
 
-  // Hamburger
+  // Hamburger (mobile; CSS hides on desktop)
   var btn = document.getElementById("kc-menu-toggle");
   var nav = document.getElementById("kc-nav");
   if (btn && nav) {
