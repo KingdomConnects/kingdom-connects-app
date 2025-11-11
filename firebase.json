@@ -2,11 +2,13 @@
   "hosting": {
     "public": ".",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
+    "cleanUrls": true,
+    "headers": [
+      { "source": "**/*.html", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] },
+      { "source": "**/*.{js,css}", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000" }] },
+      { "source": "index.html", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] }
     ]
-  }
+  },
+  "firestore": { "rules": "firestore.rules" },
+  "storage":   { "rules": "storage.rules" }
 }
